@@ -24,7 +24,7 @@
     <form action="{{ asset('/stylist_user/info_DB') }}" enctype="multipart/form-data" method="POST">
         @csrf
         <input type="hidden" value="{{ $stylist->getId() }}" name="id">
-        <div class="container top-50 start-50 position-absolute translate-middle">
+        <div class="container start-50 position-absolute translate-middle-x">
             <div class="row">
                 <div class="col-12 col-xxl-1 col-lg-1 col-md-1  col-xl-1">
                 </div>

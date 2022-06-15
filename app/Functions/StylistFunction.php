@@ -30,7 +30,7 @@
                 }
                 $sql = $sql->whereIn('id',$stylist_id);
             }
-            if($service){
+            if($service){                
                 $service_DB = DB::table('stylist_services')->where('service','=',$service)->pluck('stylist_id');
                 $stylist_id = [];
                 foreach($service_DB as $id){
@@ -38,7 +38,7 @@
                 }
                 $sql = $sql->whereIn('id',$stylist_id);
             }
-            $stylist_list = $sql->get();
+            $stylist_list = $sql->paginate(1)->withQueryString();//エラーのハイライトがあれば、無視していい
             return $stylist_list;
         }
     }
