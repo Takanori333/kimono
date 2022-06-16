@@ -22,7 +22,7 @@
                         <ul class="dropdown-menu vh-100 min-vh-100 fixed-top w-100 overflow-auto" aria-labelledby="dropdownMenuLink">
                             @foreach ($customer_list as $customer)
                             <li>
-                                <a class="dropdown-item" href="javascript:void(0);" onclick="change_customer_message()">{{ $customer->name }}</a>
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="change_customer_message({{ asset('/chat/get_message_stylist/'.$customer->id)}},{{  csrf_token()  }})">{{ $customer->name }}</a>
                             </li>                                
                             @endforeach
                         </ul>
