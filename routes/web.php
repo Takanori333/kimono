@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StylistUserController;
 use App\Http\Controllers\StylistController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,7 @@ Route::post('/stylist_user/delete_service',[StylistUserController::class,'delete
 Route::post('/stylist_user/freetime_DB',[StylistUserController::class,'freetime_DB']);
 Route::post('/stylist_user/delete_freetime_DB',[StylistUserController::class,'delete_freetime_DB']);
 Route::post('/stylist_user/change_status',[StylistUserController::class,'change_status']);
+Route::get('/stylist_user/chat',[StylistUserController::class,'chat']);
 //スタイリスト
 Route::get('/stylist',[StylistController::class,'top']);
 // ユーザー
@@ -58,4 +60,6 @@ Route::post('/user/signin_DB',[UserController::class,'signin']);
 Route::post('/user/signup_DB',[UserController::class,'signup']);
 
 Route::get('/user/info/{id}',[UserController::class,'info_index']);
-
+Route::get('/user/stylist_chat/{id}',[UserController::class,'chat_stylist']);
+//チャット（データベースに保存）
+Route::post('/chat/insert_stylist',[ChatController::class,'insert_stylist']);

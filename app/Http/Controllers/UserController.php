@@ -165,4 +165,8 @@ class UserController extends Controller
 
         return view("user.info", $data);
     }
+    //スタイリストとのチャットページに移動
+    function chat_stylist($id){
+        return view("user.chat_stylist");
+    }
 }

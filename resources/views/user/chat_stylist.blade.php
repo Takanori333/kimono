@@ -20,11 +20,7 @@
                             Dropdown link
                         </a>
                         <ul class="dropdown-menu vh-100 min-vh-100 fixed-top w-100 overflow-auto" aria-labelledby="dropdownMenuLink">
-                            @foreach ($customer_list as $customer)
-                            <li>
-                                <a class="dropdown-item" href="javascript:void(0);" onclick="change_customer_message()">{{ $customer->name }}</a>
-                            </li>                                
-                            @endforeach
+                            <li><a class="dropdown-item" href="#">Action</a></li>
                         </ul>
                 </div>
             </div>
@@ -46,7 +42,7 @@
     <input type="hidden" id="stylist_id" value="9999999">
     <input type="hidden" id="customer_id" value="9999999">
     <input type="hidden" id="csrf" value="{{ csrf_token() }}">
-    <input type="hidden" id="url" value="{{ asset('/chat/insert_stylist') }}">
-    <script src="{{ asset('js/socket_stylist_user.js') }}"></script>
+    <input type="hidden" id="url" value="{{ asset('/chat/insert_stylist') }}">    
+    <script src="{{ asset('js/socket_stylist_customer.js') }}"></script>
 </body>
 </html>

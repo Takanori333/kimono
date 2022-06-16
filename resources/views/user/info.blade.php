@@ -8,12 +8,13 @@
 </head>
 <body>
     <img src="{{ asset($user->user_info->icon) }}" alt="">
+    <p>id:{{ $user->id }}</p>
     <p>{{ $user->user_info->name }}</p>
     <a href="">フォロー</a>
     <a href="">フォロワー</a>
     <p>購入者評価{{ $average_seller_point }}</p>
     <p>販売者評価{{ $average_customer_point }}</p>
-    <p>メールアドレス{{ $user->user_info->email }}</p>
+    <p>メールアドレス{{ $user->email }}</p>
     <p>電話番号{{ $user->user_info->phone }}</p>
     <p>郵便番号{{ $user->user_info->post }}</p>
     <p>住所{{ $user->user_info->address }}</p>
@@ -24,7 +25,7 @@
             女
         @endif
     </p>
-    <p>生年月日{{ $user->user_info->birthday }}</p>
+    <p>生年月日{{  str_replace('-', '/', $user->user_info->birthday) }}</p>
     <p>身長
         @if ($user->user_info->height)
             {{ $user->user_info->height }}

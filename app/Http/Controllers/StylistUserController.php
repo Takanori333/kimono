@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Functions\ChatFunction;
 use App\Functions\StylistUserFunction;
 use Illuminate\Http\Request;
 
@@ -91,5 +92,12 @@ class StylistUserController extends Controller
         $s_function = new StylistUserFunction();
         $s_function->change_status($request);
     }    
+
+    function chat(){
+        $chat_f = new ChatFunction();
+        $customer_list = $chat_f->stylist_customer_list();
+        // var_dump($customer_list);
+        return view('stylist_user.chat',compact('customer_list'));
+    }
 
 }
