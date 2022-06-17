@@ -7,12 +7,13 @@ use Illuminate\Support\Facades\DB;
 
 $io = new SocketIO(3120);
 $io->on('connection',function ($socket)use($io){
-        // $io->emit("welcome","hello");
-        
+        // $io->emit("welcome","hello");        
         stylist_join($socket,$io);
         stylist_customer_join($socket,$io);
         stylist_send($socket,$io);
         stylist_customer_send($socket,$io);
+        trade_join($socket,$io);
+        trade_send($socket,$io);
     });
 
 function user_join(&$socket,&$io){
@@ -45,9 +46,19 @@ function stylist_customer_send(&$socket,&$io){
         $socket->emit('from_customer',$msg['message']);
     });
 }
-
-
-
+//ユーザがフリーマチャットに入る時に、このユーザのチャンネルを作る
+function trade_join(&$socket,&$io){
+    $socket->on('trade_join',function ($id)use ($io,$socket){
+        $socket->join('trade:'.$id);
+    });
+}
+//フリーマチャットのメッセージを送る
+function trade_send(&$socket,&$io){
+    $socket->on('trade_send',function ($msg)use ($io,$socket){
+        $io->to('trade:'.$msg['getter_id'])->emit('from_other_side',$msg['message']);
+        $socket->emit('from_self',$msg['message']);
+    });
+}
 function disconnect(&$socket,&$io,&$user){
     $socket->on('disconnect',function($msg)use($io,$socket,&$user){
     });

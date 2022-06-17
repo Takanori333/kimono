@@ -96,8 +96,10 @@ class StylistUserController extends Controller
     function chat(){
         $chat_f = new ChatFunction();
         $customer_list = $chat_f->stylist_customer_list();
+        $stylist_f = new StylistUserFunction();
+        $service = $stylist_f->get_service_menu();
         // var_dump($customer_list);
-        return view('stylist_user.chat',compact('customer_list'));
+        return view('stylist_user.chat',['customer_list'=>$customer_list,'service'=>$service]);
     }
 
 }

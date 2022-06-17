@@ -19,10 +19,17 @@
         //TODO:バリョテション
         //サインアップで入力したデータをデータベースに挿入する
         function signup(Request &$request){
-            $stylistDB = new StylistDB();
+            // $stylistDB = new StylistDB();
             $stylist_infoDB = new Stylist_info();
-            $stylistDB->email = $request->email;
-            $stylistDB->password = $request->password;
+            $user_id = DB::table("stylists")->insertGetId(
+                [
+                    'email'=>$request->email,
+                    'password'=>$request->password
+                ]
+                );
+            // $stylistDB->email = $request->email;
+            // $stylistDB->password = $request->password;
+            $stylist_infoDB->id = $user_id;
             $stylist_infoDB->name = $request->name;
             $stylist_infoDB->address = $request->address;
             $year = $request->year;
@@ -35,7 +42,7 @@
             $icon_path = $request->file("icon")->store("image");
             $stylist_infoDB->icon = $icon_path;
             $stylist_infoDB->save();
-            $stylistDB->save();       
+            // $stylistDB->save();       
         }
         //TODO:バリョテション
         //サインインし、成功なら、データベースから取った情報をセッションに保存する

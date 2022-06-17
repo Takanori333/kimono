@@ -9,6 +9,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"  crossorigin="anonymous"></script>
 </head>
 <body>
+    @foreach ($stylist_list as $stylist)
+        <img src="{{ asset($stylist->icon) }}" alt="" height="300px" width="250px">
+    @endforeach
         {{-- {{ $stylist_list->links() }}
     {{ var_dump($stylist_list) }} --}}
     <nav aria-label="Page navigation example">

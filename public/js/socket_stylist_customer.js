@@ -4,9 +4,9 @@ let customer_id = document.getElementById('customer_id').value;
 let url = document.getElementById('url').value;
 let csrf = document.getElementById('csrf').value;
 let message_box = document.getElementById('message_box');
-let msg = document.getElementById("message");
+let message_body = document.getElementById("message");
 socket.emit('stylist_customer_join',customer_id);
-msg.addEventListener('keyup',function(e){
+message_body.addEventListener('keyup',function(e){
     if(e.shiftKey){
         if(e.keyCode==13){
             sendMsg();
@@ -14,12 +14,12 @@ msg.addEventListener('keyup',function(e){
     }
 })
 function sendMsg(){
-    if(msg.value){
-        socket.emit('stylist_customer_send',{stylist_id:stylist_id,customer_id:customer_id,message:msg.value});
+    if(message_body.value){
+        socket.emit('stylist_customer_send',{stylist_id:stylist_id,customer_id:customer_id,message:message_body.value});
         $.ajax({
             url:url,
             type:'POST',
-            data:{"_token":csrf,stylist_id:stylist_id,customer_id:customer_id,message:msg.value,from:1},
+            data:{"_token":csrf,stylist_id:stylist_id,customer_id:customer_id,message:message_body.value,from:1},
             success:function(){
                 console.log(1);
             },
@@ -27,14 +27,16 @@ function sendMsg(){
                 console.log(msg);
             }
         })        
-        msg.value = "";    
+        message_body.value = "";    
     }
 }
 socket.on('from_stylist',function(msg){
     make_message_stylist(msg);
+    scrollToBottom();
 })
 socket.on('from_customer',function(msg){
     make_message_customer(msg);
+    scrollToBottom();
 })
 
 function make_message_customer(message){
@@ -59,3 +61,7 @@ function make_message_stylist(message){
     out_div.appendChild(inner_div);    
     message_box.appendChild(out_div);
 }
+function scrollToBottom(){
+    message_box.scrollTo(0,message_box.scrollHeight);
+}
+scrollToBottom();

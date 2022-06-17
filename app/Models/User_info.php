@@ -9,5 +9,5 @@ class User_info extends Model
 {
     use HasFactory;
 
-    protected $guarded = array("id");
+    protected $guarded = ["id"];
 }

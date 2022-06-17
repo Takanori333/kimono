@@ -5,6 +5,7 @@ use App\Http\Controllers\StylistUserController;
 use App\Http\Controllers\StylistController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\FleamarketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,20 +47,39 @@ Route::post('/stylist_user/change_status',[StylistUserController::class,'change_
 Route::get('/stylist_user/chat',[StylistUserController::class,'chat']);
 //スタイリスト
 Route::get('/stylist',[StylistController::class,'top']);
-// ユーザー
-Route::get('/user/signin',function(){
-    return view('user.signin');
-});
-Route::get('/user/signin',[UserController::class,'signin_index']);
+Route::get('/stylist/book/{reserve_id}',[StylistController::class,'reserve']);
+Route::post('/stylist/confirm',[StylistController::class,'confirm']);
 
+// ユーザー
+Route::get('/user/signin',[UserController::class,'signin_index']);
 Route::get('/user/signup',function(){
     return view('user.signup');
 });
-
 Route::post('/user/signin_DB',[UserController::class,'signin']);
 Route::post('/user/signup_DB',[UserController::class,'signup']);
-
 Route::get('/user/info/{id}',[UserController::class,'info_index']);
+Route::get('/user/exhibited/{id}',[UserController::class,'exhibited_index']);
+Route::get('/user/exhibited/delete/{id}',[UserController::class,'exhibited_delete']);
+Route::get('/user/purchased/{id}',[UserController::class,'purchased_index']);
+Route::get('/user/sold/{id}',[UserController::class,'sold_index']);
+Route::get('/user/ordered/{id}',[UserController::class,'ordered_index']);
+Route::get('/user/follower/{id}',[UserController::class,'follower_index']);
+Route::get('/user/follow/{id}',[UserController::class,'follow_index']);
+Route::get('/user/follow_DB',[UserController::class,'follow']);
+Route::get('/user/unfollow_DB',[UserController::class,'unfollow']);
+Route::get('/user/edit/{id}',[UserController::class,'edit_index']);
+Route::get('/user/show/{id}',[UserController::class,'show_index']);
+
 Route::get('/user/stylist_chat/{id}',[UserController::class,'chat_stylist']);
+Route::get('/user/trade_chat/{item_id}',[UserController::class,'chat_trade']);
 //チャット（データベースに保存）
 Route::post('/chat/insert_stylist',[ChatController::class,'insert_stylist']);
+Route::post('/chat/stylist_user_get_message',[ChatController::class,'stylist_user_get_message']);
+Route::post('/make_reserve',[ChatController::class,'make_reserve']);
+
+// フリマ関連
+Route::get('/fleamarket', [FleamarketController::class, 'index']);
+Route::get('/fleamarket/exhibit/new', [FleamarketController::class, 'createIndex']);
+Route::post('/fleamarket/exhibit/confirm', [FleamarketController::class, 'createConfirm']);
+Route::post('/fleamarket/exhibit/done', [FleamarketController::class, 'create']);
+
