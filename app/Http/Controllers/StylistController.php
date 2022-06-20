@@ -9,9 +9,15 @@ class StylistController extends Controller
 {
     //スタイリスト一覧の画面
     function top(Request &$request){
-        $s_function = new StylistFunction;
+        $s_function = new StylistFunction();
         $stylist_list = $s_function->top($request);
         return view('stylist.top',['stylist_list'=>$stylist_list]);
+    }
+
+    function stylist_info($id){
+        $s_function = new StylistFunction();
+        $info = $s_function->stylist_info($id);
+        return view('stylist.show',["stylist"=>$info[0],"areas"=>$info[1],"services"=>$info[2]]);
     }
 
     //TODO:notfound画面

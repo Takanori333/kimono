@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>出品登録確認</title>
 </head>
 <body>
@@ -18,7 +19,10 @@
     {{-- 商品登録確認表示 --}}
     <div>
         <p>商品名:{{$item_infos["name"]}}</p>
-        <p>商品画像:{{$item_infos["image"]}} <img src="{{$item_infos["image"]}}"></p>
+        <p>商品画像: </p>
+        @foreach ( $item_infos["image"] as $img )
+            <img src="{{$img}}">
+        @endforeach
         <p>カテゴリ:{{$item_infos["category"]}}</p>
         <p>値段:{{$item_infos["price"]}}</p>
         <p>発送元都道府県:{{$item_infos["pref"]}}</p>
@@ -37,7 +41,9 @@
         <form action="/fleamarket/exhibit/done" method="POST">
             @csrf
             <input type="hidden" name="name" value="{{ $item_infos["name"] }}">
-            <input type="hidden" name="image" value="{{ $item_infos["image"] }}">
+            @foreach ( $item_infos["image"] as $img )
+                <input type="hidden" name="image[]" value="{{ $img }}">
+            @endforeach
             <input type="hidden" name="category" value="{{ $item_infos["category"] }}">
             <input type="hidden" name="price" value="{{ $item_infos["price"] }}">
             <input type="hidden" name="pref" value="{{ $item_infos["pref"] }}">

@@ -18,4 +18,9 @@ class Item_history extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
+    public function user_info()
+    {
+        return $this->belongsTo(User_info::class, "buyer_id");
+    }
 }

@@ -124,8 +124,8 @@
         //スタイリストのトップページにこれからの予約リと予約可能時間をデータベースから取得し、画面で表示する
         function top(){
             $stylist = unserialize(session()->get("stylist"));
-            $reserve_list = DB::table('stylist_histories')->where("stylist_id","=",$stylist->getId())->where("end_time",">=",date("Y-m-d H:i:s"))->get();
-            $freetime_list = DB::table('stylist_freetimes')->where("stylist_id","=",$stylist->getId())->where("end_time",">=",date("Y-m-d H:i:s"))->get();
+            $reserve_list = DB::table('stylist_histories')->where("stylist_id","=",$stylist->getId())->where("end_time",">=",date("Y-m-d H:i:s"))->orderBy('start_time')->take(3)->get();
+            $freetime_list = DB::table('stylist_freetimes')->where("stylist_id","=",$stylist->getId())->where("end_time",">=",date("Y-m-d H:i:s"))->orderBy('start_time')->get();
             $status = DB::table('stylists')->where('id','=',$stylist->getId())->value('exist');
             return [$reserve_list,$freetime_list,$status];
         }
@@ -138,7 +138,7 @@
         //予約リストを取得する
         function reserve(){
             $stylist = unserialize(session()->get("stylist"));
-            $reserve_list = DB::table('stylist_histories')->where("stylist_id","=",$stylist->getId())->get();
+            $reserve_list = DB::table('stylist_histories')->where("stylist_id","=",$stylist->getId())->orderBy('start_time')->get();
             return $reserve_list;
         }        
         //TODO:バリョテション

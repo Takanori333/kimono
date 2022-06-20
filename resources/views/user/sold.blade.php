@@ -17,7 +17,7 @@
                 <p>{{ number_format($sold_item->item_info->price) }}円</p>
                 <p>販売日時：{{ str_replace('-', '/', $sold_item->item_history->created_at) }}</p>
                 <span>購入者：</span>
-                <a href="{{ asset('/user/show/' . $sold_item->user_id) }}">{{ $sold_item->user_info->name }}</a>
+                <a href="{{ asset('/user/show/' . $sold_item->user_id) }}">{{ $sold_item->item_history->user_info->name }}</a>
             </div>
         @endforeach
     @else

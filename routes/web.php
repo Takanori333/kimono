@@ -49,26 +49,27 @@ Route::get('/stylist_user/chat',[StylistUserController::class,'chat']);
 Route::get('/stylist',[StylistController::class,'top']);
 Route::get('/stylist/book/{reserve_id}',[StylistController::class,'reserve']);
 Route::post('/stylist/confirm',[StylistController::class,'confirm']);
-
+Route::get('/stylist/show/{id}',[StylistController::class,'stylist_info']);
 // ユーザー
-Route::get('/user/signin',[UserController::class,'signin_index']);
+Route::get('/user/signin',[UserController::class,'signinIndex']);
 Route::get('/user/signup',function(){
     return view('user.signup');
 });
 Route::post('/user/signin_DB',[UserController::class,'signin']);
 Route::post('/user/signup_DB',[UserController::class,'signup']);
-Route::get('/user/info/{id}',[UserController::class,'info_index']);
-Route::get('/user/exhibited/{id}',[UserController::class,'exhibited_index']);
+Route::get('/user/info/{id}',[UserController::class,'infoIndex']);
+Route::get('/user/exhibited/{id}',[UserController::class,'exhibitedIndex']);
 Route::get('/user/exhibited/delete/{id}',[UserController::class,'exhibited_delete']);
-Route::get('/user/purchased/{id}',[UserController::class,'purchased_index']);
-Route::get('/user/sold/{id}',[UserController::class,'sold_index']);
-Route::get('/user/ordered/{id}',[UserController::class,'ordered_index']);
-Route::get('/user/follower/{id}',[UserController::class,'follower_index']);
-Route::get('/user/follow/{id}',[UserController::class,'follow_index']);
+Route::get('/user/purchased/{id}',[UserController::class,'purchasedIndex']);
+Route::get('/user/sold/{id}',[UserController::class,'soldIndex']);
+Route::get('/user/ordered/{id}',[UserController::class,'orderedIndex']);
+Route::get('/user/follower/{id}',[UserController::class,'followerIndex']);
+Route::get('/user/follow/{id}',[UserController::class,'followIndex']);
 Route::get('/user/follow_DB',[UserController::class,'follow']);
 Route::get('/user/unfollow_DB',[UserController::class,'unfollow']);
-Route::get('/user/edit/{id}',[UserController::class,'edit_index']);
-Route::get('/user/show/{id}',[UserController::class,'show_index']);
+Route::get('/user/edit/{id}',[UserController::class,'editIndex']);
+Route::post('/user/edit_DB',[UserController::class,'editUser']);
+Route::get('/user/show/{id}',[UserController::class,'showIndex']);
 
 Route::get('/user/stylist_chat/{id}',[UserController::class,'chat_stylist']);
 Route::get('/user/trade_chat/{item_id}',[UserController::class,'chat_trade']);

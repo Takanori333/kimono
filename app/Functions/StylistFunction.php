@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
         {
             
         }
-
+        //スタイリストトップページ（一覧）
         function top(Request &$request){
             $area = $request->area;
             $service = $request->service;
@@ -39,8 +39,14 @@ use Illuminate\Http\Request;
                 }
                 $sql = $sql->whereIn('id',$stylist_id);
             }
-            $stylist_list = $sql->paginate(1)->withQueryString();//エラーのハイライトがあれば、無視していい
+            $stylist_list = $sql->paginate(9)->withQueryString();//エラーのハイライトがあれば、無視していい
             return $stylist_list;
+        }
+        function stylist_info($id){
+            $stylist = DB::table('stylist_infos')->where('id','=',$id)->first();
+            $services = DB::table('stylist_services')->where('stylist_id','=',$id)->get();
+            $areas = DB::table('stylist_areas')->where('stylist_id','=',$id)->get();
+            return [$stylist,$services,$areas];
         }
         //予約画面
         function reserve($reserve_id){

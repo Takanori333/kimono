@@ -11,11 +11,12 @@ use App\Functions\ChatFunction;
 use App\Models\Item;
 use App\Models\Item_history;
 use App\Models\Stylist_history;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
     // サインイン画面の表示
-    public function signin_index(Request $request)
+    public function signinIndex(Request $request)
     {
         // msgの初期値
         $data = [
@@ -117,16 +118,9 @@ class UserController extends Controller
     }
 
     // ユーザー情報ページの表示
-    public function info_index(Request $request)
+    public function infoIndex(Request $request)
     {
-        // $id = $request->id;
-        // 該当のidのユーザー情報をDBから取り出す
-        // $user = User::with("user_info")
-        //             ->where("users.id", $id)
-        //             ->first();
-
         $user = unserialize($request->session()->get("user"));
-        // var_dump($user);
 
         //  平均評価を計算し、代入
         $average_seller_point = $user->getAverageSellerPoint();
@@ -146,6 +140,7 @@ class UserController extends Controller
 
         return view("user.info", $data);
     }
+
     //スタイリストとのチャットページに移動
     function chat_stylist($id){
         $chat_f = new ChatFunction();
@@ -154,7 +149,7 @@ class UserController extends Controller
     }
 
     // 出品商品一覧画面の表示
-    public function exhibited_index(Request $request)
+    public function exhibitedIndex(Request $request)
     {
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
@@ -218,7 +213,7 @@ class UserController extends Controller
     }
 
     // 購買履歴一覧画面の表示
-    public function purchased_index(Request $request)
+    public function purchasedIndex(Request $request)
     {
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
@@ -235,10 +230,11 @@ class UserController extends Controller
     }
 
     // 販売履歴一覧画面の表示
-    public function sold_index(Request $request)
+    public function soldIndex(Request $request)
     {
         // セッションからuserインスタンスを受け取る
-        $user = unserialize($request->session()->get("user"));
+        // $user = unserialize($request->session()->get("user"));
+        $user = User::where("id", $request->id)->first();
 
         // ユーザーが出品した商品の中から、販売済みの物を検索する
         // item_info, item_photo, item_historyと一緒に取り出す
@@ -258,7 +254,7 @@ class UserController extends Controller
     }
 
     // 注文履歴一覧画面の表示
-    public function ordered_index(Request $request)
+    public function orderedIndex(Request $request)
     {
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
@@ -276,24 +272,39 @@ class UserController extends Controller
         return view("user.ordered", $data);
     }
 
-    // 注文履歴一覧画面の表示
-    public function follower_index(Request $request)
+    // フォロワー一覧画面の表示
+    public function followerIndex(Request $request)
     {
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
+        echo $user->id;
         
         $followers_of_page_user = User_follower::where("follow_id", $request->id)
-            ->with("user_info")
+            // ->with("user_info")
             ->get();
 
-        $followers_of_access_user = User_follower::where("follow_id", $user->id)
-            ->with("user_info")
-            ->get();
+        $follows_of_access_user = 
+            User_follower::where("follower_id", $user->id)
+            ->select("follow_id")
+            // ->where("follower_id", $user->id)
+            // ->with("user_info")
+            ->get()
+            ->map(function ($row) {
+                return $row->follow_id;
+            })
+            // ->all()
+            ->toArray()
+            ;
+
+        // var_dump($follows_of_access_user);
+        // var_dump($followers_of_page_user->first());
+        echo "<br>";
+        // var_dump($follows_of_access_user->first());
 
         $data = [
             "user" => $user,
             "followers_of_page_user" => $followers_of_page_user,
-            "followers_of_access_user" => $followers_of_access_user,
+            "follows_of_access_user" => $follows_of_access_user,
         ];
 
         // 購買履歴一覧画面の表示
@@ -308,7 +319,10 @@ class UserController extends Controller
 
         $follow_id = $request->follow_id;
 
-        $user_follower = new User_follower;
+        $user_follower = User_follower::firstOrNew([
+            "follow_id" => $follow_id,
+            "follower_id" => $user->id,
+        ]);
 
         $values = [
             "follow_id" => $follow_id,
@@ -331,8 +345,8 @@ class UserController extends Controller
 
         $follow_id = $request->follow_id;
 
-        $user_follower = User_follower::where("follow_id", $follow_id)
-            ->where("followerid", $user->id)
+        User_follower::where("follow_id", $follow_id)
+            ->where("follower_id", $user->id)
             ->delete();
 
         $data = [
@@ -363,4 +377,91 @@ class UserController extends Controller
     // }
 
 
+    public function editIndex(Request $request)
+    {
+        // セッションからuserインスタンスを受け取る
+        $user = unserialize($request->session()->get("user"));
+
+        $user->user_info->name;
+
+        $data = [
+        "user" => $user,
+        "msg" => ""
+        ];
+
+        // リダイレクト時のmsgの代入
+        if ($request->old("msg")) {
+            $data["msg"] = $request->old("msg");
+        }
+
+        return view("user.edit", $data);
+    }
+
+    public function editUser(Request $request)
+    {
+        // バリデーションチェック
+
+        // セッションからuserインスタンスを受け取る
+        $user = unserialize($request->session()->get("user"));
+        $user_info = User_info::where("id", $user->id)->first();
+
+        // usersに保存する値
+        $user_form = [
+            "email" => $request->email,
+            "password" => $request->password,
+        ];
+
+        // user_infosに保存する値
+        $user_info_form = [
+            "name" => $request->name,
+            "address" => $request->address,
+            "sex" => $request->sex,
+            // heightはnullable
+            "height" => $request->height,
+            "phone" => $request->phone,
+            "post" => $request->post,
+            "birthday" => $request->year . "-" . $request->month . "-" . $request->day,
+        ];
+
+        // DBに保存
+        $user->fill($user_form)->save();
+        $user_info->fill($user_info_form)->save();
+
+        $data = [
+            "msg" => "変更しました"
+        ];
+
+        return redirect("user/edit/". $user->id)->withInput($data);   
+    }
+
+    public function showIndex(Request $request)
+    {
+        // $user = unserialize($request->session()->get("user"));
+        $user = User::where("id", $request->id)->first();
+
+        //  平均評価を計算し、代入
+        $average_seller_point = $user->getAverageSellerPoint();
+        $average_customer_point = $user->getAverageCustomerPoint();
+
+        // フォロー数とフォロワー数を計算
+        $follower_count = User_follower::where("follow_id", $user->id)->count();
+        $follow_count = User_follower::where("follower_id", $user->id)->count();
+
+        // ユーザーが出品した商品の中から、現在出品中の物を検索
+        $exhibited_items = Item::where("user_id", $user->id)
+                    ->where("onsale", 1)
+                    ->with(["item_info", "item_photo"])
+                    ->get();
+
+        $data = [
+            "user" => $user,
+            "average_seller_point" => $average_seller_point,
+            "average_customer_point" => $average_customer_point,
+            "follow_count" => $follow_count,
+            "follower_count" => $follower_count,
+            "exhibited_items" =>$exhibited_items,
+        ];
+
+        return view("user.show", $data);
+    }
 }

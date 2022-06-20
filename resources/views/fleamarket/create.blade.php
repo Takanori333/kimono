@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>商品登録</title>
 </head>
 <body>
@@ -17,7 +18,7 @@
 
     {{-- 商品登録フォーム --}}
     <div>
-        <form action="/fleamarket/exhibit/confirm" method="POST" enctype="multipart/form-data">
+        <form action="/fleamarket/exhibit/confirm" method="POST" enctype="multipart/form-data" id="item_create_form">
         @csrf
             @foreach ($errors->all() as $error)
                 <li>{{$error}}</li>
@@ -26,8 +27,19 @@
             <input type="text" name="name" value="{{ old("name") }}">
             <br>
 
+            @php
+                $images = old("image");
+            @endphp
             <label for="image">商品画像:</label>
-            <input type="file" name="image" value="{{ old("image") }}" multiple>
+            <input type="file" id="input_img" multiple>
+
+            <div id="show_img_area">
+                @isset( $images )
+                    @foreach ($images as $image )
+                        <img src="{{ $image }}">
+                    @endforeach
+                @endisset
+            </div>
             <br>
 
             <label for="category">カテゴリ:</label>
@@ -81,8 +93,48 @@
             <textarea name="detail" cols="30" rows="10">{{ old("detail") }}</textarea>
             <br>
 
-            <input type="submit" value="内容を確認">
+            <div id="hidden_input">
+                @isset( $images )
+                    @foreach ($images as $key => $image )
+                        <input type="hidden" name="image[{{$key}}]" value="{{ $image }}">
+                    @endforeach
+                @endisset
+            </div>
+
+            <input type="button" value="内容を確認" onclick="submit()">
         </form>
     </div>
+    <script>
+        // <input type="file" id="input_img" multiple>にchangeイベントを設定
+        document.getElementById( "input_img" ).addEventListener( "change", function() {
+            // フォームで選択された全ファイルを取得
+            let fileList = this.files ;
+
+            // 個数分の画像を表示する
+            for( let i=0,l=fileList.length; l>i; i++ ) {
+                // FileReaderオブジェクトを作成
+                let fileReader = new FileReader() ;
+
+                // 読み込み後の処理を決めておく
+                fileReader.onload = function() {
+                    // Data URIを取得
+                    let dataUri = this.result ;
+                    // サンプルを表示する領域を取得
+                    let show_img = document.getElementById("show_img_area");
+                    // HTMLに書き出し (src属性にData URIを指定)
+                    show_img.innerHTML += '<img src="' + dataUri + '">'
+                    
+                    // inputタグをhiddenで表示するdivタグを取得する
+                    let hidden_area = document.getElementById("hidden_input");
+                    hidden_area.innerHTML += '<input type="hidden" name="image[]" value="' + dataUri +'">'
+                    console.log( '<input type="hidden" name="image[]" value="' + dataUri +'">');
+                }
+                // ファイルをData URIとして読み込む
+                fileReader.readAsDataURL( fileList[i] ) ;
+            }
+        } ) ;
+
+
+    </script>
 </body>
 </html>

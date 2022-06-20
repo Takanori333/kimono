@@ -1,0 +1,88 @@
+:root {
+    /* --font-family-sans-serif: "Helvetica Neue", Helvetica, Arial, "游ゴシック体", "Yu Gothic", YuGothic, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; */
+    --font-family-sans-serif: 'Shippori Mincho', serif;
+    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+body {
+    font-family: var(--font-family-sans-serif);
+}
+
+.bg-lightgray {
+    background-color: lightgray !important;
+}
+
+.bg-lightoff {
+    background-color: rgb(231, 231, 231) !important;
+}
+
+textarea:focus,
+input:focus,
+input[type]:focus,
+.uneditable-input:focus {
+    outline: none;
+    box-shadow: none;
+    border: 2px solid #505050;
+    background-color: #ffffff;
+}
+
+/* input:focus::placeholder {
+    color: #fbbc05;
+} */
+
+.hp-80{
+    height: 80px;
+}
+
+.ob-fit{
+    object-fit: cover;
+}
+
+.item_img_size{
+    height: 300px;
+}
+
+.item-img-size-500{
+    height: 500px;
+}
+
+/* @media screen and (max-width: 959px) {
+    .item_img_size{
+        height: 150px;
+    }
+} */
+
+/* @media screen and (max-width: 480px) {
+    .item_img_size{
+        height: 80px;
+    }
+} */
+
+.frima-header{
+    margin-top: 73px;
+}
+
+@media screen and (max-width: 543px) {
+    .frima-header{
+        margin-top: 113px;
+    }
+}
+
+.frima-body{
+    margin-top: 3rem;
+}
+
+@media screen and (max-width: 543px) {
+    .frima-body{
+        margin-top: 80px;
+    }
+}
+
+select{
+    border: none;
+    border-bottom: #505050;
+}
+
+select:focus{
+    outline: none;
+}
