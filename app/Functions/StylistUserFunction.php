@@ -56,11 +56,17 @@
         //TODO:バリョテション
         //スタイリスト情報更新
         function info_update(Request &$request){
+            $year = $request->year;
+            $month = $request->month;
+            $day = $request->day;
             $new_info = [
                 'name' => $request->name,
                 'phone' => $request->phone,
                 'post' => $request->post,
-                'address' => $request->address
+                'address' => $request->address,
+                'min_price' => $request->min_price,
+                'max_price' => $request->max_price,
+                'birthday' => $year."-".$month."-".$day
             ];
             if($request->file('icon')){
                 $new_info['icon'] = $request->file('icon')->store('image');
@@ -72,7 +78,7 @@
         function data2session($stylist_id){
             $email =  DB::table("stylists")->where("id","=",$stylist_id)->value("email");
             $stylist_info = DB::table("stylist_infos")->where("id","=",$stylist_id)->first();
-            $stylist = new Stylist($stylist_id,$stylist_info->name,$email,$stylist_info->address,$stylist_info->birthday,$stylist_info->sex==0?"女性":"男性",$stylist_info->phone,$stylist_info->post,$stylist_info->icon);
+            $stylist = new Stylist($stylist_id,$stylist_info->name,$email,$stylist_info->address,$stylist_info->birthday,$stylist_info->sex==0?"女性":"男性",$stylist_info->phone,$stylist_info->post,$stylist_info->icon,$stylist_info->min_price,$stylist_info->max_price);
             session(["stylist"=>serialize($stylist)]);
         }
         //スタイリストの活動地域をデータベースから取得する

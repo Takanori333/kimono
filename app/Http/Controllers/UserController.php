@@ -12,6 +12,7 @@ use App\Models\Item;
 use App\Models\Item_history;
 use App\Models\Stylist_history;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\VarDumper\VarDumper;
 
 class UserController extends Controller
 {
@@ -74,6 +75,15 @@ class UserController extends Controller
         }
     }
 
+    // サインアウトの処理
+    public function signout(Request $request){
+        // $request->session()->get('user');
+        $request->session()->forget('user');
+
+        // リダイレクト
+        // return redirect();
+    }
+
     // サインアップの処理
     public function signup(Request $request)
     {
@@ -120,6 +130,7 @@ class UserController extends Controller
     // ユーザー情報ページの表示
     public function infoIndex(Request $request)
     {
+        // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
 
         //  平均評価を計算し、代入
@@ -247,8 +258,6 @@ class UserController extends Controller
             "sold_items" => $sold_items,
         ];
 
-        // var_dump($sold_items->first());
-
         // 購買履歴一覧画面の表示
         return view("user.sold", $data);
     }
@@ -259,7 +268,8 @@ class UserController extends Controller
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
 
-
+        // ユーザーのスタイリストへの注文履歴を検索する
+        // stylist_infoと一緒に取り出す
         $order_histories = Stylist_history::where("customer_id", $user->id)
             ->with("stylist_info")
             ->get();
@@ -268,7 +278,7 @@ class UserController extends Controller
             "order_histories" => $order_histories,
         ];
 
-        // 購買履歴一覧画面の表示
+        // 注文履歴一覧画面の表示
         return view("user.ordered", $data);
     }
 
@@ -277,29 +287,25 @@ class UserController extends Controller
     {
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
-        echo $user->id;
         
+        // ページのユーザーのことをフォローしているユーザーを検索する
+        // user_infosとjoinして取り出す
+        // idカラムが重複するので、user_infosのidをuser_idとする
         $followers_of_page_user = User_follower::where("follow_id", $request->id)
-            // ->with("user_info")
+            ->join("user_infos", "follower_id", "=", "user_infos.id")
+            ->select("*", "user_infos.id as user_id")
             ->get();
-
-        $follows_of_access_user = 
-            User_follower::where("follower_id", $user->id)
+ 
+        // アクセスしたユーザーがフォローしている人を検索する
+        // フォローしているユーザーのidを取り出し、配列に格納する
+        // アクセスしたユーザーがフォローしているかで、フォローボタン等の表示を変える
+        $follows_of_access_user = User_follower::where("follower_id", $user->id)
             ->select("follow_id")
-            // ->where("follower_id", $user->id)
-            // ->with("user_info")
             ->get()
             ->map(function ($row) {
                 return $row->follow_id;
             })
-            // ->all()
-            ->toArray()
-            ;
-
-        // var_dump($follows_of_access_user);
-        // var_dump($followers_of_page_user->first());
-        echo "<br>";
-        // var_dump($follows_of_access_user->first());
+            ->toArray();
 
         $data = [
             "user" => $user,
@@ -307,7 +313,7 @@ class UserController extends Controller
             "follows_of_access_user" => $follows_of_access_user,
         ];
 
-        // 購買履歴一覧画面の表示
+        // フォロワー一覧画面の表示
         return view("user.follower", $data);
     }
 
@@ -317,20 +323,26 @@ class UserController extends Controller
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
 
+        // フォローするユーザーのidを取得
         $follow_id = $request->follow_id;
 
+        // フォロー情報があるか検索
+        // ないときは新しいインスタンスを作る
         $user_follower = User_follower::firstOrNew([
             "follow_id" => $follow_id,
             "follower_id" => $user->id,
         ]);
 
+        // DBに保存する値
         $values = [
             "follow_id" => $follow_id,
             "follower_id" => $user->id,
         ];
 
+        // DBに保存
         $user_follower->fill($values)->save();
 
+        // JSにフォローしたユーザーのidを返す
         $data = [
             "follow_id" => $follow_id,
         ];
@@ -338,17 +350,21 @@ class UserController extends Controller
         return $data;
     }
 
+    // 解除するボタンが押された時の処理
     public function unfollow(Request $request)
     {
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
 
+        // 削除するユーザーのidを取得
         $follow_id = $request->follow_id;
 
+        // DBからフォロー情報を削除
         User_follower::where("follow_id", $follow_id)
             ->where("follower_id", $user->id)
             ->delete();
 
+        // JSに削除したユーザーのidを返す
         $data = [
             "follow_id" => $follow_id,
         ];
@@ -356,37 +372,51 @@ class UserController extends Controller
         return $data;
     }
 
-    // フォローするボタンが押されたときの処理
-    // public function follow(Request $request)
-    // {
-    //     // セッションからuserインスタンスを受け取る
-    //     $user = unserialize($request->session()->get("user"));
-        
-    //     $follow_id = $request->id;
+    // フォロー一覧画面の表示
+    public function followIndex(Request $request)
+    {
+        // セッションからuserインスタンスを受け取る
+        $user = unserialize($request->session()->get("user"));
 
-    //     $user_follower = new User_follower;
+        // ページのユーザーがフォローしているユーザーを検索する
+        // user_infosとjoinして取り出す
+        // idカラムが重複するので、user_infosのidをuser_idとする
+        $follows_of_page_user = User_follower::where("follower_id", $request->id)
+            ->join("user_infos", "follow_id", "=", "user_infos.id")
+            ->select("*", "user_infos.id as user_id")
+            ->get();
 
-    //     $values = [
-    //         "follow_id" => $follow_id,
-    //         "follower_id" => $user->id,
-    //     ];
-        
-        
-    //     // 購買履歴一覧画面の表示
-    //     return view("user.follower", $data);
-    // }
+        // アクセスしたユーザーがフォローしている人を検索する
+        // フォローしているユーザーのidを取り出し、配列に格納する
+        // アクセスしたユーザーがフォローしているかで、フォローボタン等の表示を変える
+        $follows_of_access_user = User_follower::where("follower_id", $user->id)
+            ->select("follow_id")
+            ->get()
+            ->map(function ($row) {
+                return $row->follow_id;
+            })
+            ->toArray();
 
+        $data = [
+            "user" => $user,
+            "follows_of_page_user" => $follows_of_page_user,
+            "follows_of_access_user" => $follows_of_access_user,
+        ];
 
+        // フォロー一覧画面の表示
+        return view("user.follow", $data);
+    }
+
+    // ユーザー情報変更画面の表示
     public function editIndex(Request $request)
     {
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
 
-        $user->user_info->name;
-
         $data = [
-        "user" => $user,
-        "msg" => ""
+            "user" => $user,
+            // msgの初期値
+            "msg" => ""
         ];
 
         // リダイレクト時のmsgの代入
@@ -394,17 +424,20 @@ class UserController extends Controller
             $data["msg"] = $request->old("msg");
         }
 
+        // ユーザー情報変更画面の表示
         return view("user.edit", $data);
     }
 
+    // ユーザー情報変更処理
     public function editUser(Request $request)
     {
         // バリデーションチェック
 
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
+        // $user = User::where("id", $request->id)->first();
         $user_info = User_info::where("id", $user->id)->first();
-
+        
         // usersに保存する値
         $user_form = [
             "email" => $request->email,
@@ -427,41 +460,75 @@ class UserController extends Controller
         $user->fill($user_form)->save();
         $user_info->fill($user_info_form)->save();
 
+        // セッションのuserインスタンスを更新
+        $request->session()->put("user", serialize($user));
+
         $data = [
+            // 変更完了メッセージ
             "msg" => "変更しました"
         ];
 
+        // ユーザー情報変更画面へリダイレクト
         return redirect("user/edit/". $user->id)->withInput($data);   
     }
 
+    // ユーザープロフィール画面の表示
     public function showIndex(Request $request)
     {
-        // $user = unserialize($request->session()->get("user"));
-        $user = User::where("id", $request->id)->first();
+        
+        $access_user = unserialize($request->session()->get("user"));
+        $page_user = User::where("id", $request->id)->first();
 
         //  平均評価を計算し、代入
-        $average_seller_point = $user->getAverageSellerPoint();
-        $average_customer_point = $user->getAverageCustomerPoint();
+        $average_seller_point = $page_user->getAverageSellerPoint();
+        $average_customer_point = $page_user->getAverageCustomerPoint();
 
         // フォロー数とフォロワー数を計算
-        $follower_count = User_follower::where("follow_id", $user->id)->count();
-        $follow_count = User_follower::where("follower_id", $user->id)->count();
+        $follower_count = User_follower::where("follow_id", $page_user->id)->count();
+        $follow_count = User_follower::where("follower_id", $page_user->id)->count();
 
         // ユーザーが出品した商品の中から、現在出品中の物を検索
-        $exhibited_items = Item::where("user_id", $user->id)
+        $exhibited_items = Item::where("user_id", $page_user->id)
                     ->where("onsale", 1)
                     ->with(["item_info", "item_photo"])
                     ->get();
 
+                    
+        // ログイン状態であるかを判別
+        if ($access_user) {
+            // アクセスしたユーザーがページのユーザーをフォローしているかを検索
+            // フォローしていないときはnullになる
+            $user_follower = User_follower::where("follow_id", $page_user->id)
+                ->where("follower_id", $access_user->id)
+                ->first();
+            
+            if ($access_user->id == $page_user->id) {
+                // アクセスしたユーザーとページのユーザーが一緒の時はフォローボタンを表示しない
+                $follow_flg = "myself";
+            } elseif ($user_follower) {
+                // アクセスしたユーザーがページのユーザーをフォローしているときは解除ボタンの表示
+                $follow_flg = "unfollow";
+            } else {
+                // アクセスしたユーザーがページのユーザーをフォローしていないときはフォローボタンの表示
+                $follow_flg = "follow";
+            }
+        } else {
+            // ログイン状態じゃないとき
+            $follow_flg = "guest";
+        }
+
         $data = [
-            "user" => $user,
+            "page_user_id" => $request->id,
+            "user" => $page_user,
             "average_seller_point" => $average_seller_point,
             "average_customer_point" => $average_customer_point,
+            "follow_flg" => $follow_flg,
             "follow_count" => $follow_count,
             "follower_count" => $follower_count,
             "exhibited_items" =>$exhibited_items,
         ];
 
+        // ユーザープロフィール画面の表示
         return view("user.show", $data);
     }
 }

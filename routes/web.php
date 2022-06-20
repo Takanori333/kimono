@@ -6,6 +6,7 @@ use App\Http\Controllers\StylistController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FleamarketController;
+use App\Http\Controllers\ManagerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,7 @@ Route::post('/stylist/confirm',[StylistController::class,'confirm']);
 Route::get('/stylist/show/{id}',[StylistController::class,'stylist_info']);
 // ユーザー
 Route::get('/user/signin',[UserController::class,'signinIndex']);
+Route::get('/user/signout',[UserController::class,'signout']);
 Route::get('/user/signup',function(){
     return view('user.signup');
 });
@@ -79,8 +81,28 @@ Route::post('/chat/stylist_user_get_message',[ChatController::class,'stylist_use
 Route::post('/make_reserve',[ChatController::class,'make_reserve']);
 
 // フリマ関連
-Route::get('/fleamarket', [FleamarketController::class, 'index']);
+Route::get('/fleamarket', [FleamarketController::class, 'index'])->name('fleamarket');;
 Route::get('/fleamarket/exhibit/new', [FleamarketController::class, 'createIndex']);
 Route::post('/fleamarket/exhibit/confirm', [FleamarketController::class, 'createConfirm']);
 Route::post('/fleamarket/exhibit/done', [FleamarketController::class, 'create']);
+Route::get('/fleamarket/edit/{id}', [FleamarketController::class, 'edit']);
+Route::post('/fleamarket/edit/{id}', [FleamarketController::class, 'editConfirm']);
+Route::post('/fleamarket/update/{id}', [FleamarketController::class, 'editDone']);
+Route::get('/fleamarket/search', [FleamarketController::class, 'search']);
+
+// 管理者
+Route::get('/manager',[ManagerController::class,'index']);
+Route::get('/manager/user',[ManagerController::class,'userManageIndex']);
+Route::get('/manager/user/delete',[ManagerController::class,'deleteUser']);
+Route::get('/manager/user/recover',[ManagerController::class,'recoverUser']);
+Route::get('/manager/item',[ManagerController::class,'itemManageIndex']);
+Route::get('/manager/item/delete',[ManagerController::class,'deleteItem']);
+Route::get('/manager/item/recover',[ManagerController::class,'recoverItem']);
+Route::get('/manager/stylist',[ManagerController::class,'stylistManageIndex']);
+Route::get('/manager/faq',[ManagerController::class,'faqManageIndex']);
+Route::get('/manager/faq/edit/{id}',[ManagerController::class,'editFaq']);
+Route::get('/manager/faq',[ManagerController::class,'createFaq']);
+
+
+
 

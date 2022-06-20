@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
     <style>
@@ -49,8 +50,24 @@
     {{-- <p>id:{{ $user->id }}</p> --}}
     <a href="{{ asset('/user/show/' . $user->id) }}">{{ $user->user_info->name }}</a>
     <br>
-    <a href="{{ asset('/user/follow/' . $user->id) }}">フォロー</a>{{ $follow_count }}
-    <a href="{{ asset('/user/follower/' . $user->id) }}">フォロワー</a>{{ $follower_count }}
+    {{-- {{ $follow_flg }} --}}
+    {{-- アクセスしたユーザーがフォローしているかを確認 --}}
+    @if ($follow_flg == "myself")
+        {{-- ユーザーがアクセスしたユーザー自身の時は何も表示しない --}}
+    @elseif ($follow_flg == "follow")
+        {{-- フォローしていないときはフォローボタンの表示 --}}
+        <button value="{{ $page_user_id }}" id="{{ $page_user_id }}" class="follow">フォローする</button>
+    @elseif ($follow_flg == "unfollow")
+        {{-- フォローしているときは解除ボタンの表示 --}}
+        <button value="{{ $page_user_id }}" id="{{ $page_user_id }}" class="unfollow" >解除</button>
+    @elseif ($follow_flg == "guest")
+        {{-- ログイン状態でないときは何も表示しない --}}
+    @endif
+    <br>
+    <a href="{{ asset('/user/follow/' . $user->id) }}">フォロー</a>
+    <span name="follow_count" id="follow_count">{{ $follow_count }}</span>
+    <a href="{{ asset('/user/follower/' . $user->id) }}">フォロワー</a>
+    <span name="follower_count" id="follower_count">{{ $follower_count }}</span>
     <br>
     <span>購入者評価{{ $average_seller_point }}</span>
     <div class="Stars" id="star" style="--rating: {{ $average_seller_point }};"></div>
@@ -72,5 +89,49 @@
     @else
         <p>出品している商品はありません</p>
     @endif
+    <script>
+        $(function(){
+            $("button").click(function(){
+                let class_name = $(this).attr("class");
+                let follow_id = $(this).val();
+                let follower_count = $("#follower_count").text();
+                // フォローするボタンが押されたとき
+                if (class_name == "follow") {
+                    $.ajax({
+                        type: "get",
+                        url: "/user/follow_DB",
+                        data: {"follow_id": follow_id},
+                        dataType: "json"
+                    }).done(function(data){
+                        // ボタンを解除するボタンをに変更
+                        $("#" + data.follow_id).removeClass('follow');
+                        $("#" + data.follow_id).addClass('unfollow');
+                        $("#" + data.follow_id).text("解除");
+                        // フォロワー数を更新
+                        $("#follower_count").text(Number(follower_count) + 1);
+                    }).fail(function(XMLHttpRequest, textStatus, error){
+                        console.log(error);
+                    })
+                // 解除するボタンが押されたとき
+                } else {
+                    $.ajax({
+                        type: "get",
+                        url: "/user/unfollow_DB",
+                        data: {"follow_id": follow_id},
+                        dataType: "json"
+                    }).done(function(data){
+                        // ボタンをフォローするボタンをに変更
+                        $("#" + data.follow_id).removeClass('unfollow');
+                        $("#" + data.follow_id).addClass('follow');
+                        $("#" + data.follow_id).text("フォローする");
+                        // フォロワー数を更新
+                        $("#follower_count").text(Number(follower_count) - 1);
+                    }).fail(function(XMLHttpRequest, textStatus, error){
+                        console.log(error);
+                    })
+                }
+            })
+        })
+    </script>
 </body>
 </html>

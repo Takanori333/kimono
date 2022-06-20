@@ -27,13 +27,13 @@ class User_follower extends Model
         return $follow_count;
     }
     
-    public function user()
-    {
-        return $this->belongsTo(User::class, "follower_id");
-    }
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class, "follower_id");
+    // }
 
-    public function user_info()
-    {
-        return $this->belongsTo(User_info::class, "follower_id", "id");
-    }
+    // public function user_info()
+    // {
+    //     return $this->belongsTo(User_info::class, "follower_id", "id");
+    // }
 }

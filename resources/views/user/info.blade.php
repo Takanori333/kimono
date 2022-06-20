@@ -69,7 +69,7 @@
                 女
             @endif
         </p>
-        <p>生年月日{{  str_replace('-', '/', $user->user_info->birthday) }}</p>
+        <p>生年月日{{ str_replace('-', '/', $user->user_info->birthday) }}</p>
         <p>身長
             @if ($user->user_info->height)
                 {{ $user->user_info->height }}

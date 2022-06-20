@@ -14,6 +14,7 @@
 </head>
 <body>
     @php
+    use Illuminate\Support\Carbon;
     $stylist = unserialize(session()->get("stylist"));
     $state_list = [
         "北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県",
@@ -98,7 +99,12 @@
                                 @endforeach
                             </div>
                         </div>
-    
+                        <br>
+                        <div class="row">
+                           <div class="col-4">料金範囲:</div>
+                           <div class="col-4"><input type="number" class="form-control" name="min_price" value="{{ $stylist->getMin_price() }}" placeholder="最低料金"></div>
+                           <div class="col-4"><input type="number" class="form-control" name="max_price" value="{{ $stylist->getMax_price() }}" placeholder="最高料金"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 col-xxl-2 col-lg-2 col-md-2 col-xl-2">
@@ -135,9 +141,9 @@
                                 <div class="alert-danger"></div>
                                 <label for="exampleInputEmail1" class="form-label">生年月日</label>
                                 <div class="row">
-                                    <div class="col-4"><input type="text" class="form-control" placeholder="年"></div>
-                                    <div class="col-4"><input type="text" class="form-control" placeholder="月"></div>
-                                    <div class="col-4"><input type="text" class="form-control" placeholder="日"></div>
+                                    <div class="col-4"><input type="text" class="form-control" name="year" placeholder="年" value="{{Carbon::parse($stylist->getBirthday())->format('Y')}}"></div>
+                                    <div class="col-4"><input type="text" class="form-control" name="month" placeholder="月" value="{{Carbon::parse($stylist->getBirthday())->format('m')}}"></div>
+                                    <div class="col-4"><input type="text" class="form-control" name="day" placeholder="日" value="{{Carbon::parse($stylist->getBirthday())->format('d')}}"></div>
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -153,7 +159,6 @@
             </div>
             <div class="text-center"><button class="btn-primary">更新</button></div>
         </div>
-    
     </form>
 </body>
 </html>

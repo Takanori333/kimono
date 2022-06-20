@@ -11,9 +11,11 @@
     <title>スタイリスト一覧</title>
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./css/my-sheet.css">
+    <link rel="stylesheet" href="{{ asset('/css/my-sheet.css') }}">
     <!-- CDN読み込み -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"></head>
+    {{-- 星マーク --}}
+    <link rel="stylesheet" href="{{ asset('/css/star.css') }}">
 <body>
   @php
     $stylist = unserialize(session()->get("stylist"));
@@ -27,50 +29,72 @@
   @endphp
     <div class="container">
       <div class="contents pt-5 mt-5 w-100 mx-auto text-center">
-        <div class="row">
-          <div class="col-12 col-xl-3 col-xxl-3">
-            <div class="input-group m-3 p-1 mx-auto">
-              <input type="text" class="form-control" placeholder="検索する">
-              <button class="btn btn-outline-secondary" type="button" id="button-addon2">
-                  <i class="bi bi-search"></i>
-              </button>
-            </div>            
-          </div>
-          <div class="col" style="align-self: center">
-            <select name="" id="">
-              <option value="0" selected disabled>活動場所</option>
-              @foreach ($state_list as $state)
-                  <option value="{{ $state }}">{{ $state }}</option>
-              @endforeach
-            </select>
-          </div>
+        <form action="{{ asset("/stylist") }}" method="GET" id="bar_form">
+          @csrf
+          <div class="row">
+            <div class="col-12 col-xl-3 col-xxl-3">
+              <div class="input-group m-3 p-1 mx-auto">
+                <input type="text" class="form-control" placeholder="検索する">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                    <i class="bi bi-search"></i>
+                </button>
+              </div>            
+            </div>
+            <div class="col" style="align-self: center">
+              <select name="area" id="" onchange="form_submit()">
+                <option value="" selected>活動場所</option>
+                @foreach ($state_list as $state)
+                    <option value="{{ $state }}"
+                      @if ($state == $area)
+                          selected
+                      @endif
+                    >{{ $state }}</option>
+                @endforeach
+              </select>
+            </div>
 
-          <div class="col" style="align-self: center">
-            <select name="" id="">
-              <option value="0" selected disabled>サービスメニュー</option>
-              @foreach ($service_list as $s)
-                  <option value="{{ $s }}">{{ $s }}</option>
-              @endforeach
-            </select>
-          </div>
+            <div class="col" style="align-self: center">
+              <select name="service" id="" onchange="form_submit()">
+                <option  value="" selected>サービスメニュー</option>
+                @foreach ($service_list as $s)
+                <option value="{{ $s }}" 
+                  @if ($service==$s)
+                    selected
+                  @endif
+                >{{ $s }}</option>
+                @endforeach
+              </select>
+            </div>
 
-          <div class="col" style="align-self: center">
-            <select name="" id="">
-              <option value="0" disabled selected>ソート順</option>
-              <option value="price">料金順</option>
-              <option value="comment">評価順</option>
-            </select>
+            <div class="col" style="align-self: center">
+              <select name="sort" id="" onchange="form_submit()">
+                <option value="" selected>ソート順</option>                
+                <option value="min_price" @if ($sort=="min_price")
+                    selected
+                @endif>料金順</option>
+                <option value="point" @if ($sort=="point")
+                    selected
+                @endif>評価順</option>
+              </select>
+            </div>
           </div>
-        </div>
-
+        </form>
         <div class="row">
         @foreach ($stylist_list as $stylist)
           <div class="col my-4 col-xl-4 col-xxl-4" style="text-align: -webkit-center;">
               <div class="card" style="width: 18rem;" >
-                <a href="{{ asset('/stylist/show/'.$stylist->id) }}" style="text-decoration: none">
+                <a class="link-dark" href="{{ asset('/stylist/show/'.$stylist->id) }}" style="text-decoration: none" target="_blank">
                   <img src="{{ asset($stylist->icon) }}" class="card-img-top" alt="" height="300px" width="250px">
                   <div class="card-body">
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <p class="card-text mb-1">{{ $stylist->name }}</p>
+                    @if ($stylist->point)
+                      <div class="col Stars card-text mb-1" style='--rating: {{$stylist->point}};' aria-label='Rating of this product is {{$stylist->point}} out of 5.'></div>
+                    @else
+                    <p class="card-text mb-1 text-end">-</p>                        
+                    @endif
+                    <p class="card-text mb-1 text-end">￥{{ $stylist->min_price?$stylist->min_price."~".$stylist->max_price : "-"}}</p>
+                    <p class="card-text mb-1 text-start border-bottom">{{ $stylist->service }}</p>
+                    <p class="card-text mb-1 text-start">{{ $stylist->area }}</p>
                   </div>
                 </a>
               </div>
@@ -80,15 +104,11 @@
       </div>
     </div>
 
-
-        {{-- {{ $stylist_list->links() }}
-    {{ var_dump($stylist_list) }} --}}
-
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
         @if ($stylist_list->currentpage()-1)
           <li class="page-item">
-              <a class="page-link border-0" href="{{ $stylist_list->previousPageUrl() }}" aria-label="Previous">
+              <a class="page-link border-0" href="{{ $stylist_list->previousPageUrl() }}" aria-label="Previous" >
                   <span aria-hidden="true" class="link-secondary">&#8249;</span>
               </a>
           </li>
@@ -105,27 +125,10 @@
           @endif
       </ul>
     </nav>
-    
-    {{-- <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-            @if ($stylist_list->currentpage()-1)
-                <li class="page-item">
-                    <a class="page-link border-0" href="{{ $stylist_list->previousPageUrl() }}" aria-label="Previous">
-                    <span aria-hidden="true" class="link-secondary">&#8249;</span>
-                    </a>                    
-                </li>          
-                <li class="page-item"><a class="page-link" href="{{ $stylist_list->previousPageUrl() }}">{{ $stylist_list->currentPage() -1}}</a></li>
-            @endif
-          <li class="page-item active"><span class="page-link">{{ $stylist_list->currentPage() }}</span></li>
-          @if ($stylist_list->currentpage()!=$stylist_list->lastPage())
-          <li class="page-item"><a class="page-link" href="{{  $stylist_list->nextPageUrl()}}">{{ $stylist_list->currentPage() +1}}</a></li>
-          <li class="page-item">
-            <a class="page-link" href="{{  $stylist_list->nextPageUrl()}}" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>              
-          @endif
-        </ul>
-      </nav> --}}
+    <script>
+      function form_submit(){
+        document.getElementById('bar_form').submit();
+      }
+    </script>
 </body>
 </html>

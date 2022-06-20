@@ -10,28 +10,69 @@
     <title>スタイリスト一覧</title>
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./css/my-sheet.css">
+    <link rel="stylesheet" href="{{ asset('/css/my-sheet.css') }}">
     <!-- CDN読み込み -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"></head>
-
+    {{-- 星マーク --}}
+    <link rel="stylesheet" href="{{ asset('/css/star.css') }}">
     <title>Document</title>
 </head>
 <body>
-    {{ var_dump($areas) }}
     <div class="container">
         <div class="contents pt-5 mt-5 w-75 mx-auto text-center">
-
+            <div class="row text-end">
+                <a href="{{ asset('/user/stylist_chat/'.$stylist->id) }}">チャット</a>
+            </div>
             <div class="row my-4">
                 <div class="col-12 col-xl-4 col-xxl-4">
                     <img src="{{ asset($stylist->icon) }}" alt="" height="300px" width="250px">
                 </div>
-                <div class="col-12 col-xl-8 col-xxl-8">
-                    <div class="container">
-                        <div class="row">名前:{{ $stylist->name }}</div>
-                        <div class="row">地域:</div>
-                        <div class="row"></div>
-                        <div class="row"></div>
-                        <div class="row"></div>
+                <div class="col-12 col-xl-8 col-xxl-8 ">
+                    <div class="container ml-2 d-grid gap-3 fs-4">
+                        <div class="row border-bottom">
+                            <div class="col text-start">
+                                名前:
+                            </div>
+                            <div class="col text-start">
+                                {{ $stylist->name }}
+                            </div>
+                        </div>
+                        <div class="row border-bottom">
+                            <div class="col text-start">
+                                地域:
+                            </div>
+                            <div class="col text-start">
+                                {{ $areas }}
+                            </div>
+                        </div>
+                        <div class="row border-bottom">
+                            <div class="col text-start">
+                                料金
+                            </div>
+                            <div class="col text-start">
+                                ￥{{ $stylist->min_price }}~{{ $stylist->min_price }}
+                            </div>
+                        </div>
+                        <div class="row border-bottom">
+                            <div class="col text-start">
+                                評価:
+                            </div>
+                            <div class="col text-start">
+                              @if ($stylist->point)
+                                <div class="col Stars card-text mb-1 fs-2" style='--rating: {{$stylist->point}};' aria-label='Rating of this product is {{$stylist->point}} out of 5.'></div>
+                              @else
+                                <p class="card-text mb-1 text-end">-</p>                        
+                              @endif
+                            </div>
+                        </div>
+                        <div class="row border-bottom">
+                            <div class="col text-start">
+                                サービス:
+                            </div>
+                            <div class="col text-start">
+                                {{ $services }}
+                            </div>
+                        </div>
                     </div>
                 </div>                
             </div>

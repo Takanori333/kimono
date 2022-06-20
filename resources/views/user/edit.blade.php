@@ -50,6 +50,7 @@
             <input type="text" value="{{ $user->password }}" name="password">
             <br>
             <a href="{{ asset('/user/info/' . $user->id) }}">戻る</a>
+            <input type="hidden" name="id" value="{{ $user->id }}">
             <input type="submit" name="signup" value="確定">
         </form>
     </div>
