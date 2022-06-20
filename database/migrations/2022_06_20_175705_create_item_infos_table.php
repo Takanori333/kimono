@@ -16,13 +16,14 @@ class CreateItemInfosTable extends Migration
         Schema::create('item_infos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 20);
-            $table->string('detail', 200);
+            $table->text('detail')->nullable();
             $table->integer('price');
             $table->string('category', 50);
             $table->string('material', 50);
             $table->string('item_status', 50);
             $table->string('smell', 50);
             $table->string('color', 50);
+            $table->string('area', 50);
             $table->double('height', 8, 2);
             $table->double('length', 8, 2);
             $table->double('sleeve', 8, 2);

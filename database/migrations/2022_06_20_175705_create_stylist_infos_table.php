@@ -22,6 +22,9 @@ class CreateStylistInfosTable extends Migration
             $table->string('phone', 20);
             $table->string('post', 7);
             $table->string('icon', 100);
+            $table->integer('min_price')->nullable();
+            $table->integer('max_price')->nullable();
+            $table->double('point')->default(0);
             $table->timestamps();
         });
     }
