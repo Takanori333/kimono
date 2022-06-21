@@ -46,6 +46,7 @@ Route::post('/stylist_user/freetime_DB',[StylistUserController::class,'freetime_
 Route::post('/stylist_user/delete_freetime_DB',[StylistUserController::class,'delete_freetime_DB']);
 Route::post('/stylist_user/change_status',[StylistUserController::class,'change_status']);
 Route::get('/stylist_user/chat',[StylistUserController::class,'chat']);
+Route::post('/stylist_user/get_customer',[StylistUserController::class,'get_customer']);
 //スタイリスト
 Route::get('/stylist',[StylistController::class,'top']);
 Route::get('/stylist/book/{reserve_id}',[StylistController::class,'reserve']);
@@ -72,11 +73,13 @@ Route::get('/user/unfollow_DB',[UserController::class,'unfollow']);
 Route::get('/user/edit/{id}',[UserController::class,'editIndex']);
 Route::post('/user/edit_DB',[UserController::class,'editUser']);
 Route::get('/user/show/{id}',[UserController::class,'showIndex']);
+Route::get('/faq',[UserController::class,'faq']);
 
 Route::get('/user/stylist_chat/{id}',[UserController::class,'chat_stylist']);
 Route::get('/user/trade_chat/{item_id}',[UserController::class,'chat_trade']);
 //チャット（データベースに保存）
 Route::post('/chat/insert_stylist',[ChatController::class,'insert_stylist']);
+Route::post('/chat/insert_trade',[ChatController::class,'insert_trade']);
 Route::post('/chat/stylist_user_get_message',[ChatController::class,'stylist_user_get_message']);
 Route::post('/make_reserve',[ChatController::class,'make_reserve']);
 
@@ -89,9 +92,15 @@ Route::get('/fleamarket/edit/{id}', [FleamarketController::class, 'edit']);
 Route::post('/fleamarket/edit/{id}', [FleamarketController::class, 'editConfirm']);
 Route::post('/fleamarket/update/{id}', [FleamarketController::class, 'editDone']);
 Route::get('/fleamarket/search', [FleamarketController::class, 'search']);
+Route::get('/fleamarket/item/{id}', [FleamarketController::class, 'show']);
+Route::post('/fleamarket/item/{id}/upload/comment', [FleamarketController::class, 'uploadComment']);
+Route::get('/fleamarket/purchase/{id}', [FleamarketController::class, 'purchase']);
+
 
 // 管理者
 Route::get('/manager',[ManagerController::class,'index']);
+Route::get('/manager/signin',[ManagerController::class,'signinIndex']);
+Route::post('/manager/signin_DB',[ManagerController::class,'signin']);
 Route::get('/manager/user',[ManagerController::class,'userManageIndex']);
 Route::get('/manager/user/delete',[ManagerController::class,'deleteUser']);
 Route::get('/manager/user/recover',[ManagerController::class,'recoverUser']);
@@ -99,9 +108,16 @@ Route::get('/manager/item',[ManagerController::class,'itemManageIndex']);
 Route::get('/manager/item/delete',[ManagerController::class,'deleteItem']);
 Route::get('/manager/item/recover',[ManagerController::class,'recoverItem']);
 Route::get('/manager/stylist',[ManagerController::class,'stylistManageIndex']);
+Route::get('/manager/stylist/delete',[ManagerController::class,'deleteStylist']);
+Route::get('/manager/stylist/recover',[ManagerController::class,'recoverStylist']);
 Route::get('/manager/faq',[ManagerController::class,'faqManageIndex']);
-Route::get('/manager/faq/edit/{id}',[ManagerController::class,'editFaq']);
-Route::get('/manager/faq',[ManagerController::class,'createFaq']);
+Route::get('/manager/faq/edit/{id}',[ManagerController::class,'editFaqIndex']);
+Route::get('/manager/faq/edit_DB',[ManagerController::class,'editFaq']);
+Route::get('/manager/faq/create',[ManagerController::class,'createFaqIndex']);
+Route::get('/manager/faq/create_DB',[ManagerController::class,'createFaq']);
+Route::get('/manager/faq/delete',[ManagerController::class,'deleteFaq']);
+Route::get('/manager/faq/recover',[ManagerController::class,'recoverFaq']);
+
 
 
 

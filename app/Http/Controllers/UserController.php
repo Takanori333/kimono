@@ -8,6 +8,10 @@ use App\Models\User_follower;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use App\Functions\ChatFunction;
+use App\Http\Requests\SigninRequest;
+use App\Http\Requests\SignupRequest;
+use App\Http\Requests\UserEditRequest;
+use App\Models\Faq;
 use App\Models\Item;
 use App\Models\Item_history;
 use App\Models\Stylist_history;
@@ -34,7 +38,7 @@ class UserController extends Controller
     }
 
     // サインインの処理
-    public function signin(Request $request)
+    public function signin(SigninRequest $request)
     {
         // バリデーションチェック
 
@@ -43,7 +47,9 @@ class UserController extends Controller
         $input_password = $request->password;
 
         // 入力されたemailに一致するものをusersから取り出す
-        $user = User::where("email", $input_email)->first();
+        $user = User::where("email", $input_email)
+            ->where("exist", 1)
+            ->first();
 
         // flgの初期値
         $flg = true;
@@ -84,48 +90,52 @@ class UserController extends Controller
         // return redirect();
     }
 
-    // サインアップの処理
-    public function signup(Request $request)
+    public function signup(Request $request) 
     {
-        // バリデーションチェック
-
-        $user = new User();
-        $user_info = new User_info();
-
-        // usersに保存する値
-        $user_form = [
-            "email" => $request->email,
-            "password" => $request->password,
-        ];
-
-        // user_infosに保存する値
-        $user_info_form = [
-            "name" => $request->name,
-            "address" => $request->address,
-            "sex" => $request->sex,
-            // heightはnullable
-            "height" => $request->height,
-            "phone" => $request->phone,
-            "post" => $request->post,
-            "birthday" => $request->year . "-" . $request->month . "-" . $request->day,
-        ];
-
-        // DBに保存
-        $user->fill($user_form)->save();
-        $user_info->fill($user_info_form)->save();
-
-        // 登録したユーザーのidを代入
-        $user = User::where("email", $request->email)->first();
-
-        // セッションにuserのインスタンスを格納
-        $request->session()->put("user", serialize($user));
-
-        // フリマトップページへリダイレクト
-        // return redirect("/fleamarket ");
-
-        // 今は、フリマトップページができていないので、ユーザー情報画面にリダイレクト
-        return redirect("user/info/$user->id");
+        $icon_path = $request->file("icon")->store("image");
+        echo $icon_path;
     }
+
+    // // サインアップの処理
+    // public function signup(SignupRequest $request)
+    // {
+    //     $user = new User();
+    //     $user_info = new User_info();
+
+    //     // usersに保存する値
+    //     $user_form = [
+    //         "email" => $request->email,
+    //         "password" => $request->password,
+    //     ];
+
+    //     // user_infosに保存する値
+    //     $user_info_form = [
+    //         "name" => $request->name,
+    //         "address" => $request->address,
+    //         "sex" => $request->sex,
+    //         "icon" => "image/".$request->file("icon")->store(""),
+    //         "height" => $request->height,
+    //         "phone" => $request->phone,
+    //         "post" => $request->post,
+    //         "birthday" => $request->year . "-" . $request->month . "-" . $request->day,
+    //     ];
+
+    //     // DBに保存
+    //     $user->fill($user_form)->save();
+    //     $user_info->fill($user_info_form)->save();
+
+    //     // 登録したユーザーのidを代入
+    //     $user = User::where("email", $request->email)->first();
+
+    //     // セッションにuserのインスタンスを格納
+    //     $request->session()->put("user", serialize($user));
+
+    //     // フリマトップページへリダイレクト
+    //     // return redirect("/fleamarket ");
+
+    //     // 今は、フリマトップページができていないので、ユーザー情報画面にリダイレクト
+    //     return redirect("user/info/$user->id");
+    // }
 
     // ユーザー情報ページの表示
     public function infoIndex(Request $request)
@@ -134,8 +144,8 @@ class UserController extends Controller
         $user = unserialize($request->session()->get("user"));
 
         //  平均評価を計算し、代入
-        $average_seller_point = $user->getAverageSellerPoint();
-        $average_customer_point = $user->getAverageCustomerPoint();
+        // $average_seller_point = $user->getAverageSellerPoint();
+        // $average_customer_point = $user->getAverageCustomerPoint();
 
         // フォロー数とフォロワー数を計算
         $follower_count = User_follower::where("follow_id", $user->id)->count();
@@ -143,8 +153,8 @@ class UserController extends Controller
 
         $data = [
             "user" => $user,
-            "average_seller_point" => $average_seller_point,
-            "average_customer_point" => $average_customer_point,
+            // "average_seller_point" => $average_seller_point,
+            // "average_customer_point" => $average_customer_point,
             "follow_count" => $follow_count,
             "follower_count" => $follower_count,
         ];
@@ -156,8 +166,9 @@ class UserController extends Controller
     function chat_stylist($id){
         $chat_f = new ChatFunction();
         $message_list = $chat_f->stylist_customer_get_message($id);
-        return view("user.chat_stylist",compact('message_list'));
-    }
+        $stylist_info = $chat_f->stylist_customer_get_info($id);
+        return view("user.chat_stylist",["message_list"=>$message_list,"stylist_info"=>$stylist_info]);
+}
 
     // 出品商品一覧画面の表示
     public function exhibitedIndex(Request $request)
@@ -429,44 +440,55 @@ class UserController extends Controller
     }
 
     // ユーザー情報変更処理
-    public function editUser(Request $request)
+    public function editUser(UserEditRequest $request)
     {
-        // バリデーションチェック
-
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
-        // $user = User::where("id", $request->id)->first();
-        $user_info = User_info::where("id", $user->id)->first();
-        
-        // usersに保存する値
-        $user_form = [
-            "email" => $request->email,
-            "password" => $request->password,
-        ];
 
-        // user_infosに保存する値
-        $user_info_form = [
-            "name" => $request->name,
-            "address" => $request->address,
-            "sex" => $request->sex,
-            // heightはnullable
-            "height" => $request->height,
-            "phone" => $request->phone,
-            "post" => $request->post,
-            "birthday" => $request->year . "-" . $request->month . "-" . $request->day,
-        ];
+        // バリデーションチェック
+        $user_count = User::where("email", $request->email)
+            ->where("id", "!=", $user->id)    
+            ->count();
 
-        // DBに保存
-        $user->fill($user_form)->save();
-        $user_info->fill($user_info_form)->save();
-
-        // セッションのuserインスタンスを更新
-        $request->session()->put("user", serialize($user));
-
-        $data = [
-            // 変更完了メッセージ
-            "msg" => "変更しました"
-        ];
+        if (!$user_count) {
+            // $user = User::where("id", $request->id)->first();
+            $user_info = User_info::where("id", $user->id)->first();
+            
+            // usersに保存する値
+            $user_form = [
+                "email" => $request->email,
+                "password" => $request->password,
+            ];
+    
+            // user_infosに保存する値
+            $user_info_form = [
+                "name" => $request->name,
+                "address" => $request->address,
+                "sex" => $request->sex,
+                // heightはnullable
+                "height" => $request->height,
+                "phone" => $request->phone,
+                "post" => $request->post,
+                "birthday" => $request->year . "-" . $request->month . "-" . $request->day,
+            ];
+    
+            // DBに保存
+            $user->fill($user_form)->save();
+            $user_info->fill($user_info_form)->save();
+    
+            // セッションのuserインスタンスを更新
+            $request->session()->put("user", serialize($user));
+    
+            $data = [
+                // 変更完了メッセージ
+                "msg" => "変更しました"
+            ];
+        } else {
+            $data = [
+                // エラーメッセージ
+                "msg" => "そのメールアドレスは既に使用されています"
+            ];
+        }
 
         // ユーザー情報変更画面へリダイレクト
         return redirect("user/edit/". $user->id)->withInput($data);   
@@ -479,9 +501,9 @@ class UserController extends Controller
         $access_user = unserialize($request->session()->get("user"));
         $page_user = User::where("id", $request->id)->first();
 
-        //  平均評価を計算し、代入
-        $average_seller_point = $page_user->getAverageSellerPoint();
-        $average_customer_point = $page_user->getAverageCustomerPoint();
+        // //  平均評価を計算し、代入
+        // $average_seller_point = $page_user->getAverageSellerPoint();
+        // $average_customer_point = $page_user->getAverageCustomerPoint();
 
         // フォロー数とフォロワー数を計算
         $follower_count = User_follower::where("follow_id", $page_user->id)->count();
@@ -520,8 +542,8 @@ class UserController extends Controller
         $data = [
             "page_user_id" => $request->id,
             "user" => $page_user,
-            "average_seller_point" => $average_seller_point,
-            "average_customer_point" => $average_customer_point,
+            // "average_seller_point" => $average_seller_point,
+            // "average_customer_point" => $average_customer_point,
             "follow_flg" => $follow_flg,
             "follow_count" => $follow_count,
             "follower_count" => $follower_count,
@@ -530,5 +552,16 @@ class UserController extends Controller
 
         // ユーザープロフィール画面の表示
         return view("user.show", $data);
+    }
+
+    public function faq()
+    {
+        $faqs = Faq::where("exist", 1)->get();
+
+        $data = [
+            "faqs" => $faqs,
+        ];
+
+        return view("user.faq", $data);
     }
 }

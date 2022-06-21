@@ -58,53 +58,53 @@ class User extends Authenticatable
         return $this->hasMany(Seller_assessment::class, "to_id");
     }
 
-    public function getAverageSellerPoint()
-    {
-        // 販売者の合計評価点の初期値
-        $all_seller_point = 0;
-        $count = 0;
+    // public function getAverageSellerPoint()
+    // {
+    //     // 販売者の合計評価点の初期値
+    //     $all_seller_point = 0;
+    //     $count = 0;
 
-        // 販売者の評価点を取り出し、all_seller_pointに加算
-        foreach ($this->seller_assessment as $seller_assessment)
-        {
-            $all_seller_point += $seller_assessment->point;
-            $count++;
-        }
+    //     // 販売者の評価点を取り出し、all_seller_pointに加算
+    //     foreach ($this->seller_assessment as $seller_assessment)
+    //     {
+    //         $all_seller_point += $seller_assessment->point;
+    //         $count++;
+    //     }
 
-        // 評価がされていないとき、countが0なのでエラーがでる
-        if ($count) {
-            // 販売者の平均評価の計算
-            $average_seller_point = round($all_seller_point / $count, 1);
-        } else {
-            $average_seller_point = 0;
-        }
+    //     // 評価がされていないとき、countが0なのでエラーがでる
+    //     if ($count) {
+    //         // 販売者の平均評価の計算
+    //         $average_seller_point = round($all_seller_point / $count, 1);
+    //     } else {
+    //         $average_seller_point = 0;
+    //     }
 
-        return $average_seller_point;
-    }
+    //     return $average_seller_point;
+    // }
 
-    public function getAverageCustomerPoint()
-    {
-        // 販売者の合計評価点の初期値
-        $all_customer_point = 0;
-        $count = 0;
+    // public function getAverageCustomerPoint()
+    // {
+    //     // 販売者の合計評価点の初期値
+    //     $all_customer_point = 0;
+    //     $count = 0;
 
-        // 販売者の評価点を取り出し、all_customer_pointに加算
-        foreach ($this->customer_assessment as $customer_assessment)
-        {
-            $all_customer_point += $customer_assessment->point;
-            $count++;
-        }
+    //     // 販売者の評価点を取り出し、all_customer_pointに加算
+    //     foreach ($this->customer_assessment as $customer_assessment)
+    //     {
+    //         $all_customer_point += $customer_assessment->point;
+    //         $count++;
+    //     }
 
-        // 評価がされていないとき、countが0なのでエラーがでる
-        if ($count) {
-            // 販売者の平均評価の計算
-            $average_customer_point = round($all_customer_point / $count, 1);
-        } else {
-            $average_customer_point = 0;
-        }
+    //     // 評価がされていないとき、countが0なのでエラーがでる
+    //     if ($count) {
+    //         // 販売者の平均評価の計算
+    //         $average_customer_point = round($all_customer_point / $count, 1);
+    //     } else {
+    //         $average_customer_point = 0;
+    //     }
 
-        return $average_customer_point;
-    }
+    //     return $average_customer_point;
+    // }
 
     
 

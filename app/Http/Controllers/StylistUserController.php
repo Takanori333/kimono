@@ -102,4 +102,10 @@ class StylistUserController extends Controller
         return view('stylist_user.chat',['customer_list'=>$customer_list,'service'=>$service]);
     }
 
+    function get_customer(){
+        $chat_f = new ChatFunction();
+        $customer_list = $chat_f->stylist_customer_list();
+        return $customer_list;
+    }
+
 }

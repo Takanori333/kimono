@@ -25,17 +25,17 @@
             <p>{{ $user->user_info->post }}</p>
             <p>{{ $user->user_info->address }}</p>
             @if ($user->exist)
-                <button id="delete{{ $user->id }}" value="{{ $user->id }}" name="delete">削除</button>
-                <button id="recover{{ $user->id }}" value="{{ $user->id }}" name="recover" disabled>復旧</button>
+                <button id="delete{{ $user->id }}" value="{{ $user->id }}" class="manage" name="delete">削除</button>
+                <button id="recover{{ $user->id }}" value="{{ $user->id }}" class="manage" name="recover" disabled>復旧</button>
             @else
-                <button id="delete{{ $user->id }}" value="{{ $user->id }}" name="delete" disabled>削除</button>
-                <button id="recover{{ $user->id }}" value="{{ $user->id }}" name="recover">復旧</button>
+                <button id="delete{{ $user->id }}" value="{{ $user->id }}" class="manage" name="delete" disabled>削除</button>
+                <button id="recover{{ $user->id }}" value="{{ $user->id }}" class="manage" name="recover">復旧</button>
             @endif
         </div>
     @endforeach
     <script>
         $(function(){
-            $("button").click(function(){
+            $(".manage").click(function(){
                 let name = $(this).attr("name");
                 let user_id = $(this).val();
                 if (name == "delete") {

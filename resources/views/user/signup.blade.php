@@ -8,26 +8,35 @@
 </head>
 <body>
     <h1>新規登録</h1>
-    <form action="{{ asset('/user/signup_DB') }}" method="post">
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <span>{{ $error }}</span>
+            <br>
+        @endforeach
+    @endif
+    <form action="{{ asset('/user/signup_DB') }}" method="post" enctype="multipart/form-data">
         @csrf
         名前
-        <input type="text" name="name">
+        <input type="text" name="name" value="{{ old('name') }}">
         <br>
         メールアドレス
-        <input type="text" name="email">
+        <input type="text" name="email" value="{{ old('email') }}">
         <br>
         メールアドレス確認
-        <input type="text" name="emai_confirmation">
+        <input type="text" name="email_confirmation" value="{{ old('email_confirmation') }}">
         <br>
         電話番号
-        <input type="text" name="phone">
+        <input type="text" name="phone" value="{{ old('phone') }}">
         <br>
         性別
         <input type="radio" name="sex" value="1" checked>男
         <input type="radio" name="sex" value="0">女
         <br>
         生年月日
-        <select name="year" id="">
+        <input type="text" name="year" value="{{ old('year') }}" placeholder="年">
+        <input type="text" name="month" value="{{ old('month') }}" placeholder="月">
+        <input type="text" name="day" value="{{ old('day') }}" placeholder="日">
+        {{-- <select name="year" id="">
             @for ($year = 1900; $year <= date("Y"); $year++)
                 <option value="{{ $year }}">{{ $year }}</option>
             @endfor
@@ -41,22 +50,25 @@
             @for ($day = 1; $day <= 31; $day++)
                 <option value="{{ $day }}">{{ $day }}</option>
             @endfor
-        </select>日
+        </select>日 --}}
         <br>
         郵便番号
-        <input type="text" name="post">
+        <input type="text" name="post" value="{{ old('post') }}">
         <br>
         住所
-        <textarea name="address" id="" cols="30" rows="10"></textarea>
+        <textarea name="address" id="" cols="30" rows="10">{{ old('address') }}</textarea>
         <br>
         身長
-        <input type="text" name="height">
+        <input type="text" name="height" value="{{ old('height') }}">
         <br>
         パスワード
         <input type="text" name="password">
         <br>
         パスワード確認
         <input type="text" name="password_confirmation">
+        <br>
+        アイコン
+        <input type="file" name="icon">
         <br>
         <input type="submit" name="signup" value="登録">
     </form>

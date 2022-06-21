@@ -69,11 +69,11 @@
     <a href="{{ asset('/user/follower/' . $user->id) }}">フォロワー</a>
     <span name="follower_count" id="follower_count">{{ $follower_count }}</span>
     <br>
-    <span>購入者評価{{ $average_seller_point }}</span>
-    <div class="Stars" id="star" style="--rating: {{ $average_seller_point }};"></div>
+    <span>購入者評価{{ round($user->seller_assessment->avg("point"), 1) }}</span>
+    <div class="Stars" id="star" style="--rating: {{ round($user->seller_assessment->avg("point"), 1) }};"></div>
     <br>
-    <span>販売者評価{{ $average_customer_point }}</span>
-    <div class="Stars" id="star" style="--rating: {{ $average_customer_point }};"></div>
+    <span>販売者評価{{ round($user->customer_assessment->avg("point"), 1) }}</span>
+    <div class="Stars" id="star" style="--rating: {{ round($user->customer_assessment->avg("point"), 1) }};"></div>
     <br>
     <h2>商品一覧</h2>
     <a href="{{ asset('/user/sold/'. $user->id) }}">過去の商品を見る</a>

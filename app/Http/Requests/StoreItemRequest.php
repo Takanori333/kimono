@@ -48,44 +48,59 @@ class StoreItemRequest extends FormRequest
             'name.required' => ':attributeが記入されていません',
             'name.string' => ':attributeが正しくありません',
             'name.max:20' => '20 文字以下で入力してください',
+
             'image.required' => ':attributeが選択されていません',
             'image.image' => ':attributeが正しくありません',
+            
             'category.required' => ':attributeが入力されていません',
             'category.string' => ':attributeが正しくありません',
             'category.max:50' => '50 文字以下で入力してください',
+            
             'price.required' => ':attributeが記入されていません',
             'price.integer' => ':attributeは数字で入力してください',
             'price.gte' => '1 円以上で入力してください',
             'price.lte:9999999' => '999 万 9999 円以下で入力してください',
+            
             'pref.required' => ':attributeが指定されていません',
             'pref.in' => '都道府県が正しくありません',
+            
             'material.required' => ':attributeが記入されていません',
             'material.string' => ':attributeが正しくありません',
             'material.max:50' => '50 文字以下で入力してください',
+            
             'color.required' => ':attributeが記入されていません',
             'color.max:50' => '50 文字以下で入力してください',
+            
             'status.required' => ':attributeが記入されていません',
             'status.max:50' => '50 文字以下で入力してください',
+            
             'smell.required' => ':attributeが記入されていません',
             'smell.max:50' => '50 文字以下で入力してください',
+            
             'size_height.required' => ':attributeが記入されていません',
             'size_height.numeric' => ':attributeは数字で入力してください',
             'size_height.regex' => '0.00m から 9.99m の範囲で入力してください',
+            
             'size_length.required' => ':attributeが記入されていません',
             'size_length.numeric' => ':attributeは数字で入力してください',
             'size_length.regex' => '0.00m から 9.99m の範囲で入力してください',
+            
             'size_sleeve.required' => ':attributeが記入されていません',
             'size_sleeve.numeric' => ':attributeは数字で入力してください',
             'size_sleeve.regex' => '0.00m から 9.99m の範囲で入力してください',
+            
             'size_sleeves.required' => ':attributeが記入されていません',
             'size_sleeves.numeric' => ':attributeは数字で入力してください',
             'size_sleeves.regex' => '0.00m から 9.99m の範囲で入力してください',
+            
             'size_front.required' => ':attributeが記入されていません',
             'size_front.numeric' => ':attributeは数字で入力してください',
             'size_front.regex' => '0.00m から 9.99m の範囲で入力してください',
+            
             'size_back.required' => ':attributeが記入されていません',
             'size_back.numeric' => ':attributeは数字で入力してください',
             'size_back.regex' => '0.00m から 9.99m の範囲で入力してください',
+            
             'detail.max:200' => '200 文字以下で入力してください',
         ];
     }

@@ -8,10 +8,16 @@
 </head>
 <body>
     <h1>サインイン</h1>
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <span>{{ $error }}</span>
+            <br>
+        @endforeach
+    @endif
     {{ $msg }}
     <form action="{{ asset('/user/signin_DB') }}" method="post">
         @csrf
-        <input type="text" name="email"><br>
+        <input type="text" name="email" value="{{ old('email') }}"><br>
         <input type="text" name="password"><br>
         <input type="submit" name="singin" id="" value="サインイン">
     </form>

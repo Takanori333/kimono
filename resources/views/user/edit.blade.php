@@ -8,10 +8,18 @@
 </head>
 <body>
     <h1>登録情報変更</h1>
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <span>{{ $error }}</span>
+            <br>
+        @endforeach
+    @endif
     {{ $msg }}
     <div>
-        <form action="{{ asset('/user/edit_DB') }}" method="post">
+        <form action="{{ asset('/user/edit_DB') }}" method="post" enctype="multipart/form-data">
             @csrf
+            <img src="{{ asset($user->user_info->icon) }}" alt="">
+            <br>
             名前
             <input type="text" value="{{ $user->user_info->name }}" name="name">
             <br>
@@ -49,7 +57,7 @@
             パスワード
             <input type="text" value="{{ $user->password }}" name="password">
             <br>
-            <a href="{{ asset('/user/info/' . $user->id) }}">戻る</a>
+            <button type="button" onclick="location.href='{{ asset('/user/info/' . $user->id) }}'">戻る</button>
             <input type="hidden" name="id" value="{{ $user->id }}">
             <input type="submit" name="signup" value="確定">
         </form>

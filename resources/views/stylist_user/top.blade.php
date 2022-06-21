@@ -9,9 +9,10 @@
     <script src="{{ asset('/js/jquery.js') }}"></script>
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/css/my-sheet.css') }}">
-    <title>Document</title>
+    <title>スタイリストトップ</title>
 </head>
 <body>
+    @include('stylist_user.header')
     @php
         use Illuminate\Support\Carbon;
         $stylist = unserialize(session()->get("stylist"));        
@@ -65,7 +66,7 @@
         </div>
     </div> --}}
 
-    <div class="container pt-5">
+    <div class="container pt-5 mt-5">
         <div class="row">
             <div class="col-12 col-xxl-1   col-xl-1">
             </div>
@@ -178,7 +179,7 @@
             </div>
         </div>
     </div>
-
+    @include('stylist_user.footer')
     <script src="{{ asset('/js/stylist_top.js') }}"></script>
 </body>
 </html>

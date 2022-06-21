@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>情報編集</title>
     <script src="{{ asset('/js/jquery.js') }}"></script>
     <script src="{{ asset('/js/stylist_update.js') }}"></script>    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ asset('/css/my-sheet.css') }}">
 </head>
 <body>
+    @include('stylist_user.header')
     @php
     use Illuminate\Support\Carbon;
     $stylist = unserialize(session()->get("stylist"));
@@ -28,7 +29,7 @@
         @csrf
         <input type="hidden" value="{{ $stylist->getId() }}" name="id">
         <div class="container pt-5">
-            <div class="row">
+            <div class="row pt-5">
                 <div class="col-12 col-xxl-1 col-lg-1 col-md-1  col-xl-1">
                 </div>
                 <div class="col-12 col-xxl-4 col-lg-4 col-md-4  col-xl-4">
@@ -157,8 +158,9 @@
                     </div>
                 </div>
             </div>
-            <div class="text-center"><button class="btn-primary">更新</button></div>
+            <div class="text-center"><button class="btn btn-outline-secondary">更新</button></div>
         </div>
     </form>
+    @include('stylist_user.footer')
 </body>
 </html>

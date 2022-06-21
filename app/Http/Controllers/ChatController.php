@@ -18,11 +18,16 @@ class ChatController extends Controller
         $message_list = $chat_f->stylist_user_get_message($request);
         return $message_list;
     }
-
+    //予約を作る
     function make_reserve(Request &$request){
         $chat_f = new ChatFunction();
         $url = $chat_f->make_reserve($request);
         return $url;
     }
-
+    //フリーマチャットのメッセージをデータベースに挿入する
+    function insert_trade(Request &$request){
+        $chat_f = new ChatFunction();
+        $chat_f->insert_item_chats($request);
+    }
+    
 }

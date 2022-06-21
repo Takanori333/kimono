@@ -3,33 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use  App\Classes\ImageSave;
+use App\Http\Requests\StoreItemCommentRequest;
 use App\Http\Requests\StoreItemRequest;
+use App\Http\Requests\PurchaseItemRequest;
+use  App\Classes\SelectItem;
+use  App\Classes\ImageSave;
 use App\Models\Item;
 use App\Models\Item_info;
 use App\Models\Item_photo;
+use App\Models\Item_comment;
+use App\Models\User_info;
 use Illuminate\Support\Facades\DB;
 
 class FleamarketController extends Controller
 {
     // 4-1
     public function index(){
-        // 全ユーザー閲覧可能
-        
-        
-        // フリマの全商品を取得する
-        $temp_infos = Item::join('item_infos', 'items.id', '=' ,'item_infos.id')
-        ->select('items.user_id', 'item_infos.*')
-        ->get()
-        ->toArray();
-        // 画像ファイルを全て配列に格納する
-        $item_infos = array();
-        foreach( $temp_infos as $temp_info ){
-            $item_images = Item_photo::where('item_id', '=', $temp_info['id'])->get()->toArray();
-            $temp_info['image'] = $item_images;
-            $item_infos[] = $temp_info;
-        }
-
+        $item_infos = SelectItem::getAllItemInfos();
         // viewを返す
         return view('fleamarket.index', compact('item_infos'));
     }
@@ -37,70 +27,56 @@ class FleamarketController extends Controller
     // 4-2
     public function search(Request $request){
         $keyword = $request->all();
+        $item_infos = SelectItem::getSearchedItemInfos($keyword);
 
-        // 検索ワードの前処理
-        $keyword = $keyword['keyword'];
-        //1.全角スペースを半角スペースに変換
-        $keyword = str_replace('　', ' ', $keyword);
-        //2.前後のスペース削除（trimの対象半角スペースのみなので半角スペースに変換後行う）
-        $keyword = trim($keyword);
-        //3.連続する半角スペースを半角スペースひとつに変換
-        $keyword = preg_replace('/\s+/', ' ', $keyword);
-        $keywords = explode(' ', $keyword);
-
-
-        // AND検索
-        // 全ての商品を取得する
-        $item_infos = Item::join('item_infos', 'items.id', '=' ,'item_infos.id')
-        ->select('items.user_id', 'item_infos.*')
-        ->get()
-        ->toArray();
-        // 検索対象のカラムを設定
-        $columns = [
-            'name',
-            'detail',
-            'price',
-            'category',
-            'material',
-            'item_status',
-            'smell',
-            'color'
-        ];
-        $result_items = array();
-        // 商品1つ1つにキーワードが含まれるか検索する
-        foreach( $item_infos as $item_info ){
-
-            $is_match_kw = false;
-            $id = $item_info["id"];
-            foreach( $keywords as $kw ){
-                $is_match_column = false;
-
-                // 検索用の文字列を作成する
-                $pat = '%' . addcslashes($kw, '%_\\') . '%';
-                foreach( $columns as $column ){
-                    $result = Item_info::where('id', '=', $id, 'and', $column, 'LIKE', $pat)->get();
-                    dump("3  kw: " . $kw . ", column: " . $column . " is_match:" . !$result->isEmpty());
-                    if( $is_match_column = !$result->isEmpty() ){
-                        break;
-                    }
-                }
-
-                dump("2  is_not_match:" . !$is_match_column );
-                if( $is_match_kw = !$is_match_column ){
-                    break;
-                }
-            }
-
-            dump("1  " . $is_match_kw);
-            if( $is_match_kw ){
-                // 検索結果が存在するならば、商品を配列に追加
-                $result_items[] = $item_info;
-            }
-        }
-
-        dump($result_items);
+        return view('fleamarket.search_result', compact('item_infos'));
     }
 
+    // 4-4
+    public function show($id){
+        $item_info = SelectItem::getItemInfosById($id)[0];
+        $item_comments = SelectItem::getItemCommentsById($id);
+
+        return view('fleamarket.show', compact('item_info', 'item_comments'));
+    }
+
+    // 4-4-1(コメントアップロード用)
+    public function uploadComment(StoreItemCommentRequest $request, $id){
+        $reqData = $request->validated();
+
+        // データベースにコメントを追加
+        $comment = $reqData['comment'];
+        $user_id = 1;
+        // $user_id = session('user');
+        Item_comment::create([
+            'item_id' => $id,
+            'user_id' => $user_id,
+            'text' => $comment,
+        ]);
+
+        $item_comments = SelectItem::getItemCommentsById($id);
+
+        return response()->json($item_comments);
+    }
+
+    // 4-5
+    public function purchase($id){
+        $item_info = SelectItem::getItemInfosById($id)[0];
+        // $user_info = User_info::where('id', '=', session('user'))->first()->toArray();
+        $user_info = User_info::where('id', '=', 1)->first()->toArray();
+        $item_info['user_info'] = $user_info;
+
+        return view('fleamarket.purchase', compact('item_info'));
+    }
+
+    // 4-6
+    public function purchaseConfirm(PurchaseItemRequest $request, $id){
+        $payment_way = $request->validated();
+        $item_info = SelectItem::getItemInfosById($id)[0];
+
+        dump($payment_way);
+        dump($item_info);
+    }
 
     // 4-9
     public function createIndex(){
@@ -112,7 +88,6 @@ class FleamarketController extends Controller
     // 4-10
     public function createConfirm(StoreItemRequest $request){
         $item_infos = $request->validated();
-
         return view('fleamarket.create_confirm', ['item_infos' => $item_infos]);
     }
 
@@ -145,6 +120,7 @@ class FleamarketController extends Controller
                 'item_status'   => $item_infos['status'],
                 'smell'         => $item_infos['smell'],
                 'color'         => $item_infos['color'],
+                'area'          => $item_infos['pref'],
                 'height'        => $item_infos['size_height'],
                 'length'        => $item_infos['size_length'],
                 'sleeve'        => $item_infos['size_sleeve'],
@@ -232,6 +208,7 @@ class FleamarketController extends Controller
                 'item_status'   => $item_infos['status'],
                 'smell'         => $item_infos['smell'],
                 'color'         => $item_infos['color'],
+                'area'          => $item_infos['pref'],
                 'height'        => $item_infos['size_height'],
                 'length'        => $item_infos['size_length'],
                 'sleeve'        => $item_infos['size_sleeve'],

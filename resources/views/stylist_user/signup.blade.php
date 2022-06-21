@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>和服フリマ（仮） - 新規登録</title>
+    <title>スタイリスト  新規登録</title>
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/css/my-sheet.css') }}">
@@ -16,6 +16,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 </head>
 <body>
+    <nav id="header" class="p-3">
+        <div class="p-3 fixed-top d-flex border-bottom flex-wrap w-100">
+            <h5 class="me-auto my-0 mr-mb-auto font-weight-normal p-2"><a href="{{ asset('/') }}" class="link-dark text-decoration-none h4">和服フリマ（仮）</a></h5>
+        </div>
+    </nav>
     {{-- <form action="{{ asset('/stylist_user/signup_DB') }}" method="post" enctype="multipart/form-data">
         @csrf
         email<input type="email" name="email">
@@ -41,9 +46,9 @@
         <button>サインアップ</button>
     </form> --}}
     <div class="container">
-        <div class="contents pt-5 w-75 mx-auto">
+        <div class="contents p-5 w-75 mx-auto mt-3 border_shadow">
 
-            <h2 class="text-center py-5">新規登録</h2>
+            <h2 class="text-center pb-4">新規登録</h2>
 
             <div class="">
                 <form action="{{ asset('/stylist_user/signup_DB') }}" method="post" enctype="multipart/form-data">

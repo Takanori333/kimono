@@ -167,4 +167,5 @@
             $stylist = unserialize(session()->get("stylist"));
             $status = DB::table('stylists')->where('id','=',$stylist->getId())->update(['exist'=>$request->status]);
         }
+
     }

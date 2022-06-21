@@ -64,6 +64,15 @@
             $message_list = DB::table('stylist_chats')->where('stylist_id','=',$id)->where('customer_id','=',$user_id)->get();
             return $message_list;            
         }
+
+        function stylist_customer_get_info($id){
+            // $user = unserialize(session()->get("user"));
+            // $user_id = $user->getId();
+            $user_id = 9999999;
+            $stylist_info = DB::table('stylist_infos')->where('id','=',$id)->first();
+            return $stylist_info;
+        }
+
         //スタイリストが予約を作る画面
         function make_reserve(Request &$request){
             $stylist_reserve = new Stylist_reserve();
@@ -87,7 +96,9 @@
             $buyer_id = DB::table('item_histories')->where('item_id','=',$item_id)->value('buyer_id');
             if($seller_id==$user_id||$buyer_id==$user_id){
                 $message_list = DB::table('item_chats')->where('item_id','=',$item_id)->get();
-                return $message_list;
+                $buyer_info = DB::table('user_infos')->where('id','=',$buyer_id)->first();
+                $seller_info = DB::table('user_infos')->where('id','=',$seller_id)->first();
+                return [$message_list,$buyer_info,$seller_info];
             }
             return false;
         }
@@ -95,8 +106,8 @@
         function insert_item_chats(Request &$request){
             $item_chat = new Item_chat();
             $item_chat->item_id = $request->item_id;
-            $item_chat->text = $request->text;
-            $item_chat->from = $request->message;
+            $item_chat->text = $request->message;
+            $item_chat->from = $request->from;
             $item_chat->save();
         }
     }

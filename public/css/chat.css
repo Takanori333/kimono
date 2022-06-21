@@ -10,12 +10,15 @@
     justify-content: flex-start;
     word-break: break-word;
     margin: 10px;
+    align-items: center;
+
 }
 
 .self > .inner_div{
     background: rgb(217, 245, 201);
     max-width: 60%;
     padding: 10px;
+    margin-right:10px;
     border-radius: 5px;
 }
 

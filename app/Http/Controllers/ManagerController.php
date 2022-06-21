@@ -2,12 +2,66 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FaqRequest;
+use App\Http\Requests\SigninRequest;
+use App\Models\Faq;
 use App\Models\Item;
+use App\Models\Stylist;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class ManagerController extends Controller
 {
+    public function index()
+    {
+        return view("manager.index");
+    }
+
+    // サインイン画面の表示
+    public function signinIndex(Request $request)
+    {
+        // msgの初期値
+        $data = [
+            "msg" => "",
+        ];
+
+        // リダイレクト時のmsgの代入
+        // emailとpasswordの組み合わせが違う時のエラーメッセージが入る
+        if ($request->old("msg")) {
+            $data["msg"] = $request->old("msg");
+        }
+
+        return view("manager.signin", $data);
+    }
+
+    // サインインの処理
+    public function signin(SigninRequest $request)
+    {
+        // バリデーションチェック
+
+        $manager_email = "manager@gmail.com";
+        $manager_password = "password";
+        
+        // 入力値の代入
+        $input_email = $request->email;
+        $input_password = $request->password;
+
+        if ($input_email == $manager_email and $input_password == $manager_password) {
+            // セッションにmanagerのインスタンスを格納
+            $request->session()->put("manager", "manager");
+
+            // 管理者トップページにリダイレクト
+            return redirect("/manager ");
+
+            // 今は、管理者トップページができていないので、ユーザー管理画面にリダイレクト
+            // return redirect("manager/user");
+        } else {
+            // emailとpasswordの組み合わせが正しくないとき
+            // サインイン画面にリダイレクト
+            return redirect("manager/signin")->withInput(["msg" => "メールアドレスまたはパスワードが違います"]);
+        }
+    }
+
     public function userManageIndex(Request $request)
     {
         // セッションからmanagerインスタンスを受け取る
@@ -56,7 +110,7 @@ class ManagerController extends Controller
         // $manager = unserialize($request->session()->get("manager"));
 
         $items = Item::where("onsale", "!=", "2")
-            ->with(["Item_info", "Item_photo", "user_info"])
+            ->with(["item_info", "item_photo", "user_info"])
             ->get();
 
         $data = [
@@ -93,4 +147,166 @@ class ManagerController extends Controller
 
         return $data;
     }
+
+    public function stylistManageIndex(Request $request)
+    {
+        // セッションからmanagerインスタンスを受け取る
+        // $manager = unserialize($request->session()->get("manager"));
+
+        $stylists = Stylist::where("exist", "!=", "0")
+            ->with(["stylist_info", "stylist_area", "stylist_comment"])
+            ->get();
+
+        $data = [
+            "stylists" => $stylists,
+        ];
+
+        return view("manager.stylist_manage", $data);
+    }
+
+    public function deleteStylist(Request $request)
+    {
+        $stylist_id = $request->stylist_id;
+
+        $stylist = Stylist::where("id", $stylist_id)->first();
+        $stylist->fill(["exist" => 2])->save();
+
+        $data = [
+            "stylist_id" => $stylist_id,
+        ];
+
+        return $data;
+    }
+
+    public function recoverStylist(Request $request)
+    {
+        $stylist_id = $request->stylist_id;
+
+        $stylist = Stylist::where("id", $stylist_id)->first();
+        $stylist->fill(["exist" => 1])->save();
+
+        $data = [
+            "stylist_id" => $stylist_id,
+        ];
+
+        return $data;
+    }
+
+    public function faqManageIndex(Request $request)
+    {
+        // セッションからmanagerインスタンスを受け取る
+        // $manager = unserialize($request->session()->get("manager"));
+
+        $faqs = Faq::all();
+
+        $data = [
+            "faqs" => $faqs,
+        ];
+
+        return view("manager.faq_manage", $data);
+    }
+
+    public function deleteFaq(Request $request)
+    {
+        $faq_id = $request->faq_id;
+
+        $faq = Faq::where("id", $faq_id)->first();
+        $faq->fill(["exist" => 0])->save();
+
+        $data = [
+            "faq_id" => $faq_id,
+        ];
+
+        return $data;
+    }
+
+    public function recoverFaq(Request $request)
+    {
+        $faq_id = $request->faq_id;
+
+        $faq = Faq::where("id", $faq_id)->first();
+        $faq->fill(["exist" => 1])->save();
+
+        $data = [
+            "faq_id" => $faq_id,
+        ];
+
+        return $data;
+    }
+
+    public function editFaqIndex(Request $request)
+    {
+        $faq_id = $request->id;
+        $msg = "";
+
+        // リダイレクト時のmsgの代入
+        if ($request->old("msg")) {
+            $msg = $request->old("msg");
+            $faq_id = $request->old("id");
+        }
+
+        $faq = Faq::where("id", $faq_id)->first();
+
+        $data = [
+            "msg" => $msg,
+            "faq" => $faq,
+        ];
+
+        return view("manager.faq_edit", $data);
+    }
+
+    public function editFaq(FaqRequest $request)
+    {
+        $faq_id = $request->faq_id;
+
+        $faq = Faq::where("id", $faq_id)->first();
+
+        $values = [
+            "question" => $request->question,
+            "answer" => $request->answer,
+        ];
+
+        $faq->fill($values)->save();
+        
+        $data = [
+            "msg" => "変更しました",
+            "id" => $faq_id,
+        ];
+
+        return redirect("/manager/faq/edit/" . $faq->id)->withInput($data);
+    }
+
+    public function createFaqIndex(Request $request)
+    {
+        $data = [
+            "msg" => "",
+        ];
+
+        // リダイレクト時のmsgの代入
+        if ($request->old("msg")) {
+            $data["msg"] = $request->old("msg");
+        }
+
+        return view("manager.faq_create", $data);
+    }
+
+    public function createFaq(FaqRequest $request)
+    {
+
+        $faq = new Faq;
+
+        $values = [
+            "question" => $request->question,
+            "answer" => $request->answer,
+        ];
+
+        $faq->fill($values)->save();
+        
+        $data = [
+            "msg" => "追加しました",
+        ];
+
+        return redirect("/manager/faq/create/")->withInput($data);
+    }
+
 }

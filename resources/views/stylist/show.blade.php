@@ -19,7 +19,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="contents pt-5 mt-5 w-75 mx-auto text-center">
+        <div class="contents p-5 mt-5 w-75 mx-auto text-center border_shadow">
             <div class="row text-end">
                 <a href="{{ asset('/user/stylist_chat/'.$stylist->id) }}">チャット</a>
             </div>
@@ -75,6 +75,12 @@
                         </div>
                     </div>
                 </div>                
+            </div>
+            <div class="row justify-content-center">
+                <div class="row h1 justify-content-center">レビュー</div>
+                <div class="row border overflow-auto justify-content-center align-items-center h2" style="height: 200px">
+                    レビューはありません
+                </div>
             </div>
         </div>
     </div>

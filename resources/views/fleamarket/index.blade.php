@@ -41,7 +41,7 @@
             {{ $msg }}
         @endisset
         @foreach ( $item_infos as $item_info )
-            <a href="{{asset('fleamarket/edit/' . $item_info['id'] )}}">
+            <a href="{{asset('fleamarket/item/' . $item_info['id'] )}}">
                 <div>
                     <img src="{{asset($item_info["image"][0]["path"])}}">
                     <p> 商品名: {{ $item_info["name"] }}</p>

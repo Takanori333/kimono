@@ -44,10 +44,18 @@ function make_message_other_side(message){
     let out_div = document.createElement("div");
     let inner_div = document.createElement("div");
     let pre = document.createElement("pre");
+    let img = document.createElement("img");
     out_div.classList.add("other_side");
     inner_div.classList.add("inner_div");
     pre.textContent = message;
+    img.src = other_side_icon;
+    img.width = '30px';
+    img.height = '30px';
+    img.style.borderRadius = "50%";
+    img.style.height = '30px';
+    img.style.width = '30px';
     inner_div.appendChild(pre);
+    out_div.appendChild(img);
     out_div.appendChild(inner_div);    
     message_box.appendChild(out_div);
 }

@@ -5,7 +5,12 @@
     let csrf = document.getElementById('csrf').value;
     let message_body = document.getElementById("message");    
     let message_box = document.getElementById('message_box');
+    let customer_list_box = document.getElementById('customer_list_box');
+    let customer_info_box = document.getElementById('customer_info');
+    let customer_list;
+    let customer_info;
     socket.emit('stylist_join',stylist_id);
+    //textareaにshift+enterキーでメッセージ送信
     message_body.addEventListener('keyup',function(e){
         if(e.shiftKey){
             if(e.keyCode==13){
@@ -13,6 +18,7 @@
             }
         }
     })
+    //socketサーバーとデータベースにメッセージを送信
     function sendMsg(){
         if(message_body.value){
             socket.emit('stylist_send',{stylist_id:stylist_id,customer_id:customer_id,message:message_body.value});
@@ -30,6 +36,7 @@
             message_body.value = "";
         }        
     }
+    //予約のurlを送信する
     function sendUrl(reserve){
         socket.emit('stylist_send',{stylist_id:stylist_id,customer_id:customer_id,message:reserve});
         $.ajax({
@@ -44,25 +51,82 @@
             }
         })
     }
+    //自分が送ったメッセージを表示する
     socket.on('from_stylist',function(msg){
         make_message_stylist(msg);
         scrollToBottom();
     })
+    //顧客からのメッセージを表示する
     socket.on('from_customer',function(msg){
         make_message_customer(msg);
         scrollToBottom();
     })
+    //顧客の一覧を獲得する
+    function get_customer_list(){
+        $.ajax({
+            url:customer_list_url,
+            type:'POST',
+            data:{"_token":customer_csrf},
+            success:function(c_list){
+                $(customer_list_box).empty();
+                // let index = 0;
+                customer_list = c_list;
+                for(let i=0;i<c_list.length;i++){
+                    let customer = c_list[i];
+                    let li = document.createElement("li");
+                    let a = document.createElement("a");
+                    let img = document.createElement("img");
+                    let p = document.createElement("p");
+                    a.classList.add("dropdown-item");
+                    a.classList.add("customer_item");
+                    a.classList.add("d-flex");
+                    a.classList.add("align-items-center");
+                    a.href = "javascript:void(0);";
+                    a.addEventListener("click",function(){
+                        change_customer_message('http://192.168.10.209:8000/chat/stylist_user_get_message',customer_csrf,customer.id,i);                        
+                    })
+                    img.src = 'http://192.168.10.209:8000/' + customer.icon;
+                    img.width = '30px';
+                    img.height = '30px';
+                    img.style.borderRadius = "50%";
+                    img.style.height = '30px';
+                    img.style.width = '30px';
+                    p.textContent = customer.name + ":" + customer.readed;
+                    p.style.margin = "0";
+                    a.appendChild(img);
+                    a.appendChild(p);
+                    li.appendChild(a);
+                    customer_list_box.appendChild(li);
+                    // index++;
+                    // console.log(customer);
+                }
+            },
+            error:function(msg){
+                console.log(msg);
+            }
+        })
+    }
+    //顧客からのメッセージを画面に表示する
     function make_message_customer(message){
         let out_div = document.createElement("div");
         let inner_div = document.createElement("div");
         let pre = document.createElement("pre");
+        let img = document.createElement("img");
         out_div.classList.add("other_side");
         inner_div.classList.add("inner_div");
         pre.textContent = message;
+        img.src = 'http://192.168.10.209:8000/' + customer_info.icon;
+        img.width = '30px';
+        img.height = '30px';
+        img.style.borderRadius = "50%";
+        img.style.height = '30px';
+        img.style.width = '30px';
         inner_div.appendChild(pre);
+        out_div.appendChild(img);
         out_div.appendChild(inner_div);    
         message_box.appendChild(out_div);
     }
+    //自分が送ったメッセージを画面に表示する
     function make_message_stylist(message){
         let out_div = document.createElement("div");
         let inner_div = document.createElement("div");
@@ -74,13 +138,16 @@
         out_div.appendChild(inner_div);    
         message_box.appendChild(out_div);
     }
-    function change_customer_message(url,csrf,id){
+    //選択した顧客のメッセージを表示する
+    function change_customer_message(url,csrf,id,index){
         $.ajax({
             url:url,
             type:"post",
             data:{"_token":csrf,customer_id:id},
             success:function(msg_list){
                 $(message_box).empty();
+                customer_id=id;         
+                customer_info = customer_list[index];
                 for(msg of msg_list){
                     // console.log(msg);
                     if(msg['from']==0){
@@ -89,14 +156,43 @@
                         make_message_customer(msg['text']);
                     }
                 }
-                customer_id=id;                
                 scrollToBottom();
+                change_customer_info();
+                get_customer_list();
             },
             error:function(msg){
                 console.log(msg);
             }
         })
     }
+    //選択した顧客の情報を表示する
+    function change_customer_info(){
+        $(customer_info_box).empty();
+        let a = document.createElement("a");
+        let img = document.createElement("img");
+        let p = document.createElement("p");
+        a.classList.add("d-flex");
+        a.classList.add("link-dark");
+        a.classList.add("text-decoration-none");
+        a.classList.add("h5");
+        a.href = 'http://192.168.10.209:8000/user/show/' + customer_info.id;
+        a.target = '_blank';
+        img.src = 'http://192.168.10.209:8000/' + customer_info.icon;
+        img.width = '30px';
+        img.height = '30px';
+        img.style.borderRadius = "50%";
+        img.style.height = '30px';
+        img.style.width = '30px';
+        p.textContent = " " + customer_info.name;
+        a.appendChild(img);
+        a.appendChild(p);
+        customer_info_box.appendChild(a);
+    }
+    //scrollbarを常に一番下に表示する
+    function scrollToBottom(){
+        message_box.scrollTo(0,message_box.scrollHeight);
+    }
+    //予約を作る画面で、選択したサービスを追加する
     function insert_service(e){
         let area = document.getElementById("service_area");
         let out_div = document.createElement('div');
@@ -131,9 +227,11 @@
             }
         }
     }
+    //予約を作る画面を開く
     function open_reverse(){
         document.getElementById("reverse").style.display = "block";
     }
+    //予約を作る画面を閉じる
     function close_reverse(){
         document.getElementById("reverse_form").reset();
         $("#service_area").empty();
@@ -143,9 +241,7 @@
         }
         document.getElementById("reverse").style.display = "none";
     }
-    function scrollToBottom(){
-        message_box.scrollTo(0,message_box.scrollHeight);
-    }
+    //予約を作る
     function make_reserve(url){
         let start_time = document.getElementById("start_time").value;
         let end_time = document.getElementById("end_time").value;
@@ -164,4 +260,6 @@
             }
         })
     }
+    get_customer_list();
     $(document.getElementsByClassName('customer_item')[0]).click();
+

@@ -52,11 +52,11 @@
     <a href="{{ asset('/user/follow/' . $user->id) }}">フォロー</a>{{ $follow_count }}
     <a href="{{ asset('/user/follower/' . $user->id) }}">フォロワー</a>{{ $follower_count }}
     <br>
-    <span>購入者評価{{ $average_seller_point }}</span>
-    <div class="Stars" id="star" style="--rating: {{ $average_seller_point }};"></div>
+    <span>購入者評価{{ round($user->seller_assessment->avg("point"), 1) }}</span>
+    <div class="Stars" id="star" style="--rating: {{ round($user->seller_assessment->avg("point"), 1) }};"></div>
     <br>
-    <span>販売者評価{{ $average_customer_point }}</span>
-    <div class="Stars" id="star" style="--rating: {{ $average_customer_point }};"></div>
+    <span>販売者評価{{ round($user->customer_assessment->avg("point"), 1) }}</span>
+    <div class="Stars" id="star" style="--rating: {{ round($user->customer_assessment->avg("point"), 1) }};"></div>
     <div>
         <p>メールアドレス{{ $user->email }}</p>
         <p>電話番号{{ $user->user_info->phone }}</p>
@@ -78,14 +78,14 @@
             @endif
         </p>
     </div>
-    <a href="{{ asset('/user/exhibited/'. $user->id) }}">出品中商品</a>
+    <button onclick="location.href='{{ asset('/user/exhibited/'. $user->id) }}'">出品中商品</button>
     <br>
-    <a href="{{ asset('/user/purchased/'. $user->id) }}">商品購入履歴</a>
+    <button onclick="location.href='{{ asset('/user/purchased/'. $user->id) }}'">商品購入履歴</button>
     <br>
-    <a href="{{ asset('/user/sold/'. $user->id) }}">商品販売履歴</a>
+    <button onclick="location.href='{{ asset('/user/sold/'. $user->id) }}'">商品販売履歴</button>
     <br>
-    <a href="{{ asset('/user/ordered/'. $user->id) }}">着付け依頼履歴</a>
+    <button onclick="location.href='{{ asset('/user/ordered/'. $user->id) }}'">着付け依頼履歴</button>
     <br>
-    <a href="{{ asset('/user/edit/'. $user->id) }}">登録情報変更</a>
+    <button onclick="location.href='{{ asset('/user/edit/'. $user->id) }}'">登録情報変更</button>
 </body>
 </html>
