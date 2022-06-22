@@ -28,8 +28,28 @@
                 <a href="{{ asset('/user/stylist_chat/'.$stylist->id) }}">チャット</a>
             </div>
             <div class="row my-4">
-                <div class="col-12 col-xl-4 col-xxl-4">
-                    <img src="{{ asset($stylist->icon) }}" alt="" height="300px" width="250px">
+                <div class="col-12 col-xl-4 col-xxl-4 d-grid gap-2">
+                    <div class="row">
+                        <img src="{{ asset($stylist->icon) }}" alt="" height="300px" width="250px">
+                    </div>
+                    <div class="row text-center">
+                        <div>フォロワー人数: {{ $follower_count }}</div>
+                    </div>
+                    @if ($is_follow!=2)
+                        @if ($is_follow==1)
+                        <form action="{{ asset('/stylist/unfollow') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $stylist->id }}">
+                            <button type="submit" class="btn btn-outline-danger" >フォロー解除</button>
+                        </form>
+                        @else
+                        <form action="{{ asset('/stylist/follow') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $stylist->id }}">
+                            <button type="submit" class="btn btn-outline-secondary" >フォローする</button>                            
+                        </form>
+                        @endif
+                    @endif
                 </div>
                 <div class="col-12 col-xl-8 col-xxl-8 ">
                     <div class="container ml-2 d-grid gap-3 fs-4">
@@ -78,20 +98,20 @@
                             </div>
                         </div>
                         <div class="row border-bottom">
-                            <div class="row text-start">
-                                活動場所可能時間:
-                            </div>
-                            <div class="row text-start overflow-auto" style="max-height: 60px;">
-                                @if (isset($freetime))
-                                    1
-                                @endif
-                                @foreach ($freetime as $time)
-                                <div class="">
-                                    <div class="row text-center h6">
-                                        <div class="col-11">{{Carbon::parse($time->start_time)->format('m月d日 H時i分')}}~{{Carbon::parse($time->end_time)->format('m月d日 H時i分')}}</div>
+                            <div class="col text-start">
+                                     活動場所可能時間:
+                                <div class="row overflow-auto" style="max-height: 60px;">
+                                    @if ($freetime->isEmpty())
+                                         活動場所可能時間はありません
+                                    @endif
+                                    @foreach ($freetime as $time)
+                                    <div class="">
+                                        <div class="row text-center h6">
+                                            <div class="col-11">{{Carbon::parse($time->start_time)->format('m月d日 H時i分')}}~{{Carbon::parse($time->end_time)->format('m月d日 H時i分')}}</div>
+                                        </div>
                                     </div>
+                                    @endforeach                            
                                 </div>
-                                @endforeach                            
                             </div>
                         </div>
                     </div>

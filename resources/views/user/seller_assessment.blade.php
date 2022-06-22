@@ -25,6 +25,7 @@
                 <span>{{ $assessment_user->point }}</span>
                 <div class="Stars" id="star" style="--rating: {{ $assessment_user->point }};"></div>
                 <p>{{ $assessment_user->text }}</p>
+                <span>評価日時：{{ str_replace('-', '/', $assessment_user->assessment_date) }}</span>
             </div>
         @endforeach
     @else

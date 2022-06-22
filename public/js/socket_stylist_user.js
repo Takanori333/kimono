@@ -116,9 +116,7 @@
                     // console.log(customer);
                 }
                 if(first){
-                    $(document.getElementsByClassName('customer_item')[0]).click();
-                    console.log(document.getElementsByClassName('customer_item')[0]);
-                    console.log(1);
+                    change_customer_message('http://192.168.10.209:8000/chat/stylist_user_get_message',customer_csrf,c_list[0].id,0);
                     first = false;
                 }
             },

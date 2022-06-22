@@ -17,6 +17,16 @@
     @php
         $stylist = unserialize(session()->get("stylist"));
     @endphp
+    @if ($customer_list->isEmpty())
+        @include('stylist_user.header')
+    <div class="p-5 mb-4  rounded-3 " style="height: 500px">
+        <div class="container-fluid py-5 text-center">
+          <h1 class="display-5 fw-bold" style="color:#7a7a7a;">顧客からのメッセージはありません</h1>
+        </div>
+    </div>
+      @include('stylist_user.footer')
+
+      @else
     <div class="vh-100 min-vh-100 min-vw-100 vw-100 position-relative overflow-hidden">
         <div class="row">
             <div class="position-absolute start-0 top-0 col-12 col-lg-2 col-md-2 col-sm-2 col-xl-2 col-xxl-2" style="padding: 0">
@@ -25,13 +35,6 @@
                             顧客一覧
                         </a>
                         <ul class="dropdown-menu vh-100 min-vh-100 fixed-top w-100 overflow-auto" aria-labelledby="dropdownMenuLink" id="customer_list_box">
-                            @foreach ($customer_list as $customer)
-                            {{-- <li>
-                                <a class="dropdown-item customer_item" href="javascript:void(0);" onclick="change_customer_message('{{ asset('/chat/stylist_user_get_message')}}','{{  csrf_token()  }}','{{ $customer->id }}')">
-                                    {{ $customer->name }}{{ $customer->readed }}
-                                </a>
-                            </li>                                 --}}
-                            @endforeach
                         </ul>
                 </div>
             </div>
@@ -45,7 +48,7 @@
                     </div>
                     <div class="row border-secondary border-bottom" style="height: 61%;margin:0;display:block;overflow-y:auto;overflow-x:hidden" id="message_box"></div>
                     <div class="row border-secondary border-bottom" style="height: 7%;max-height: 100px;margin: 0;display: flex;justify-content: flex-end;">
-                        <button class="btn btn-outline-secondary" style="width: 20%;max-width: 80px;height: 80%;max-height: 40px;position: relative;padding: 0;margin: 0;align-self: center;font-size: 15px;margin-right:20px" onclick="open_reverse()">予約を作る</button>
+                        <button class="btn btn-outline-secondary" style="max-width: 120px;height: 80%;max-height: 40px;position: relative;padding: 0;margin: 0;align-self: center;font-size: 15px;margin-right:20px" onclick="open_reverse()">予約を作る</button>
                         <button class="btn btn-outline-secondary" style="width: 20%;max-width: 80px;height: 80%;max-height: 40px;position: relative;padding: 0;margin: 0;align-self: center;font-size: 15px;margin-right:20px" onclick="sendMsg()">送信</button>
                     </div>
                     <div class="row form-floating" style="height: 25%;margin:0">
@@ -123,6 +126,8 @@
         let customer_list_url = "{{ asset('/stylist_user/get_customer') }}";
         let customer_csrf = "{{  csrf_token()  }}";
     </script>
-    <script src="{{ asset('js/socket_stylist_user.js') }}"></script>
+    <script src="{{ asset('js/socket_stylist_user.js') }}"></script>        
+    @endif
+
 </body>
 </html>

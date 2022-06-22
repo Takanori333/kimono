@@ -9,11 +9,10 @@
     <title>和服フリマ（仮） - マイページ</title>
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&family=Shippori+Mincho&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/my-sheet.css') }}">
     <!-- CDN読み込み -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="{{ asset('js/header.js') }}"></script>
+    <!-- 星読み込み -->
+    <link rel="stylesheet" href="{{ asset('css/star.css') }}">
 </head>
 <body>
 

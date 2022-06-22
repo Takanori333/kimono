@@ -1,50 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('/css/star.css') }}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <title>Document</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>和服フリマ（仮） - ユーザー</title>
+    <!-- フォント読み込み -->
+    <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&family=Shippori+Mincho&display=swap" rel="stylesheet">
+    <!-- CDN読み込み -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <!-- 星読み込み -->
+    <link rel="stylesheet" href="{{ asset('css/star.css') }}">
 </head>
 <body>
-    {{-- <style>
-        @charset "UTF-8";
-        :root {
-        --star-size: 30px;
-        --star-color: #fff;
-        --star-background: #fc0;
-        }
 
-        .Stars {
-        --percent: calc(var(--rating) / 5 * 100%);
-        display: inline-block;
-        font-size: var(--star-size);
-        font-family: Times;
-        line-height: 1;
-        }
-        .Stars::before {
-        content: "★★★★★";
-        letter-spacing: 3px;
-        background: linear-gradient(90deg, var(--star-background) var(--percent), var(--star-color) var(--percent));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        }
-
-        /* body {
-        background: #eee;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        } */
-
-        * {
-        position: relative;
-        box-sizing: border-box;
-        }
-    </style> --}}
+    @include('header')
 
     <img src="{{ asset($user->user_info->icon) }}" alt="">
     <br>
@@ -57,10 +29,10 @@
         {{-- ユーザーがアクセスしたユーザー自身の時は何も表示しない --}}
     @elseif ($follow_flg == "follow")
         {{-- フォローしていないときはフォローボタンの表示 --}}
-        <button value="{{ $page_user_id }}" id="{{ $page_user_id }}" class="follow">フォローする</button>
+        <button value="{{ $page_user_id }}" id="{{ $page_user_id }}" name="follow">フォローする</button>
     @elseif ($follow_flg == "unfollow")
         {{-- フォローしているときは解除ボタンの表示 --}}
-        <button value="{{ $page_user_id }}" id="{{ $page_user_id }}" class="unfollow" >解除</button>
+        <button value="{{ $page_user_id }}" id="{{ $page_user_id }}" name="unfollow" >解除</button>
     @elseif ($follow_flg == "guest")
         {{-- ログイン状態でないときは何も表示しない --}}
     @endif
@@ -91,43 +63,47 @@
         <p>出品している商品はありません</p>
     @endif
     <script>
-        $(function(){
-            $("button").click(function(){
-                let class_name = $(this).attr("class");
+        $(function() {
+            $("button").click(function() {
+                let name = $(this).attr("name");
                 let follow_id = $(this).val();
                 let follower_count = $("#follower_count").text();
                 // フォローするボタンが押されたとき
-                if (class_name == "follow") {
+                if (name == "follow") {
                     $.ajax({
                         type: "get",
                         url: "/user/follow_DB",
-                        data: {"follow_id": follow_id},
+                        data: {
+                            "follow_id": follow_id
+                        },
                         dataType: "json"
-                    }).done(function(data){
-                        // ボタンを解除するボタンをに変更
-                        $("#" + data.follow_id).removeClass('follow');
-                        $("#" + data.follow_id).addClass('unfollow');
+                    }).done(function(data) {
+                        // ボタンを解除するボタンに変更
+                        $("#" + data.follow_id).attr("name", "unfollow");
+                        $("#" + data.follow_id).attr("class", "btn btn-outline-secondary");
                         $("#" + data.follow_id).text("解除");
                         // フォロワー数を更新
                         $("#follower_count").text(Number(follower_count) + 1);
-                    }).fail(function(XMLHttpRequest, textStatus, error){
+                    }).fail(function(XMLHttpRequest, textStatus, error) {
                         console.log(error);
                     })
                 // 解除するボタンが押されたとき
-                } else {
+                } else if (name="unfollow"){
                     $.ajax({
                         type: "get",
                         url: "/user/unfollow_DB",
-                        data: {"follow_id": follow_id},
+                        data: {
+                            "follow_id": follow_id
+                        },
                         dataType: "json"
-                    }).done(function(data){
-                        // ボタンをフォローするボタンをに変更
-                        $("#" + data.follow_id).removeClass('unfollow');
-                        $("#" + data.follow_id).addClass('follow');
+                    }).done(function(data) {
+                        // ボタンをフォローするボタンに変更
+                        $("#" + data.follow_id).attr("name", "follow");
+                        $("#" + data.follow_id).attr("class", "btn btn-secondary");
                         $("#" + data.follow_id).text("フォローする");
                         // フォロワー数を更新
                         $("#follower_count").text(Number(follower_count) - 1);
-                    }).fail(function(XMLHttpRequest, textStatus, error){
+                    }).fail(function(XMLHttpRequest, textStatus, error) {
                         console.log(error);
                     })
                 }

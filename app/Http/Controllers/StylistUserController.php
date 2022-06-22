@@ -63,7 +63,7 @@ class StylistUserController extends Controller
     function top(){
         $s_function = new StylistUserFunction();
         $info_list = $s_function->top();
-        return view('stylist_user.top',["reserve_list"=>$info_list[0],"freetime"=>$info_list[1],"status"=>$info_list[2]]);
+        return view('stylist_user.top',["reserve_list"=>$info_list[0],"freetime"=>$info_list[1],"status"=>$info_list[2],"follower_count"=>$info_list[3]]);
     }
     //予約詳細
     function reserve_detail($id){

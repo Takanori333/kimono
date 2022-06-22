@@ -76,6 +76,7 @@
                             <img src="{{ asset($stylist->getIcon()) }}" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text"><h3>{{ $stylist->getName() }}</h3></p>
+                                <p class="card-text"><h6>フォロワー人数:{{ $follower_count }}</h6></p>
                                 <div class="card-text text-end">
                                     <a href="{{ '/stylist_user/info ' }}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                                             <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
@@ -108,6 +109,11 @@
                                         </a>
                                     </div>
                                 </li>
+                                @if ($reserve_list->isEmpty())
+                                <li class="list-group-item text-center">
+                                    <div>直近の予約はありません</div>
+                                </li>
+                                @endif
                                 @foreach ($reserve_list as $reserve)
                                 <li class="list-group-item text-center">
                                     <a href="{{ asset('/stylist_user/reserve_detail/'.$reserve->id) }}" class="dropdown-item" style="padding: 0px">
@@ -136,7 +142,13 @@
                                         </a>
                                     </div>
                                 </li>
-
+                                @if ($freetime->isEmpty())
+                                <li class="list-group-item">
+                                    <div class="row text-center">
+                                       <div> 活動場所可能時間はありません</div>
+                                    </div>
+                                </li>
+                                @endif
                                 @foreach ($freetime as $time)
 
                                 <li class="list-group-item">

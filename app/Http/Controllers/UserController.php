@@ -44,8 +44,6 @@ class UserController extends Controller
     // サインインの処理
     public function signin(SigninRequest $request)
     {
-        // バリデーションチェック
-
         // 入力値の代入
         $input_email = $request->email;
         $input_password = $request->password;
@@ -69,8 +67,6 @@ class UserController extends Controller
                 // フリマトップページにリダイレクト
                 return redirect(asset("/fleamarket"));
 
-                // 今は、フリマトップページができていないので、ユーザー情報画面にリダイレクト
-                // return redirect(asset("user/info/$user->id"));
             } else {
                 // emailとpasswordの組み合わせが正しくないときは、flgにfalseを代入
                 $flg = false;
@@ -79,10 +75,15 @@ class UserController extends Controller
             $flg = false;
         }
 
+        $data = [
+            "msg" => "メールアドレスまたはパスワードが違います",
+            "email" => $input_email,
+        ];
+
         // emailとpasswordの組み合わせが正しくないとき
         // サインイン画面にリダイレクト
         if (!$flg) {
-            return redirect(asset("user/signin"))->withInput(["msg" => "メールアドレスまたはパスワードが違います"]);
+            return redirect(asset("user/signin"))->withInput($data);
         }
     }
 
@@ -90,8 +91,8 @@ class UserController extends Controller
     public function signout(Request $request){
         $request->session()->forget('user');
 
-        // リダイレクト
-        // return redirect();
+        // フリマトップページにリダイレクト
+        return redirect(asset("/fleamarket"));
     }
 
     // サインアップの処理
@@ -129,7 +130,9 @@ class UserController extends Controller
         $user_info->fill($user_info_form)->save();
 
         // 登録したユーザーのidを代入
-        $user = User::where("email", $request->email)->first();
+        $user = User::with("user_infos", "users.id", "=", "user_infos.id")
+            ->where("email", $request->email)
+            ->first();
 
         // セッションにuserのインスタンスを格納
         $request->session()->put("user", serialize($user));
@@ -148,8 +151,14 @@ class UserController extends Controller
         $user = unserialize($request->session()->get("user"));
 
         // フォロー数とフォロワー数を計算
-        $follower_count = User_follower::where("follow_id", $user->id)->count();
-        $follow_count = User_follower::where("follower_id", $user->id)->count();
+        $follower_count = User_follower::where("follow_id", $user->id)
+            ->join("users", "user_followers.follower_id", "=", "users.id")
+            ->where("users.exist", 1)
+            ->count();
+        $follow_count = User_follower::where("follower_id", $user->id)
+            ->join("users", "user_followers.follow_id", "=", "users.id")
+            ->where("users.exist", 1)
+            ->count();
 
         $data = [
             "user" => $user,
@@ -343,23 +352,31 @@ class UserController extends Controller
         $user = unserialize($request->session()->get("user"));
         
         // ページのユーザーのことをフォローしているユーザーを検索する
-        // user_infosとjoinして取り出す
+        // user,user_infosとjoinして取り出す
         // idカラムが重複するので、user_infosのidをuser_idとする
         $followers_of_page_user = User_follower::where("follow_id", $request->id)
             ->join("user_infos", "follower_id", "=", "user_infos.id")
+            ->join("users", "follower_id", "=", "users.id")
+            ->where("users.exist", "1")
             ->select("*", "user_infos.id as user_id")
             ->get();
  
-        // アクセスしたユーザーがフォローしている人を検索する
-        // フォローしているユーザーのidを取り出し、配列に格納する
-        // アクセスしたユーザーがフォローしているかで、フォローボタン等の表示を変える
-        $follows_of_access_user = User_follower::where("follower_id", $user->id)
-            ->select("follow_id")
-            ->get()
-            ->map(function ($row) {
-                return $row->follow_id;
-            })
-            ->toArray();
+        if ($user) {
+            // アクセスしたユーザーがフォローしている人を検索する
+            // フォローしているユーザーのidを取り出し、配列に格納する
+            // アクセスしたユーザーがフォローしているかで、フォローボタン等の表示を変える
+            $follows_of_access_user = User_follower::where("follower_id", $user->id)
+                ->join("users", "follower_id", "=", "users.id")
+                ->where("users.exist", "1")
+                ->select("follow_id")
+                ->get()
+                ->map(function ($row) {
+                    return $row->follow_id;
+                })
+                ->toArray();
+        } else {
+            $follows_of_access_user = array();
+        }
 
         $data = [
             "user" => $user,
@@ -433,18 +450,23 @@ class UserController extends Controller
         $user = unserialize($request->session()->get("user"));
 
         // ページのユーザーがフォローしているユーザーを検索する
-        // user_infosとjoinして取り出す
+        // user, user_infosとjoinして取り出す
         // idカラムが重複するので、user_infosのidをuser_idとする
         $follows_of_page_user = User_follower::where("follower_id", $request->id)
             ->join("user_infos", "follow_id", "=", "user_infos.id")
+            ->join("users", "follow_id", "=", "users.id")
+            ->where("users.exist", "1")
             ->select("*", "user_infos.id as user_id")
             ->get();
 
+        
         // アクセスしたユーザーがフォローしている人を検索する
         // フォローしているユーザーのidを取り出し、配列に格納する
         // アクセスしたユーザーがフォローしているかで、フォローボタン等の表示を変える
         $follows_of_access_user = User_follower::where("follower_id", $user->id)
+            ->join("users", "follower_id", "=", "users.id")
             ->select("follow_id")
+            ->where("users.exist", "1")
             ->get()
             ->map(function ($row) {
                 return $row->follow_id;
@@ -456,6 +478,7 @@ class UserController extends Controller
             "follows_of_page_user" => $follows_of_page_user,
             "follows_of_access_user" => $follows_of_access_user,
         ];
+
 
         // フォロー一覧画面の表示
         return view("user.follow", $data);
@@ -527,7 +550,7 @@ class UserController extends Controller
     
             // セッションのuserインスタンスを更新
             $request->session()->put("user", serialize($user));
-    
+            
             $data = [
                 // 変更完了メッセージ
                 "msg" => "変更しました"
@@ -540,7 +563,7 @@ class UserController extends Controller
         }
 
         // ユーザー情報変更画面へリダイレクト
-        return redirect(asset("user/edit/". $user->id))->withInput($data);   
+        return redirect(asset("user/edit/". $user->id))->withInput($data); 
     }
 
     // ユーザープロフィール画面の表示
@@ -550,8 +573,14 @@ class UserController extends Controller
         $page_user = User::where("id", $request->id)->first();
 
         // フォロー数とフォロワー数を計算
-        $follower_count = User_follower::where("follow_id", $page_user->id)->count();
-        $follow_count = User_follower::where("follower_id", $page_user->id)->count();
+        $follower_count = User_follower::where("follow_id", $page_user->id)
+            ->join("users", "follower_id", "=", "users.id")
+            ->where("users.exist", "1")
+            ->count();
+        $follow_count = User_follower::where("follower_id", $page_user->id)
+            ->join("users", "follow_id", "=", "users.id")
+            ->where("users.exist", "1")    
+            ->count();
 
         // ユーザーが出品した商品の中から、現在出品中の物を検索
         $exhibited_items = Item::where("user_id", $page_user->id)

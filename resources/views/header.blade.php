@@ -18,9 +18,10 @@
             @else
                 @if ( session("stylist") )
                     <!-- スタイリスト用 -->
-                    <li class="nav-item"><a href="{{ asset('/stylist_user/chat') }}" class="nav-link p-2 js-header header-link">チャット</a></li>
+                    <li class="nav-item"><a href="{{  asset('/stylist_user') }}" class="nav-link p-2 js-header header-link">マイページ</a></li>
+                    {{-- <li class="nav-item"><a href="{{ asset('/stylist_user/chat') }}" class="nav-link p-2 js-header header-link">チャット</a></li>
                     <li class="nav-item"><a href="{{ asset('/stylist_user/reserve') }}" class="nav-link p-2 js-header header-link">予約状況</a></li>
-                    <li class="nav-item"><a href="{{ asset('/stylist_user/info') }}" class="nav-link p-2 js-header header-link">登録情報</a></li>
+                    <li class="nav-item"><a href="{{ asset('/stylist_user/info') }}" class="nav-link p-2 js-header header-link">登録情報</a></li> --}}
                     <li class="nav-item"><a href="{{ asset('/stylist_user/signout') }}" class="nav-link p-2 js-header header-link">ログアウト</a></li>
                 @else
                     @if ( session("manager") )

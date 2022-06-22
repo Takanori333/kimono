@@ -52,6 +52,8 @@ Route::get('/stylist',[StylistController::class,'top']);
 Route::get('/stylist/book/{reserve_id}',[StylistController::class,'reserve']);
 Route::post('/stylist/confirm',[StylistController::class,'confirm']);
 Route::get('/stylist/show/{id}',[StylistController::class,'stylist_info']);
+Route::post('/stylist/follow',[StylistController::class,'follow']);
+Route::post('/stylist/unfollow',[StylistController::class,'unfollow']);
 // ユーザー
 Route::get('/user/signin',[UserController::class,'signinIndex']);
 Route::get('/user/signout',[UserController::class,'signout']);
@@ -130,7 +132,13 @@ Route::get('/manager/faq/create_DB',[ManagerController::class,'createFaq']);
 Route::get('/manager/faq/delete',[ManagerController::class,'deleteFaq']);
 Route::get('/manager/faq/recover',[ManagerController::class,'recoverFaq']);
 
-
-
+//notfound
+Route::get('/notfound',function () {
+    return view('not_found');
+});
+//thanks
+Route::get('/thanks',function () {
+    return view('thanks');
+});
 
 

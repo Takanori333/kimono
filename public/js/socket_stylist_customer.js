@@ -31,8 +31,10 @@ function sendMsg(){
     }
 }
 socket.on('from_stylist',function(msg){
-    make_message_stylist(msg);
-    scrollToBottom();
+    if(msg[1]==stylist_id){
+        make_message_stylist(msg[0]);
+        scrollToBottom();    
+    }
 })
 socket.on('from_customer',function(msg){
     make_message_customer(msg);

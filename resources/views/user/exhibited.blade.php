@@ -89,24 +89,6 @@
         </div>
     </div>
 
-
-    {{-- <h1>出品中の商品</h1>
-    <button onclick="location.href='{{ asset('/fleamarket/exhibit/new') }}'">出品する</button>
-    <p>{{ $msg }}</p>
-    @if ($exhibited_items->isNotEmpty())
-    @foreach ($exhibited_items as $exhibited_item)
-    <div>
-        <img src="{{ asset($exhibited_item->item_photo->first()->path) }}" alt="">
-        <br>
-        <a href="{{ asset('/fleamarket/item/'. $exhibited_item->id) }}">{{ $exhibited_item->item_info->name }}</a>
-        <p>{{ number_format($exhibited_item->item_info->price) }}円</p>
-        <button onclick="location.href='{{ asset('/fleamarket/item/edit/'. $exhibited_item->id) }}'">編集する</button>
-        <button name="delete" value="{{ $exhibited_item->id }}" class="delete">削除する</button>
-    </div>
-    @endforeach
-    @else
-    <p>出品している商品はありません</p>
-    @endif --}}
     <script>
         $(function() {
             $(".delete").click(function() {
@@ -131,6 +113,24 @@
             })
         })
     </script>
+
+    {{-- <h1>出品中の商品</h1>
+    <button onclick="location.href='{{ asset('/fleamarket/exhibit/new') }}'">出品する</button>
+    <p>{{ $msg }}</p>
+    @if ($exhibited_items->isNotEmpty())
+    @foreach ($exhibited_items as $exhibited_item)
+    <div>
+        <img src="{{ asset($exhibited_item->item_photo->first()->path) }}" alt="">
+        <br>
+        <a href="{{ asset('/fleamarket/item/'. $exhibited_item->id) }}">{{ $exhibited_item->item_info->name }}</a>
+        <p>{{ number_format($exhibited_item->item_info->price) }}円</p>
+        <button onclick="location.href='{{ asset('/fleamarket/item/edit/'. $exhibited_item->id) }}'">編集する</button>
+        <button name="delete" value="{{ $exhibited_item->id }}" class="delete">削除する</button>
+    </div>
+    @endforeach
+    @else
+    <p>出品している商品はありません</p>
+    @endif --}}
 
     @include('footer')
 

@@ -37,7 +37,15 @@
         <label for="only_on_sale">販売商品のみを表示</label>
         <input type="checkbox" id="only_on_sale">
 
-        <p>カテゴリ</p>
+        {{-- カテゴリによる絞り込み --}}
+        <label for="category">カテゴリ:</label>
+        <select name="category" id="category">
+            <option value="" selected disabled>選択してください</option>
+            @foreach ( $categories as $category )
+                <option value="{{$category}}">{{$category}}</option>
+            @endforeach
+        </select>
+
         <p>ソート</p>
     </div>
     {{-- 表示件数 --}}
@@ -51,27 +59,34 @@
                 {{ $msg }}
             @endisset
         </div>
-        @foreach ( $item_infos as $item_info )
-            <div id="item_card_{{$item_info["id"]}}"
-                 data-is-on-sale="{{$item_info['onsale']==2? 'sold':'sale'}}"
-            >
-                <a href="{{asset('fleamarket/item/' . $item_info['id'] )}}">
-                    <div>
-                        <img src="{{asset($item_info["image"][0]["path"])}}">
-                        <p> 商品名: {{ $item_info["name"] }}</p>
-                        <p> 値段: {{ $item_info["price"] }}</p>
+
+        <div id="item_card_wrapper">
+            @foreach ( $item_infos as $item_info )
+                <div id="item_card_{{$item_info["id"]}}"
+                    data-is-on-sale="{{$item_info['onsale']==2? 'sold':'sale'}}"
+                    data-category="{{$item_info['category']}}"
+                >
+                    <a href="{{asset('fleamarket/item/' . $item_info['id'] )}}">
+                        <div>
+                            <img src="{{asset($item_info["image"][0]["path"])}}">
+                            <p> 商品名: {{ $item_info["name"] }}</p>
+                            <p> 値段: {{ $item_info["price"] }}</p>
+                        </div>
+                    </a>
+                    {{-- お気に入りから削除ボタン --}}
+                    <div id="favorite_btn_wrapper">
+                        <button onclick="deleteFavorite({{$item_info['id']}})">お気に入りから削除</button>
+                        {{-- メッセージ表示エリア --}}
+                        <div id="favorite_messages"></div>
                     </div>
-                </a>
-                {{-- お気に入りに追加ボタン --}}
-                <div id="favorite_btn_wrapper">
-                    <button onclick="deleteFavorite({{$item_info['id']}})">お気に入りから削除</button>
-                    {{-- メッセージ表示エリア --}}
-                    <div id="favorite_messages"></div>
                 </div>
-            </div>
-        @endforeach
+            @endforeach
+        </div>
+
     </div>
     <script>
+        let last_selected_category = '';
+
         function deleteFavorite(item_id){
             $.ajaxSetup({
                 headers: {
@@ -113,6 +128,16 @@
                     $('#' + sold_id).css('display', 'block');
                 });
             }
+        });
+
+        // カテゴリによる絞り込み
+        $('#category').change(function(){
+            let category = $('[name=category] option:selected').text();
+            if( last_selected_category !== '' ){
+                $('#item_card_wrapper > div[data-category!=' + last_selected_category + ']').css('display', 'block');
+            }
+            $('#item_card_wrapper > div[data-category!=' + category + ']').css('display', 'none');
+            last_selected_category = category;
         });
     </script>
 </body>

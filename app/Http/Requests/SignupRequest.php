@@ -25,11 +25,11 @@ class SignupRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:20',
+            'email' => 'required|email|unique:users|confirmed|max:50',
+            'phone' => 'required|digits_between:10,11|numeric',
             'year' => 'required|numeric|digits:4',
             'month' => 'required|numeric|digits_between:1,2',
             'day' => 'required|numeric|digits_between:1,2',
-            'email' => 'required|email|unique:users|confirmed|max:50',
-            'phone' => 'required|digits_between:10,11|numeric',
             'post' => 'required|digits:7|numeric',
             'address' => 'required|max:200',
             'password' => 'required|confirmed|max:20',
@@ -45,6 +45,16 @@ class SignupRequest extends FormRequest
             'name.required' => "名前が記入されていません",
             'name.string' => "名前が正しくありません",
             'name.max' => "名前は20文字以下で入力してください",
+            
+            'email.required' => "メールアドレスが記入されていません",
+            'email.email' => "メールアドレスの形式が正しくありません",
+            'email.unique' => "そのメールアドレスは既に使用されています",
+            'email.confirmed' => "メールアドレスが一致しません",
+            'email.max' => "メールアドレスは50文字以下で入力してください",
+            
+            'phone.required' => "電話番号が記入されていません",
+            'phone.digits_between' => "電話番号が正しくありません",
+            'phone.numeric' => "電話番号は数字で入力してください",
 
             'year.required' => '誕生年が記入されていません',
             'year.numeric' => '誕生年は数字で入力してください',
@@ -57,16 +67,6 @@ class SignupRequest extends FormRequest
             'day.required' => '誕生日が記入されていません',
             'day.numeric' => '誕生日は数字で入力してください',
             'day.digits_between' => '誕生日が正しくありません',
-
-            'email.required' => "メールアドレスが記入されていません",
-            'email.email' => "メールアドレスの形式が正しくありません",
-            'email.unique' => "そのメールアドレスは既に使用されています",
-            'email.confirmed' => "メールアドレスが一致しません",
-            'email.max' => "メールアドレスは50文字以下で入力してください",
-
-            'phone.required' => "電話番号が記入されていません",
-            'phone.digits_between' => "電話番号が正しくありません",
-            'phone.numeric' => "電話番号は数字で入力してください",
 
             'post.required' => "郵便番号が記入されていません",
             'post.numeric' => "郵便番号は数字で入力してください",

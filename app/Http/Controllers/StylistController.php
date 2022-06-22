@@ -17,7 +17,7 @@ class StylistController extends Controller
     function stylist_info($id){
         $s_function = new StylistFunction();
         $info = $s_function->stylist_info($id);
-        return view('stylist.show',["stylist"=>$info[0],"services"=>$info[1],"areas"=>$info[2],"freetime"=>$info[3]]);
+        return view('stylist.show',["stylist"=>$info[0],"services"=>$info[1],"areas"=>$info[2],"freetime"=>$info[3],"is_follow"=>$info[4],"follower_count"=>$info[5]]);
     }
 
     //TODO:notfound画面
@@ -28,11 +28,25 @@ class StylistController extends Controller
         if($reserve!==false){
             return view('stylist.book',compact('reserve'));
         }
+        return redirect(asset('/notfound'));
     }
     //TODO:感謝画面
     //予約を決定する
     function confirm(Request &$request){
         $s_function = new StylistFunction();
         $s_function->confirm($request);
+        return redirect(asset('/thanks'));
     }
+
+    function follow(Request &$request){
+        $s_function = new StylistFunction();
+        $s_function->follow($request);
+        return redirect(asset("/stylist/show/".$request->id));
+    }
+    function unfollow(Request &$request){
+        $s_function = new StylistFunction();
+        $s_function->unfollow($request);
+        return redirect(asset("/stylist/show/".$request->id));
+    }
+
 }

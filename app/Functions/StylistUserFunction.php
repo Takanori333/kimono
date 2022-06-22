@@ -133,7 +133,8 @@
             $reserve_list = DB::table('stylist_histories')->where("stylist_id","=",$stylist->getId())->where("end_time",">=",date("Y-m-d H:i:s"))->orderBy('start_time')->take(3)->get();
             $freetime_list = DB::table('stylist_freetimes')->where("stylist_id","=",$stylist->getId())->where("end_time",">=",date("Y-m-d H:i:s"))->orderBy('start_time')->get();
             $status = DB::table('stylists')->where('id','=',$stylist->getId())->value('exist');
-            return [$reserve_list,$freetime_list,$status];
+            $follower_count = DB::table('stylist_followers')->where('stylist_id','=',$stylist->getId())->count();
+            return [$reserve_list,$freetime_list,$status,$follower_count];
         }
         //予約の詳細を取得する
         function reserve_detail($id){

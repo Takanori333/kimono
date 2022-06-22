@@ -35,7 +35,7 @@ function stylist_customer_join(&$socket,&$io){
 //スタイリストからのメッセージをスタイリストと顧客に送る
 function stylist_send(&$socket,&$io){
     $socket->on('stylist_send',function ($msg)use ($io,$socket){
-        $io->to('stylist_customer:'.$msg['customer_id'])->emit('from_stylist',$msg['message']);
+        $io->to('stylist_customer:'.$msg['customer_id'])->emit('from_stylist',[$msg['message'],$msg['stylist_id']]);
         $socket->emit('from_stylist',$msg['message']);
     });
 }
