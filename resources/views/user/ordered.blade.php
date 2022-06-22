@@ -8,6 +8,7 @@
 </head>
 <body>
     <h1>着付け依頼履歴</h1>
+    {{-- <p>{{ now() }}</p> --}}
     @if ($order_histories->isNotEmpty())
         @foreach ($order_histories as $order_history)
             <div>
@@ -15,6 +16,19 @@
                 <p>{{ $order_history->services }}</p>
                 <p>{{ str_replace('-', '/', $order_history->created_at) }}</p>
                 <p>{{ number_format($order_history->price) }}円</p>
+                @if (now() >= $order_history->end_time)
+                    <form action="">
+                        評価
+                        <select name="point" id="">
+                            @for ($i=1;$i<=5;$i++)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
+                        <br>
+                        <input type="comment">
+                        <input type="submit" value="評価する">
+                    </form>
+                @endif
             </div>
         @endforeach
     @else

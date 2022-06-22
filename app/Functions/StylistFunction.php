@@ -72,7 +72,7 @@ use Illuminate\Http\Request;
         //予約画面
         function reserve($reserve_id){
             // $user = unserialize(session()->get("user"));
-            // $user_id = $user->getId();
+            // $user_id = $user->id;
             $user_id = 9999999;
             $reserve = DB::table('stylist_reserves')->where('reserve_id','=',$reserve_id)->first();
             var_dump($reserve);

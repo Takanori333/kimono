@@ -12,14 +12,19 @@
 
     {{-- フリマヘッダー --}}
     <div>
-        {{-- 検索窓 --}}
         <div>
+            {{-- タイトル --}}
+            <h1>検索結果一覧</h1>
             <p>検索</p>
             <form action="/fleamarket/search" method="GET">
                 <input type="text" name="keyword">
                 <input type="submit" value="🔍">
             </form>
         </div>
+        {{-- お気に入り商品閲覧ページ --}}
+        @if ( session('user') )
+            <a href="{{asset("/fleamarket/favorite")}}">お気に入り商品</a>
+        @endif
         {{-- 出品ボタン --}}
         <a href="{{asset("/fleamarket/exhibit/new")}}">出品</a>
     </div>

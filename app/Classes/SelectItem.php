@@ -12,7 +12,7 @@ class SelectItem{
     public static function getAllItemInfos(){
         // フリマの全商品を取得する
         $temp_infos = Item::join('item_infos', 'items.id', '=' ,'item_infos.id')
-        ->select('items.user_id', 'item_infos.*')
+        ->select('items.user_id', 'items.onsale', 'item_infos.*')
         ->get()
         ->toArray();
         // 画像ファイルを全て配列に格納する
@@ -110,7 +110,7 @@ class SelectItem{
     public static function getItemInfosById($id){
         // idから商品を検索する
         $temp_infos = Item::join('item_infos', 'items.id', '=' ,'item_infos.id')
-        ->select('items.user_id', 'item_infos.*')
+        ->select('items.user_id', 'items.onsale', 'item_infos.*')
         ->where('item_infos.id', '=', $id)
         ->get()
         ->toArray();

@@ -15,6 +15,7 @@ use App\Models\Faq;
 use App\Models\Item;
 use App\Models\Item_history;
 use App\Models\Stylist_history;
+use App\Models\Trade_status;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -62,10 +63,10 @@ class UserController extends Controller
                 $request->session()->put("user", serialize($user));
 
                 // フリマトップページにリダイレクト
-                // return redirect("/fleamarket ");
+                return redirect(asset("/fleamarket"));
 
                 // 今は、フリマトップページができていないので、ユーザー情報画面にリダイレクト
-                return redirect("user/info/$user->id");
+                // return redirect(asset("user/info/$user->id"));
             } else {
                 // emailとpasswordの組み合わせが正しくないときは、flgにfalseを代入
                 $flg = false;
@@ -77,7 +78,7 @@ class UserController extends Controller
         // emailとpasswordの組み合わせが正しくないとき
         // サインイン画面にリダイレクト
         if (!$flg) {
-            return redirect("user/signin")->withInput(["msg" => "メールアドレスまたはパスワードが違います"]);
+            return redirect(asset("user/signin"))->withInput(["msg" => "メールアドレスまたはパスワードが違います"]);
         }
     }
 
@@ -90,52 +91,51 @@ class UserController extends Controller
         // return redirect();
     }
 
-    public function signup(Request $request) 
+    // サインアップの処理
+    public function signup(SignupRequest $request)
     {
-        $icon_path = $request->file("icon")->store("image");
-        echo $icon_path;
+        $user = new User();
+        $user_info = new User_info();
+
+        
+        // usersに保存する値
+        $user_form = [
+            "email" => $request->email,
+            "password" => $request->password,
+        ];
+        
+        // user_infosに保存する値
+        $user_info_form = [
+            "name" => $request->name,
+            "address" => $request->address,
+            "sex" => $request->sex,
+            "height" => $request->height,
+            "phone" => $request->phone,
+            "post" => $request->post,
+            "birthday" => $request->year . "-" . $request->month . "-" . $request->day,
+        ];
+        
+        if ($request->icon) {
+            $icon_path = $request->file("icon")->store("image");
+            $user_info_form["icon"] = $icon_path;
+        }
+
+        // DBに保存
+        $user->fill($user_form)->save();
+        $user_info->fill($user_info_form)->save();
+
+        // 登録したユーザーのidを代入
+        $user = User::where("email", $request->email)->first();
+
+        // セッションにuserのインスタンスを格納
+        $request->session()->put("user", serialize($user));
+
+        // フリマトップページへリダイレクト
+        return redirect(asset("/fleamarket"));
+
+        // 今は、フリマトップページができていないので、ユーザー情報画面にリダイレクト
+        // return redirect("user/info/$user->id");
     }
-
-    // // サインアップの処理
-    // public function signup(SignupRequest $request)
-    // {
-    //     $user = new User();
-    //     $user_info = new User_info();
-
-    //     // usersに保存する値
-    //     $user_form = [
-    //         "email" => $request->email,
-    //         "password" => $request->password,
-    //     ];
-
-    //     // user_infosに保存する値
-    //     $user_info_form = [
-    //         "name" => $request->name,
-    //         "address" => $request->address,
-    //         "sex" => $request->sex,
-    //         "icon" => "image/".$request->file("icon")->store(""),
-    //         "height" => $request->height,
-    //         "phone" => $request->phone,
-    //         "post" => $request->post,
-    //         "birthday" => $request->year . "-" . $request->month . "-" . $request->day,
-    //     ];
-
-    //     // DBに保存
-    //     $user->fill($user_form)->save();
-    //     $user_info->fill($user_info_form)->save();
-
-    //     // 登録したユーザーのidを代入
-    //     $user = User::where("email", $request->email)->first();
-
-    //     // セッションにuserのインスタンスを格納
-    //     $request->session()->put("user", serialize($user));
-
-    //     // フリマトップページへリダイレクト
-    //     // return redirect("/fleamarket ");
-
-    //     // 今は、フリマトップページができていないので、ユーザー情報画面にリダイレクト
-    //     return redirect("user/info/$user->id");
-    // }
 
     // ユーザー情報ページの表示
     public function infoIndex(Request $request)
@@ -219,15 +219,21 @@ class UserController extends Controller
         ];
 
         // 出品商品一覧画面へリダイレクト
-        return redirect("user/exhibited/" . $user->id)->withInput($data);
+        return redirect(asset("user/exhibited/") . $user->id)->withInput($data);
     }
 
     //フリーマチャット画面にいく
     function chat_trade($item_id){
         $chat_f = new ChatFunction();
-        $message_list = $chat_f->chat_trade($item_id);
-        if($message_list!==false){
-            return view('user.chat_trade',compact('message_list'));
+        $chat_info_list = $chat_f->chat_trade($item_id);
+        if($chat_info_list!==false){
+            return view('user.chat_trade',[
+                'message_list'=>$chat_info_list[0],
+                'buyer_info'=>$chat_info_list[1],
+                'seller_info'=>$chat_info_list[2],
+                'status'=>$chat_info_list[3],
+                'item_id'=>$item_id
+            ]);
         }else{
             //もしユーザがurlのitem_idに対応する商品の販売者か購入者じゃないと、チャットがない画面にいく
             return redirect(asset('not_found_chat'));
@@ -241,9 +247,12 @@ class UserController extends Controller
         $user = unserialize($request->session()->get("user"));
 
         // 購入済みの商品をDBから検索
-        $purchased_items = Item_history::where("buyer_id", $user->id)->with("item_info")->get();
+        $purchased_items = Item_history::where("buyer_id", $user->id)
+            ->with(["item_info", "trade_status"])
+            ->get();
 
         $data = [
+            "user" => $user,
             "purchased_items" => $purchased_items,
         ];
 
@@ -254,20 +263,28 @@ class UserController extends Controller
     // 販売履歴一覧画面の表示
     public function soldIndex(Request $request)
     {
-        // セッションからuserインスタンスを受け取る
-        // $user = unserialize($request->session()->get("user"));
-        $user = User::where("id", $request->id)->first();
+        if ($request->session()->get("user")) {
+            // セッションからuserインスタンスを受け取る
+            $access_user = unserialize($request->session()->get("user"));
+        } else {
+            $access_user = null;
+        }
+
+        $page_user = User::where("id", $request->id)->first();
 
         // ユーザーが出品した商品の中から、販売済みの物を検索する
         // item_info, item_photo, item_historyと一緒に取り出す
-        $sold_items = Item::where("user_id", $user->id)
+        $sold_items = Item::where("user_id", $page_user->id)
             ->where("onsale", 2)
-            ->with(["item_info", "item_photo", "item_history"])
+            ->with(["item_info", "item_photo", "item_history", ])
             ->get();
 
         $data = [
+            "access_user" => $access_user,
             "sold_items" => $sold_items,
         ];
+
+        // var_dump($sold_items->first()->item_history->buyer_id);
 
         // 購買履歴一覧画面の表示
         return view("user.sold", $data);
@@ -471,6 +488,11 @@ class UserController extends Controller
                 "post" => $request->post,
                 "birthday" => $request->year . "-" . $request->month . "-" . $request->day,
             ];
+
+            if ($request->icon) {
+                $icon_path = $request->file("icon")->store("image");
+                $user_info_form["icon"] = $icon_path;
+            }
     
             // DBに保存
             $user->fill($user_form)->save();
@@ -491,7 +513,7 @@ class UserController extends Controller
         }
 
         // ユーザー情報変更画面へリダイレクト
-        return redirect("user/edit/". $user->id)->withInput($data);   
+        return redirect(asset("user/edit/". $user->id))->withInput($data);   
     }
 
     // ユーザープロフィール画面の表示

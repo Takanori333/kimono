@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Item_history extends Model
 {
     use HasFactory;
+    protected $guarded = ['id', 'created_at','updated_at']; // 書き込み禁止
 
     public function item_info()
     {
@@ -23,4 +24,10 @@ class Item_history extends Model
     {
         return $this->belongsTo(User_info::class, "buyer_id");
     }
+
+    public function trade_status()
+    {
+        return $this->hasOne(Trade_status::class, "item_id", "item_id");
+    }
+
 }

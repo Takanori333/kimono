@@ -38,6 +38,12 @@
                         @endforeach
                     </div>
                     <div class="row border-secondary border-bottom" style="height: 7%;max-height: 100px;margin:0">
+                        @if ($self_info==$seller_info&&$status=='0')
+                            <button class="btn btn-outline-secondary" style="width: 20%;max-width: 80px;height: 80%;max-height: 40px;left: 80%;position: relative;padding: 0;margin: 0;align-self: center;font-size: 15px;" onclick='changeTradeStatus({{ asset("/change_trade_status/".$item_id) }},{{ csrf_token() }},this)'>発送済み</button> 
+                        @endif
+                        @if ($self_info==$buyer_info&&$status=='1')
+                            <button class="btn btn-outline-secondary" style="width: 20%;max-width: 80px;height: 80%;max-height: 40px;left: 80%;position: relative;padding: 0;margin: 0;align-self: center;font-size: 15px;" onclick='changeTradeStatus({{ asset("/change_trade_status/".$item_id) }},{{ csrf_token() }},this)'>受け取り済み</button>
+                        @endif
                         <button class="btn btn-outline-secondary" style="width: 20%;max-width: 80px;height: 80%;max-height: 40px;left: 80%;position: relative;padding: 0;margin: 0;align-self: center;font-size: 15px;" onclick="sendMsg()">送信</button>
                     </div>
                     <div class="row form-floating" style="height: 25%;margin:0">

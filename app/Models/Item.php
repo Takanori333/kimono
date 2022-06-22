@@ -31,4 +31,9 @@ class Item extends Model
         return $this->hasOne(Item_history::class);
     }
 
+    public function trade_status()
+    {
+        return $this->hasOne(Trade_status::class);
+    }
+
 }

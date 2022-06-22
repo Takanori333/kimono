@@ -30,9 +30,9 @@
         }
         //スタイリストの顧客一覧を戻す
         function stylist_customer_list(){
-            // $stylist = unserialize(session()->get("stylist"));
-            // $stylist_id = $stylist->getId();
-            $stylist_id = 9999999;
+            $stylist = unserialize(session()->get("stylist"));
+            $stylist_id = $stylist->getId();
+            // $stylist_id = 9999999;
             $last_message_customer = DB::table('stylist_chats')->
             select('customer_id',DB::raw('SUM(readed) as readed,MAX(created_at) as last_message'))
             ->where('stylist_id','=',$stylist_id)->where('from','=',1)->orderBy('last_message','desc')->
@@ -48,9 +48,9 @@
         }
         //スタイリストが選択した顧客とのメッセージを取得する
         function stylist_user_get_message(Request &$request){
-            // $stylist = unserialize(session()->get("stylist"));
-            // $stylist_id = $stylist->getId();
-            $stylist_id = 9999999;            
+            $stylist = unserialize(session()->get("stylist"));
+            $stylist_id = $stylist->getId();
+            // $stylist_id = 9999999;            
             $message_list = DB::table('stylist_chats')->where('stylist_id','=',$stylist_id)->where('customer_id','=',$request->customer_id)->get();
             DB::table('stylist_chats')->where('stylist_id','=',$stylist_id)
             ->where('customer_id','=',$request->customer_id)->where('from','=',1)->update(['readed'=>0]);
@@ -59,15 +59,16 @@
         //スタイリスト顧客が選択したスタイリストのメッセージを取得する
         function stylist_customer_get_message($id){
             // $user = unserialize(session()->get("user"));
-            // $user_id = $user->getId();
+            // $user_id = $user->id;
             $user_id = 9999999;
             $message_list = DB::table('stylist_chats')->where('stylist_id','=',$id)->where('customer_id','=',$user_id)->get();
+            DB::table('stylist_chat')->where('customer_id','=',$user_id)->where('stylist_id','=',$id)->where('from','=',0)->update(['readed'=>0]);
             return $message_list;            
         }
-
+        //スタイリスト顧客が選択したスタイリストの情報を取得する
         function stylist_customer_get_info($id){
             // $user = unserialize(session()->get("user"));
-            // $user_id = $user->getId();
+            // $user_id = $user->id;
             $user_id = 9999999;
             $stylist_info = DB::table('stylist_infos')->where('id','=',$id)->first();
             return $stylist_info;
@@ -90,15 +91,19 @@
         //フリーマチャット
         function chat_trade($item_id){
             $user = unserialize(session()->get("user"));
-            $user_id = $user->getId();
+            $user_id = $user->id;
             //もしユーザがurlのitem_idに対応する商品の販売者か購入者じゃないと、チャットがない画面にいく
             $seller_id = DB::table('items')->where('id','=',$item_id)->value('user_id');            
             $buyer_id = DB::table('item_histories')->where('item_id','=',$item_id)->value('buyer_id');
+            $other_id = $user_id!=$seller_id?$seller_id:$buyer_id;
             if($seller_id==$user_id||$buyer_id==$user_id){
                 $message_list = DB::table('item_chats')->where('item_id','=',$item_id)->get();
                 $buyer_info = DB::table('user_infos')->where('id','=',$buyer_id)->first();
                 $seller_info = DB::table('user_infos')->where('id','=',$seller_id)->first();
-                return [$message_list,$buyer_info,$seller_info];
+                $status = DB::table('trade_statuses')->where('item_id','=',$item_id)->value('status');
+                //メッセージを既読にする
+                DB::table('item_chats')->where('from','=',$other_id)->update(['readed'=>0]);
+                return [$message_list,$buyer_info,$seller_info,$status];
             }
             return false;
         }
@@ -109,5 +114,76 @@
             $item_chat->text = $request->message;
             $item_chat->from = $request->from;
             $item_chat->save();
+        }
+        //取引ステージの情報を変更する
+        function change_trade_status($item_id){
+            $status = (int)DB::table('trade_statuses')->where('item_id','=',$item_id)->value('status')+1;
+            DB::table('trade_statuses')->where('item_id','=',$item_id)->update(
+                ['status'=>$status]
+            );
+        }
+        //ユーザーに新しいメッセージは入っているかどうかを監視する
+        function user_listen_chat(){
+            $user = unserialize(session()->get("user"));
+            $user_id = $user->id;
+            $items = [];
+            $sell_item = DB::table('items')->where('user_id','=',$user_id)->pluck('id');
+            foreach($sell_item as $id){
+                $items[] = $id;
+            }
+            $buy_item = DB::table('item_histories')->where('buyer_id','=',$user_id)->pluck('item_id');
+            foreach($buy_item as $id){
+                $items[] = $id;
+            }
+            $items = array_unique($items);
+            $chat_count = DB::table('item_chats')->whereIn('item_id',$items)->where('from','<>',$user_id)->sum('readed');
+            $chat_count += DB::table('stylist_chats')->where('customer_id','=',$user_id)->where('from','=',0)->sum('readed');
+            // session(['chat'=>$count]);
+            return $chat_count;
+        }
+        //ユーザーのチャット一覧
+        function user_chat_list(){
+            $user = unserialize(session()->get("user"));
+            $user_id = $user->id;
+            $items = [];
+            $sell_item = DB::table('items')->where('user_id','=',$user_id)->pluck('id');
+            foreach($sell_item as $id){
+                $items[] = $id;
+            }
+            $buy_item = DB::table('item_histories')->where('buyer_id','=',$user_id)->pluck('item_id');
+            foreach($buy_item as $id){
+                $items[] = $id;
+            }
+            $last_message_other = DB::table('item_chats')->
+            select('from',DB::raw('SUM(readed) as readed,MAX(created_at) as last_message'))
+            ->whereIn('item_id',$items)->where('from','<>',$user_id)->orderBy('last_message','desc')->
+            groupBy('from');
+
+            $chat_other_list = DB::table('user_infos')->
+            select('user_infos.name','user_infos.icon','user_infos.id','chat.last_message','chat.readed')
+            ->joinSub($last_message_other,'chat',function($join){
+                $join->on('user_infos.id','=','chat.from');
+            })->get();
+
+            $last_message_stylist = DB::table('stylist_chats')->
+            select('stylist_id',DB::raw('SUM(readed) as readed,MAX(created_at) as last_message'))
+            ->where('customer_id','=',$user_id)->where('from','=',0)->orderBy('last_message','desc')->
+            groupBy('stylist_id');
+
+            $stylist_list = DB::table('stylist_infos')->
+            select('stylist_infos.name','stylist_infos.icon','stylist_infos.id','stylist.last_message','stylist.readed')
+            ->joinSub($last_message_stylist,'stylist',function($join){
+                $join->on('stylist_infos.id','=','stylist.stylist_id');
+            })->get();
+            return [$chat_other_list,$stylist_list];
+        }
+
+        //スタイリストに新しいメッセージは入っているかどうかを監視する
+        function stylist_user_listen_chat(){
+            $stylist = unserialize(session()->get("stylist"));
+            $stylist_id = $stylist->getId();
+            $chat_count = DB::table('stylist_chats')->where('stylist_id','=',$stylist_id)->where('from','=',1)->sum('readed');
+            // session(['chat'=>$count]);
+            return $chat_count;
         }
     }

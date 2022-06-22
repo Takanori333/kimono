@@ -12,7 +12,10 @@ use App\Models\Item;
 use App\Models\Item_info;
 use App\Models\Item_photo;
 use App\Models\Item_comment;
+use App\Models\Item_history;
+use App\Models\Item_favorite;
 use App\Models\User_info;
+use App\Models\Trade_status;
 use Illuminate\Support\Facades\DB;
 
 class FleamarketController extends Controller
@@ -20,7 +23,6 @@ class FleamarketController extends Controller
     // 4-1
     public function index(){
         $item_infos = SelectItem::getAllItemInfos();
-        // viewを返す
         return view('fleamarket.index', compact('item_infos'));
     }
 
@@ -32,12 +34,40 @@ class FleamarketController extends Controller
         return view('fleamarket.search_result', compact('item_infos'));
     }
 
+    // 4-3
+    public function showFavorites(){
+        $user_id = unserialize(session('user'))->id;
+        $item_ids = Item_favorite::where('user_id', '=', unserialize(session('user'))->id )
+        ->select('item_id')
+        ->get();
+
+        $item_infos = array();
+        $msg = '';
+        if( is_null( $item_ids ) ){
+            // お気に入りに追加している商品がある場合
+            foreach( $item_ids as $item_id  ){
+                $item_infos[] = SelectItem::getItemInfosById($item_id)[0];
+            }
+        }else{
+            $msg = "お気に入りに追加された商品はありません";
+        }
+
+        return view('fleamarket.showFavorites', compact('item_infos', 'msg'));
+    }
+
     // 4-4
     public function show($id){
         $item_info = SelectItem::getItemInfosById($id)[0];
         $item_comments = SelectItem::getItemCommentsById($id);
+        $item_favorite_record = Item_favorite::where('item_id', '=', $id)
+        ->where('user_id', '=', unserialize(session('user'))->id )
+        ->first();
+        $is_favorite = true;
+        if( is_null($item_favorite_record) ){
+            $is_favorite = false;
+        }
 
-        return view('fleamarket.show', compact('item_info', 'item_comments'));
+        return view('fleamarket.show', compact('item_info', 'item_comments', 'is_favorite'));
     }
 
     // 4-4-1(コメントアップロード用)
@@ -46,8 +76,7 @@ class FleamarketController extends Controller
 
         // データベースにコメントを追加
         $comment = $reqData['comment'];
-        $user_id = 1;
-        // $user_id = session('user');
+        $user_id = unserialize(session('user'))->id;
         Item_comment::create([
             'item_id' => $id,
             'user_id' => $user_id,
@@ -59,11 +88,52 @@ class FleamarketController extends Controller
         return response()->json($item_comments);
     }
 
+    // 4-4-2(お気に入り追加)
+    public function insertFavorite(Request $request){
+        $item_id = $request->get('item_id');
+        $user_id = unserialize(session('user'))->id;
+
+        $item_favorite_records = Item_favorite::where('item_id', '=', $item_id)->where('user_id', '=', $user_id)->get();
+        if( $item_favorite_records->isEmpty() ){
+            // アイテムをお気に入りに登録していない場合
+            Item_favorite::create([
+                'item_id' => $item_id,
+                'user_id' => $user_id
+            ]);
+            $msg = 'お気に入りに登録しました';
+        }else{
+            // 既にお気に入りに登録している場合
+            $msg = '既にお気に入りに登録されています';
+        }
+
+        return response()->json($msg);
+    }
+
+    // 4-4-3(お気に入り削除)
+    public function deleteFavorite(Request $request){
+        $item_id = $request->get('item_id');
+        $user_id = unserialize(session('user'))->id;
+
+        $item_favorite_records = Item_favorite::where('item_id', '=', $item_id)->where('user_id', '=', $user_id)->get();
+        if( $item_favorite_records->isEmpty() ){
+            // アイテムをお気に入りに登録していない場合
+            $msg = 'お気に入りに登録されていません';
+        }else{
+            // 既にお気に入りに登録している場合
+            Item_favorite::where('item_id', '=', $item_id)
+            ->where('user_id', '=', $user_id)
+            ->delete();
+            $msg = 'お気に入りから削除しました';
+        }
+
+        return response()->json($msg);
+    }
+
     // 4-5
     public function purchase($id){
         $item_info = SelectItem::getItemInfosById($id)[0];
-        // $user_info = User_info::where('id', '=', session('user'))->first()->toArray();
-        $user_info = User_info::where('id', '=', 1)->first()->toArray();
+        $user_info = User_info::where('id', '=', unserialize(session('user'))->id)->first()->toArray();
+        // $user_info = User_info::where('id', '=', 1)->first()->toArray();
         $item_info['user_info'] = $user_info;
 
         return view('fleamarket.purchase', compact('item_info'));
@@ -74,8 +144,44 @@ class FleamarketController extends Controller
         $payment_way = $request->validated();
         $item_info = SelectItem::getItemInfosById($id)[0];
 
-        dump($payment_way);
-        dump($item_info);
+        return view('fleamarket.purchase_confirm', compact('item_info', 'payment_way'));
+    }
+
+    // 4-7
+    public function purchaseDone(PurchaseItemRequest $request, $id){
+        $payment_way = $request->validated();
+        // 戻るボタンが押された場合
+        if ($request->get('back')) {
+            return redirect('/fleamarket/purchase/' . $id)->withInput();
+        }
+
+        $item_info = SelectItem::getItemInfosById($id)[0];
+        // トランザクション処理
+        try {
+            DB::beginTransaction();
+
+            Trade_status::create([
+                'item_id' => $id,
+                'status' => 0,
+            ]);
+
+            Item_history::create([
+                'item_id' => $id,
+                'buyer_id' => unserialize(session('user'))->id,
+            ]);
+
+            Item::where('id', '=', $id)->update([
+                'onsale' => 2,
+            ]);
+
+            // 問題なくすべて追加出来れば処理内容を確定
+            DB::commit();
+        } catch (Throwable $e) {
+            // 何らかの問題が発生した場合はすべての処理を戻す
+            DB::rollBack();
+        }
+
+        return view('fleamarket.purchase_done', compact('id'));
     }
 
     // 4-9
@@ -88,7 +194,7 @@ class FleamarketController extends Controller
     // 4-10
     public function createConfirm(StoreItemRequest $request){
         $item_infos = $request->validated();
-        return view('fleamarket.create_confirm', ['item_infos' => $item_infos]);
+        return view('fleamarket.create_confirm', compact('item_infos'));
     }
 
     // 4-11
@@ -105,8 +211,8 @@ class FleamarketController extends Controller
 
             // itemsテーブルに値を追加
             $newRecord = Item::create([
-                // 'user_id' => session()->get('user'),
-                'user_id' => 1,
+                'user_id' => unserialize(session('user'))->id,
+                // 'user_id' => 1,
             ]);
 
             // item_infosに値を追加
@@ -132,7 +238,6 @@ class FleamarketController extends Controller
             // imageを一つずつ取り出してサーバーとデータベースに追加
             foreach( $item_infos['image'] as $key => $image ){
                 $img_path = ImageSave::uploadBase64($image);
-                // $img_path = $request->file('image')->store('public/image');
                 Item_photo::create([
                     'item_id'   => $newRecord->id,
                     'path'      => $img_path,
@@ -176,7 +281,7 @@ class FleamarketController extends Controller
         $item_infos = $request->validated();
         $item_infos['id'] = $request->get('id');
 
-        return view('fleamarket.edit_confirm', ['item_infos' => $item_infos]);
+        return view('fleamarket.edit_confirm', compact('item_infos'));
     }
 
     // 編集確認画面からの画面遷移
@@ -193,8 +298,8 @@ class FleamarketController extends Controller
 
             // itemsテーブルに値を追加
             Item::where('id', '=', $id)->update([
-                // 'user_id' => session()->get('user'),
-                'user_id' => 1,
+                'user_id' => unserialize(session('user'))->id,
+                // 'user_id' => 1,
             ]);
 
             // item_infosに値を追加

@@ -13,20 +13,21 @@
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&family=Shippori+Mincho&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="./css/my-sheet.css">
+    <link rel="stylesheet" href="{{ asset('css/my-sheet.css') }}">
     <!-- CDN読み込み -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="./js/header.js"></script>
+    <script src="{{ asset('js/header.js') }}"></script>
 </head>
 
 <body>
 
+    @include('header')
+
     <!-- トップ画像 -->
     <div class="container-fluid js-mainVisual">
         <div class="row">
-            <div class="col-xs-12 cover-img" style="background-image:url('{{ asset() }}');">
+            <div class="col-xs-12 cover-img" style="background-image:url('{{ asset('image/top_img.jpg') }}');">
                 <div class="cover-text text-center">
                     <p class="text-light fs-1" style="font-family: 'Kaisei Opti', serif;">和服フリマ（仮）</p>
                     <small class="text-light">Wafuku Flea Market and Dressing</small>
@@ -63,7 +64,7 @@
                     </div>
                 </div>
                 <div class="col"></div>
-                <img src="./images/clo.jpg" alt="">
+                <img src="{{ asset('image/clo.jpg') }}" alt="">
             </div>
         </div>
 
@@ -81,12 +82,14 @@
                         <a href="" class="btnarrow4 link-dark">着付け師を見る</a>
                     </div>
                 </div>
-                <img src="./images/kitsuke.jpg" alt="">
+                <img src="{{ asset('image/kitsuke.jpg') }}" alt="">
             </div>
         </div>
     </div>
     <!-- </div> -->
     <!-- </div> -->
+
+    @include('footer')
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

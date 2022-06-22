@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>フリマトップ</title>
+    <title>お気に入り商品</title>
 </head>
 <body>
     {{-- ヘッダー --}}
@@ -12,17 +12,15 @@
 
     {{-- フリマヘッダー --}}
     <div>
+        {{-- 検索窓 --}}
         <div>
+            <h1>お気に入り商品</h1>
             <p>検索</p>
             <form action="/fleamarket/search" method="GET">
                 <input type="text" name="keyword">
                 <input type="submit" value="🔍">
             </form>
         </div>
-        {{-- お気に入り商品閲覧ページ --}}
-        @if ( session('user') )
-            <a href="{{asset("/fleamarket/favorite")}}">お気に入り商品</a>
-        @endif
         {{-- 出品ボタン --}}
         <a href="{{asset("/fleamarket/exhibit/new")}}">出品</a>
     </div>
@@ -44,9 +42,6 @@
             {{ $msg }}
         @endisset
         @foreach ( $item_infos as $item_info )
-            {{-- @if ( $item_infos )
-                
-            @endif --}}
             <a href="{{asset('fleamarket/item/' . $item_info['id'] )}}">
                 <div>
                     <img src="{{asset($item_info["image"][0]["path"])}}">

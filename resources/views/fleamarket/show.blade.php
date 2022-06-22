@@ -24,6 +24,10 @@
                 <input type="submit" value="🔍">
             </form>
         </div>
+        {{-- お気に入り商品閲覧ページ --}}
+        @if ( session('user') )
+            <a href="{{asset("/fleamarket/favorite")}}">お気に入り商品</a>
+        @endif
         {{-- 出品ボタン --}}
         <a href="{{asset("/fleamarket/exhibit/new")}}">出品</a>
     </div>
@@ -59,7 +63,15 @@
                 <p>発送元: {{$item_info["area"]}}</p>
                 <p>出品者: <a href="/user/show/{{$item_info["user_info"]["id"]}}">{{$item_info["user_info"]["name"]}}</a></p>
                 {{-- お気に入りに追加ボタン --}}
-                <button>お気に入りに追加</button>
+                <div id="favorite_btn_wrapper">
+                    @if ( $is_favorite )
+                        <button id="deleteFavorite">お気に入りから削除</button>
+                    @else
+                        <button id="insertFavorite">お気に入りに追加</button>
+                    @endif
+                    {{-- メッセージ表示エリア --}}
+                    <div id="favorite_messages"></div>
+                </div>
             </div>
 
             {{-- チャット欄 --}}
@@ -85,6 +97,65 @@
         </div>
     </div>
     <script>
+        // お気に入り追加
+        $('body').on('click', '#insertFavorite', function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax("/fleamarket/favorite/insert",
+                {
+                    type: 'post',
+                    data: {
+                        'item_id' : {{ $item_info["id"] }}
+                    },
+                    dataType: 'json',
+                    success:function(data){
+                        $('#favorite_btn_wrapper').empty();
+                        $('#favorite_btn_wrapper').append('<button id="deleteFavorite">お気に入りから削除</button>');
+                        $('#favorite_btn_wrapper').append('<div id="favorite_messages"></div>');
+                        $('#favorite_messages').append('<p>お気に入りに追加しました</p>');
+                    },
+                    error:function(error){
+                        $('#favorite_messages').empty();
+                        $('#favorite_messages').append('<p>お気に入りに追加出来ませんでした</p>');
+                    }
+                }
+            )
+        });
+
+        // お気に入りから削除
+        $('body').on('click', '#deleteFavorite', function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax("/fleamarket/favorite/delete",
+                {
+                    type: 'post',
+                    data: {
+                        'item_id' : {{ $item_info["id"] }}
+                    },
+                    dataType: 'json',
+                    success:function(data){
+                        $('#favorite_btn_wrapper').empty();
+                        $('#favorite_btn_wrapper').append('<button id="insertFavorite">お気に入りに追加</button>');
+                        $('#favorite_btn_wrapper').append('<div id="favorite_messages"></div>');
+                        $('#favorite_messages').append('<p>お気に入りから削除しました</p>');
+                    },
+                    error:function(error){
+                        $('#favorite_messages').empty();
+                        $('#favorite_messages').append('<p>お気に入りから削除できませんでした</p>');
+                    }
+                }
+            )
+        });
+
+        // コメントの追加
         $('#comment_send').click(function(){
             $.ajaxSetup({
                 headers: {
@@ -100,7 +171,6 @@
                     },
                     dataType: 'json',
                     success:function(data){
-                        console.log(data);
                         $('#comment').val('');
                         $('#comments').empty();
                         for(let i=0;i<data.length;i++){

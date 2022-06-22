@@ -81,6 +81,8 @@ class SignupRequest extends FormRequest
 
             'height.numeric' => "身長は数字で入力してください",
             'height.digits_between' => "身長が正しくありません",
+
+            'icon.image' => '画像ファイルが正しくありません',
         ];
     }
 }

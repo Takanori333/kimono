@@ -73,4 +73,20 @@ function make_message_self(message){
 function scrollToBottom(){
     message_box.scrollTo(0,message_box.scrollHeight);
 }
+function changeTradeStatus(trade_url,trade_csrf,e){
+    let bol = confirm("取引ステージを変更するのがよろしいでしょうか？");
+    if(bol){
+        $(e).remove();
+        $.ajax({
+            url:trade_url,
+            type:'POST',
+            data:{"_token":trade_csrf},
+            success:function(){
+            },
+            error:function(msg){
+                console.log(msg);
+            }
+        })    
+    }
+}
 scrollToBottom();

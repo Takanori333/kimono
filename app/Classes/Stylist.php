@@ -61,5 +61,4 @@
         function getMax_price(){
             return $this->max_price;
         }
-
     }

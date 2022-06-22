@@ -77,6 +77,7 @@ Route::get('/faq',[UserController::class,'faq']);
 
 Route::get('/user/stylist_chat/{id}',[UserController::class,'chat_stylist']);
 Route::get('/user/trade_chat/{item_id}',[UserController::class,'chat_trade']);
+Route::post('/change_trade_status/{item_id}',[ChatController::class,'change_trade_status']);
 //チャット（データベースに保存）
 Route::post('/chat/insert_stylist',[ChatController::class,'insert_stylist']);
 Route::post('/chat/insert_trade',[ChatController::class,'insert_trade']);
@@ -84,7 +85,7 @@ Route::post('/chat/stylist_user_get_message',[ChatController::class,'stylist_use
 Route::post('/make_reserve',[ChatController::class,'make_reserve']);
 
 // フリマ関連
-Route::get('/fleamarket', [FleamarketController::class, 'index'])->name('fleamarket');;
+Route::get('/fleamarket', [FleamarketController::class, 'index'])->name('fleamarket');
 Route::get('/fleamarket/exhibit/new', [FleamarketController::class, 'createIndex']);
 Route::post('/fleamarket/exhibit/confirm', [FleamarketController::class, 'createConfirm']);
 Route::post('/fleamarket/exhibit/done', [FleamarketController::class, 'create']);
@@ -95,6 +96,13 @@ Route::get('/fleamarket/search', [FleamarketController::class, 'search']);
 Route::get('/fleamarket/item/{id}', [FleamarketController::class, 'show']);
 Route::post('/fleamarket/item/{id}/upload/comment', [FleamarketController::class, 'uploadComment']);
 Route::get('/fleamarket/purchase/{id}', [FleamarketController::class, 'purchase']);
+Route::post('/fleamarket/purchase/confirm/{id}', [FleamarketController::class, 'purchaseConfirm']);
+Route::post('/fleamarket/purchase/done/{id}', [FleamarketController::class, 'purchaseDone']);
+Route::post('/fleamarket/favorite/insert', [FleamarketController::class, 'insertFavorite']);
+Route::post('/fleamarket/favorite/delete', [FleamarketController::class, 'deleteFavorite']);
+Route::get('/fleamarket/favorite', [FleamarketController::class, 'showFavorites']);
+
+
 
 
 // 管理者

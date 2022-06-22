@@ -34,6 +34,7 @@ class UserEditRequest extends FormRequest
             'address' => 'required|max:200',
             'password' => 'required|max:20',
             'height' => 'numeric|nullable|digits_between:1,3',
+            'icon' => 'nullable|image',
         ];
     }
 
@@ -77,6 +78,8 @@ class UserEditRequest extends FormRequest
 
             'height.numeric' => "身長は数字で入力してください",
             'height.digits_between' => "身長が正しくありません",
+
+            'icon.image' => '画像ファイルが正しくありません',
         ];
     }
 }

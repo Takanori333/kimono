@@ -57,6 +57,8 @@
             パスワード
             <input type="text" value="{{ $user->password }}" name="password">
             <br>
+            <input type="file" name="icon">
+            <br>
             <button type="button" onclick="location.href='{{ asset('/user/info/' . $user->id) }}'">戻る</button>
             <input type="hidden" name="id" value="{{ $user->id }}">
             <input type="submit" name="signup" value="確定">

@@ -76,7 +76,6 @@
 
     {{-- フリマヘッダー --}}
     <div>
-        {{-- 検索窓 --}}
         <div>
             {{-- タイトル --}}
             <h1>商品購入</h1>
@@ -86,6 +85,10 @@
                 <input type="submit" value="🔍">
             </form>
         </div>
+        {{-- お気に入り商品閲覧ページ --}}
+        @if ( session('user') )
+            <a href="{{asset("/fleamarket/favorite")}}">お気に入り商品</a>
+        @endif
         {{-- 出品ボタン --}}
         <a href="{{asset("/fleamarket/exhibit/new")}}">出品</a>
     </div>
@@ -95,6 +98,9 @@
         @isset( $msg )
             {{ $msg }}
         @endisset
+        @foreach ($errors->all() as $error)
+            <li>{{$error}}</li>
+        @endforeach
         {{-- 商品画像 --}}
         <div>
             @foreach ( $item_info["image"] as $image )
@@ -115,9 +121,9 @@
 
                 {{-- お届け先 --}}
                 <p>お届け先</p>
-                <p id="buyer_name">お名前:{{ $item_info["user_info"]["name"] }}</p>
-                <p id="buyer_post">郵便番号:{{ $item_info["user_info"]["post"] }}</p>
-                <p id="buyer_address">住所:{{ $item_info["user_info"]["address"] }}</p>
+                <p id="buyer_name">お名前:{{ old('buyer_name', $item_info["user_info"]["name"]) }}</p>
+                <p id="buyer_post">郵便番号:{{ old('buyer_post', $item_info["user_info"]["post"]) }}</p>
+                <p id="buyer_address">住所:{{ old('buyer_address', $item_info["user_info"]["address"]) }}</p>
                 <button class="open_buyer_info_change_modal">変更</button>
                 {{-- お届け先変更モーダル --}}
                 <div class="buyer_info_change_modal_container">
@@ -128,13 +134,13 @@
                         <div class="modal-content">
                             {{-- お届け先名前 --}}
                             <label for="modal_buyer_name">お名前:</label>
-                            <input type="text" id="modal_buyer_name" value="{{$item_info["user_info"]["name"]}}"><br>
+                            <input type="text" id="modal_buyer_name" value="{{ old('buyer_name', $item_info["user_info"]["name"]) }}"><br>
                             {{-- お届け先郵便番号 --}}
                             <label for="modal_buyer_post">郵便番号:</label>
-                            <input type="text" id="modal_buyer_post" value="{{$item_info["user_info"]["post"]}}"><br>
+                            <input type="text" id="modal_buyer_post" value="{{ old('buyer_post', $item_info["user_info"]["post"]) }}"><br>
                             {{-- お届け先住所 --}}
                             <label for="modal_buyer_address">住所:</label><br>
-                            <textarea id="modal_buyer_address" cols="30" rows="10">{{$item_info["user_info"]["address"]}}</textarea><br>
+                            <textarea id="modal_buyer_address" cols="30" rows="10">{{ old('buyer_address', $item_info["user_info"]["address"]) }}</textarea><br>
                             <button id="buyer_info_change">変更</button>
                         </div>
                     </div>
@@ -144,9 +150,9 @@
 
                 {{-- お支払い方法 --}}
                 <p>お支払い方法:</p>
-                <p id="payment_way"></p>
+                <p id="payment_way">{{ old('payment_way') }}</p>
                 <button class="open_payment_way_change_modal">変更</button>
-                {{-- お届け先変更モーダル --}}
+                {{-- お支払い方法モーダル --}}
                 <div class="payment_way_change_modal_container">
                     <div class="payment_way_change_modal_body">
                         {{-- 閉じるボタン --}}
@@ -154,11 +160,11 @@
                         {{-- モーダル内のコンテンツ --}}
                         <div class="modal-content">
                             <label for="cash_on_delivery">代引き</label>
-                            <input type="radio" id="cash_on_delivery" name="payment_way" value="代引き"><br>
+                            <input type="radio" id="cash_on_delivery" name="payment_way" value="代引き" {{ old('payment_way') == '代引き' ? 'checked' : '' }}><br>
                             <label for="credit_card">クレジットカード</label>
-                            <input type="radio" id="credit_card" name="payment_way" value="クレジットカード"><br>
+                            <input type="radio" id="credit_card" name="payment_way" value="クレジットカード" {{ old('payment_way') == 'クレジットカード' ? 'checked' : '' }}><br>
                             <label for="convenience_payment">コンビニ払い</label>
-                            <input type="radio" id="convenience_payment" name="payment_way" value="コンビニ払い"><br>
+                            <input type="radio" id="convenience_payment" name="payment_way" value="コンビニ払い" {{ old('payment_way') == 'コンビニ払い' ? 'checked' : '' }}><br>
                             <button id="payment_way_change">変更</button>
                         </div>
                     </div>
@@ -170,10 +176,10 @@
 
                 <form action="/fleamarket/purchase/confirm/{{$item_info['id']}}" method="POST">
                     @csrf
-                    <input type="hidden" name="buyer_name" id="hidden_buyer_name" value="{{ $item_info["user_info"]["name"] }}">
-                    <input type="hidden" name="buyer_post" id="hidden_buyer_post" value="{{ $item_info["user_info"]["post"] }}">
-                    <input type="hidden" name="buyer_address" id="hidden_buyer_address" value="{{ $item_info["user_info"]["address"] }}">
-                    <input type="hidden" name="payment_way" id="hidden_payment_way" value="">
+                    <input type="hidden" name="buyer_name" id="hidden_buyer_name" value="{{ old('buyer_name', $item_info["user_info"]["name"]) }}">
+                    <input type="hidden" name="buyer_post" id="hidden_buyer_post" value="{{ old('buyer_post', $item_info["user_info"]["post"]) }}">
+                    <input type="hidden" name="buyer_address" id="hidden_buyer_address" value="{{ old('buyer_address', $item_info["user_info"]["address"]) }}">
+                    <input type="hidden" name="payment_way" id="hidden_payment_way" value="{{ old('payment_way') }}">
                     <button type="submit">購入</button>
                 </form>
             </div>

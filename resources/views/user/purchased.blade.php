@@ -18,6 +18,18 @@
                 <p>購入日時：{{ str_replace('-', '/', $purchased_item->created_at) }}</p>
                 <span>販売者：</span>
                 <a href="{{ asset('/user/show/' . $purchased_item->item->user_id) }}">{{ $purchased_item->item->user_info->name }}</a>
+                @if ($user->id == $purchased_item->buyer_id)
+                    @switch($purchased_item->trade_status->status)
+                        @case(0)
+                            <p>発送待ち</p>
+                            @break
+                        @case(1)
+                            <p>発送済み</p>
+                            @break                            
+                        @default
+                            {{-- 何も表示しない --}}
+                    @endswitch
+                @endif
             </div>
         @endforeach
     @else

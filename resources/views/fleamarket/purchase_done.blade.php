@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>フリマトップ</title>
+    <title>商品購入完了</title>
 </head>
 <body>
     {{-- ヘッダー --}}
@@ -13,6 +13,8 @@
     {{-- フリマヘッダー --}}
     <div>
         <div>
+            {{-- タイトル --}}
+            <h1>商品購入完了</h1>
             <p>検索</p>
             <form action="/fleamarket/search" method="GET">
                 <input type="text" name="keyword">
@@ -27,34 +29,15 @@
         <a href="{{asset("/fleamarket/exhibit/new")}}">出品</a>
     </div>
 
-    {{-- 商品一覧 --}}
-    {{-- 絞り込み機能 --}}
+    {{-- 購入完了メッセージ --}}
     <div>
-        <p>販売商品のみを表示</p>
-        <p>カテゴリ</p>
-        <p>ソート</p>
+        <p>購入が完了しました。</p>
+        <br>
+        <p>発送・受取プロセスについては<br>販売者とのチャットをご覧ください</p>
+
+        {{-- チャットへのボタン --}}
+        <button onclick="location.href='{{asset('/user/trade_chat/' . $id)}}'">チャットへ</button>
     </div>
-    {{-- 表示件数 --}}
-    <div>
-        <p>○件中○件表示</p>
-    </div>
-    {{-- 商品カード --}}
-    <div>
-        @isset( $msg )
-            {{ $msg }}
-        @endisset
-        @foreach ( $item_infos as $item_info )
-            {{-- @if ( $item_infos )
-                
-            @endif --}}
-            <a href="{{asset('fleamarket/item/' . $item_info['id'] )}}">
-                <div>
-                    <img src="{{asset($item_info["image"][0]["path"])}}">
-                    <p> 商品名: {{ $item_info["name"] }}</p>
-                    <p> 値段: {{ $item_info["price"] }}</p>
-                </div>
-            </a>
-        @endforeach
-    </div>
+
 </body>
 </html>
