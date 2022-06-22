@@ -17,6 +17,7 @@ class CreateStylistCommentsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('stylist_id');
             $table->integer('customer_id');
+            $table->integer('stylist_history_id');
             $table->text('text');
             $table->integer('point');
             $table->timestamps();
