@@ -14,6 +14,9 @@
 
 </head>
 <body>
+    @php
+        $stylist = unserialize(session()->get("stylist"));
+    @endphp
     <div class="vh-100 min-vh-100 min-vw-100 vw-100 position-relative overflow-hidden">
         <div class="row">
             <div class="position-absolute start-0 top-0 col-12 col-lg-2 col-md-2 col-sm-2 col-xl-2 col-xxl-2" style="padding: 0">
@@ -66,7 +69,7 @@
                     <div class="container gap-1 d-grid">
                         <div class="mb-3 row">
                             <div class="alert-danger"></div>
-                                <label for="exampleInputEmail1" class="form-label">名前：TEST</label>
+                                <label for="exampleInputEmail1" class="form-label" id="reserve_name"></label>
                         </div>
                         <div class="mb-3 row">
                             <div class="alert-danger"></div>
@@ -112,7 +115,7 @@
         </div>
     </div>
     
-    <input type="hidden" id="stylist_id" value="9999999">
+    <input type="hidden" id="stylist_id" value="{{ $stylist->getId() }}">
     {{-- <input type="hidden" id="customer_id" value="9999999"> --}}
     <input type="hidden" id="csrf" value="{{ csrf_token() }}">
     <input type="hidden" id="url" value="{{ asset('/chat/insert_stylist') }}">

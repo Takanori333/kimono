@@ -55,9 +55,11 @@ use Illuminate\Http\Request;
             })->paginate(9)->withQueryString();//エラーのハイライトがあれば、無視していい
             return $stylist_list;
         }
+        //スタイリスト情報
         function stylist_info($id){
             $stylist = DB::table('stylist_infos')->where('id','=',$id)->first();
             $services = DB::table('stylist_services')->where('stylist_id','=',$id)->pluck("service");
+            $freetime_list = DB::table('stylist_freetimes')->where("stylist_id","=",$id)->where("end_time",">=",date("Y-m-d H:i:s"))->orderBy('start_time')->get();
             $service = [];
             foreach($services as $s){
                 $service[] = $s;
@@ -67,15 +69,15 @@ use Illuminate\Http\Request;
             foreach($areas as $a){
                 $area[] = $a;
             }
-            return [$stylist,implode(" , ",$service),implode(" , ",$area)];
+            return [$stylist,implode(" , ",$service),implode(" , ",$area),$freetime_list];
         }
         //予約画面
         function reserve($reserve_id){
-            // $user = unserialize(session()->get("user"));
-            // $user_id = $user->id;
-            $user_id = 9999999;
+            $user = unserialize(session()->get("user"));
+            $user_id = $user->id;
+            // $user_id = 9999999;
             $reserve = DB::table('stylist_reserves')->where('reserve_id','=',$reserve_id)->first();
-            var_dump($reserve);
+            // var_dump($reserve);
             if($reserve->customer_id==$user_id){
                 return $reserve;
             }

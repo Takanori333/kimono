@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="{{ asset('css/my-sheet.css') }}">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="{{ asset('js/header.js') }}"></script>
 <nav id="header" class="p-3 fixed-top">
     <div class="p-3 fixed-top d-flex border-bottom flex-wrap w-100 js-header">
         <!-- サイト名 -->
@@ -11,14 +14,14 @@
             <!-- ユーザー用 -->
             @if ( session("user") )
                 <li class="nav-item"><a href="{{ asset('/user/info/{id}') }}" class="nav-link p-2 js-header header-link">マイページ</a></li>
-                <li class="nav-item"><a href="" class="nav-link p-2 js-header header-link">ログアウト</a></li>
+                <li class="nav-item"><a href="{{ asset('/user/signout') }}" class="nav-link p-2 js-header header-link">ログアウト</a></li>
             @else
                 @if ( session("stylist") )
                     <!-- スタイリスト用 -->
                     <li class="nav-item"><a href="{{ asset('/stylist_user/chat') }}" class="nav-link p-2 js-header header-link">チャット</a></li>
                     <li class="nav-item"><a href="{{ asset('/stylist_user/reserve') }}" class="nav-link p-2 js-header header-link">予約状況</a></li>
                     <li class="nav-item"><a href="{{ asset('/stylist_user/info') }}" class="nav-link p-2 js-header header-link">登録情報</a></li>
-                    <li class="nav-item"><a href="" class="nav-link p-2 js-header header-link">ログアウト</a></li>
+                    <li class="nav-item"><a href="{{ asset('/stylist_user/signout') }}" class="nav-link p-2 js-header header-link">ログアウト</a></li>
                 @else
                     @if ( session("manager") )
                         <!-- 管理者用 -->
@@ -26,7 +29,7 @@
                         <li class="nav-item"><a href="{{ asset('/manager/item') }}" class="nav-link p-2 js-header header-link">商品</a></li>
                         <li class="nav-item"><a href="{{ asset('/manager/stylist') }}" class="nav-link p-2 js-header header-link">スタイリスト</a></li>
                         <li class="nav-item"><a href="{{ asset('/manager/faq') }}" class="nav-link p-2 js-header header-link">FAQ</a></li>
-                        <li class="nav-item"><a href="" class="nav-link p-2 js-header header-link">ログアウト</a></li>
+                        <li class="nav-item"><a href="{{ asset('/manager/signout') }}" class="nav-link p-2 js-header header-link">ログアウト</a></li>
                     @else
                         <!-- ゲスト用 -->
                         <li class="nav-item"><a href="{{ asset('/user/signin') }}" class="nav-link p-2 js-header header-link">ログイン</a></li>

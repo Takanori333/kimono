@@ -32,12 +32,12 @@
 
             <div class="row my-4">
                 <!-- フォロー -->
-                <a href="{{ asset('/user/follow/' . $user->id) }}" class="col d-block text-dark text-decoration-none">
+                <a href="{{ asset('/user/follow/' . $user->id) }}" class="col d-block text-dark text-decoration-none footer-link">
                     <p class="d-inline mr-2">フォロー</p>
                     <p class="d-inline m-2">{{ $follow_count }}</p>
                 </a>
                 <!-- フォロワー -->
-                <a href="{{ asset('/user/follower/' . $user->id) }}" class="col text-dark text-decoration-none">
+                <a href="{{ asset('/user/follower/' . $user->id) }}" class="col text-dark text-decoration-none footer-link">
                     <p class="d-inline mr-2">フォロワー</p>
                     <p class="d-inline m-2">{{ $follower_count }}</p>
                 </a>
@@ -46,22 +46,28 @@
             <!-- 評価 -->
             <div class="my-4">
                 <div class="row">
-                    <p class="col">販売者評価</p>
+                    <div class="col"><a href="{{ asset('/user/assessment/customer/'. $user->id) }}" class="text-decoration-none link-dark">購入者評価</a></div>
                     @if (round($user->seller_assessment->avg('point'), 1) == 0)
                         <p class="col">評価なし</p>
                     @else
-                        <div class="col Stars" style="--rating: {{ round($user->seller_assessment->avg('point'), 1) }};" aria-label="Rating of this product is 3.5 out of 5.">
+                        <div class="col"><a href="{{ asset('/user/assessment/customer/'. $user->id) }}" class="link-dark">
+                            <div class="Stars" style="--rating: {{ round($user->seller_assessment->avg('point'), 1) }};" aria-label="Rating of this product is 3.5 out of 5.">
+                                <p class="d-inline">{{ round($user->seller_assessment->avg('point'), 1) }}</p>
+                            </div>
+                        </a></div>
                     @endif
-                    </div>
                 </div>
                 <div class="row">
-                    <p class="col">購入者評価</p>
+                <div class="col"><a href="{{ asset('/user/assessment/seller/'. $user->id) }}" class="text-decoration-none link-dark">販売者評価</a></div>
                     @if (round($user->customer_assessment->avg('point'), 1) == 0)
                         <p class="col">評価なし</p>
                     @else
+                    <div class="col"><a href="{{ asset('/user/assessment/seller/'. $user->id) }}" class="link-dark">
                         <div class="col Stars" style="--rating: {{ round($user->customer_assessment->avg('point'), 1) }};" aria-label="Rating of this product is 4.3 out of 5.">
+                            <p class="d-inline">{{ round($user->customer_assessment->avg('point'), 1) }}</p>
+                        </div>
+                    </a></div>
                     @endif
-                    </div>
                 </div>
             </div>
 

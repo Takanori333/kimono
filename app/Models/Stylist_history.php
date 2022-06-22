@@ -18,4 +18,9 @@ class Stylist_history extends Model
     {
         return $this->belongsTo(Stylist_info::class, "stylist_id", "id");
     }
+
+    public function stylist_comment()
+    {
+        return $this->hasOne(Stylist_comment::class);
+    }
 }

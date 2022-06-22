@@ -18,6 +18,10 @@
     <title>Document</title>
 </head>
 <body>
+    @include('header')
+    @php
+        use Illuminate\Support\Carbon;
+    @endphp
     <div class="container">
         <div class="contents p-5 mt-5 w-75 mx-auto text-center border_shadow">
             <div class="row text-end">
@@ -73,6 +77,23 @@
                                 {{ $services }}
                             </div>
                         </div>
+                        <div class="row border-bottom">
+                            <div class="row text-start">
+                                活動場所可能時間:
+                            </div>
+                            <div class="row text-start overflow-auto" style="max-height: 60px;">
+                                @if (isset($freetime))
+                                    1
+                                @endif
+                                @foreach ($freetime as $time)
+                                <div class="">
+                                    <div class="row text-center h6">
+                                        <div class="col-11">{{Carbon::parse($time->start_time)->format('m月d日 H時i分')}}~{{Carbon::parse($time->end_time)->format('m月d日 H時i分')}}</div>
+                                    </div>
+                                </div>
+                                @endforeach                            
+                            </div>
+                        </div>
                     </div>
                 </div>                
             </div>
@@ -84,5 +105,6 @@
             </div>
         </div>
     </div>
+    @include('footer')
 </body>
 </html>

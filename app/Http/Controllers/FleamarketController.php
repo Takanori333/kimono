@@ -23,15 +23,17 @@ class FleamarketController extends Controller
     // 4-1
     public function index(){
         $item_infos = SelectItem::getAllItemInfos();
-        return view('fleamarket.index', compact('item_infos'));
+        $categories = SelectItem::getCategories($item_infos);
+        return view('fleamarket.index', compact('item_infos', 'categories'));
     }
 
     // 4-2
     public function search(Request $request){
         $keyword = $request->all();
         $item_infos = SelectItem::getSearchedItemInfos($keyword);
+        $categories = SelectItem::getCategories($item_infos);
 
-        return view('fleamarket.search_result', compact('item_infos'));
+        return view('fleamarket.search_result', compact('item_infos', 'categories'));
     }
 
     // 4-3
@@ -39,11 +41,12 @@ class FleamarketController extends Controller
         $user_id = unserialize(session('user'))->id;
         $item_ids = Item_favorite::where('user_id', '=', unserialize(session('user'))->id )
         ->select('item_id')
-        ->get();
+        ->get()
+        ->toArray();
 
         $item_infos = array();
         $msg = '';
-        if( is_null( $item_ids ) ){
+        if( ! is_null( $item_ids ) ){
             // お気に入りに追加している商品がある場合
             foreach( $item_ids as $item_id  ){
                 $item_infos[] = SelectItem::getItemInfosById($item_id)[0];
@@ -51,8 +54,9 @@ class FleamarketController extends Controller
         }else{
             $msg = "お気に入りに追加された商品はありません";
         }
+        $categories = SelectItem::getCategories($item_infos);
 
-        return view('fleamarket.showFavorites', compact('item_infos', 'msg'));
+        return view('fleamarket.show_favorites', compact('item_infos', 'categories', 'msg'));
     }
 
     // 4-4

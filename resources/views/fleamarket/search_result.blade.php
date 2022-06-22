@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>検索結果</title>
 </head>
 <body>
@@ -32,7 +33,10 @@
     {{-- 商品一覧 --}}
     {{-- 絞り込み機能 --}}
     <div>
-        <p>販売商品のみを表示</p>
+        {{-- 販売商品のみ表示 --}}
+        <label for="only_on_sale">販売商品のみを表示</label>
+        <input type="checkbox" id="only_on_sale">
+
         <p>カテゴリ</p>
         <p>ソート</p>
     </div>
@@ -46,14 +50,37 @@
             {{ $msg }}
         @endisset
         @foreach ( $item_infos as $item_info )
-            <a href="{{asset('fleamarket/item/' . $item_info['id'] )}}">
-                <div>
-                    <img src="{{asset($item_info["image"][0]["path"])}}">
-                    <p> 商品名: {{ $item_info["name"] }}</p>
-                    <p> 値段: {{ $item_info["price"] }}</p>
-                </div>
-            </a>
+            <div id="item_card_{{$item_info["id"]}}"
+                 data-is-on-sale="{{$item_info['onsale']==2? 'sold':'sale'}}"
+            >
+                <a href="{{asset('fleamarket/item/' . $item_info['id'] )}}">
+                    <div>
+                        <img src="{{asset($item_info["image"][0]["path"])}}">
+                        <p> 商品名: {{ $item_info["name"] }}</p>
+                        <p> 値段: {{ $item_info["price"] }}</p>
+                    </div>
+                </a>
+            </div>
         @endforeach
     </div>
+    <script>
+        // 販売商品の絞り込み
+        $('#only_on_sale').change(function() {
+            if( $('#only_on_sale').prop('checked') ){
+                // チェックされた場合
+                
+                $('[data-is-on-sale="sold"]').each(function(i, e){
+                    let sold_id = $(e).attr('id');
+                    $('#' + sold_id).css('display', 'none');
+                });
+            }else{
+                // チェックが外れた場合
+                $('[data-is-on-sale="sold"]').each(function(i, e){
+                    let sold_id = $(e).attr('id');
+                    $('#' + sold_id).css('display', 'block');
+                });
+            }
+        });
+    </script>
 </body>
 </html>

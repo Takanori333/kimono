@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Stylist_comment extends Model
 {
     use HasFactory;
+
+    protected $guarded = ["id"];
 }

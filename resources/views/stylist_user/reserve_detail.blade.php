@@ -15,12 +15,12 @@
     @php
         use Illuminate\Support\Carbon;
     @endphp
-    <div class="container top-50 start-50 position-absolute translate-middle border secondary" style="padding: 50px;max-width: 600px">
+    <div class="container p-5 mt-5 border secondary" style="padding: 50px;max-width: 600px">
         <table class="table text-center">
             <tbody>
                 <tr>
                     <td>顧客</td>
-                    <td><a class="link-primary" href="#">{{ $reserve->customer_id }}</a></td>
+                    <td><a class="link-primary" href="{{ asset('/user/show/'.$reserve->customer_id) }}" target="_blank">{{ $reserve->customer_id }} </a></td>
                 </tr>
                 <tr>
                     <td>人数</td>

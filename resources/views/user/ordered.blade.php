@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>着付け依頼履歴</h1>
-    {{-- <p>{{ now() }}</p> --}}
+    <p>{{ $msg }}</p>
     @if ($order_histories->isNotEmpty())
         @foreach ($order_histories as $order_history)
             <div>
@@ -16,18 +16,24 @@
                 <p>{{ $order_history->services }}</p>
                 <p>{{ str_replace('-', '/', $order_history->created_at) }}</p>
                 <p>{{ number_format($order_history->price) }}円</p>
-                @if (now() >= $order_history->end_time)
-                    <form action="">
-                        評価
-                        <select name="point" id="">
-                            @for ($i=1;$i<=5;$i++)
-                                <option value="{{ $i }}">{{ $i }}</option>
-                            @endfor
-                        </select>
-                        <br>
-                        <input type="comment">
-                        <input type="submit" value="評価する">
-                    </form>
+                {{-- ユーザーがまだ評価していないとき --}}
+                @if (!$order_history->stylist_comment)
+                    {{-- 現在時刻がサービスの終了時間よりも後の時 --}}
+                    @if (now() >= $order_history->end_time)
+                        {{-- 評価項目の表示 --}}
+                        <form action="{{ asset('/user/assess_stylist') }}">
+                            評価
+                            <select name="point" id="">
+                                @for ($i=1;$i<=5;$i++)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                            <br>
+                            <input type="text" name="comment">
+                            <input type="submit" value="評価する">
+                            <input type="hidden" value="{{ $order_history->toJson() }}" name="order_history">
+                        </form>
+                    @endif
                 @endif
             </div>
         @endforeach

@@ -199,5 +199,26 @@ class SelectItem{
             'time' => $timeString
         ];
     }
+
+
+    public static function getCategories($item_infos){
+        $categories = array();
+        foreach( $item_infos as $key => $item_info ){
+            if( $key == 0 ){
+                $categories[] = $item_info['category'];
+            }else{
+                $is_only = true;
+                foreach( $categories as $category ){
+                    if( $category == $item_info['category'] ){
+                        $is_only = false;
+                    }
+                }
+                if( $is_only ){
+                    $categories[] = $item_info['category'];
+                }
+            }
+        }
+        return $categories;
+    }
 }
 

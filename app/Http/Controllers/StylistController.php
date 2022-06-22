@@ -13,11 +13,11 @@ class StylistController extends Controller
         $stylist_list = $s_function->top($request);
         return view('stylist.top',['stylist_list'=>$stylist_list,'area'=>$request->area,'service'=>$request->service,'sort'=>$request->sort]);
     }
-
+    //スタイリスト情報
     function stylist_info($id){
         $s_function = new StylistFunction();
         $info = $s_function->stylist_info($id);
-        return view('stylist.show',["stylist"=>$info[0],"services"=>$info[1],"areas"=>$info[2]]);
+        return view('stylist.show',["stylist"=>$info[0],"services"=>$info[1],"areas"=>$info[2],"freetime"=>$info[3]]);
     }
 
     //TODO:notfound画面

@@ -9,7 +9,11 @@
     <title>Document</title>
 </head>
 <body>
-    {{ var_dump($reserve) }}
+    {{-- {{ var_dump($reserve) }} --}}
+    @php
+        $user = unserialize(session()->get("user"));
+    @endphp
+    @include('header')
     <div class="h-100 w-100">
         <div class="row">
             <div class="start-50  position-absolute translate-middle-x border secondary col-10 col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-xl-4" style="padding: 30px;margin-top: 50px;margin-bottom: 50px;background: white;box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;">                    
@@ -18,7 +22,7 @@
                             @csrf
                             <div class="mb-3 row">
                                 <div class="alert-danger"></div>
-                                    <label for="exampleInputEmail1" class="form-label">名前：TEST</label>
+                                    <label for="exampleInputEmail1" class="form-label">名前：{{ $user->name }}</label>
                             </div>
                             <div class="mb-3 row">
                                 <div class="alert-danger"></div>
@@ -68,6 +72,6 @@
             </div>
         </div>
     </div>
-    
+    @include('footer')
 </body>
 </html>

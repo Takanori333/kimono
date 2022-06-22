@@ -11,9 +11,12 @@ use App\Functions\ChatFunction;
 use App\Http\Requests\SigninRequest;
 use App\Http\Requests\SignupRequest;
 use App\Http\Requests\UserEditRequest;
+use App\Models\Customer_assessment;
 use App\Models\Faq;
 use App\Models\Item;
 use App\Models\Item_history;
+use App\Models\Seller_assessment;
+use App\Models\Stylist_comment;
 use App\Models\Stylist_history;
 use App\Models\Trade_status;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +52,7 @@ class UserController extends Controller
 
         // 入力されたemailに一致するものをusersから取り出す
         $user = User::where("email", $input_email)
+            ->join("user_infos", "users.id", "=", "user_infos.id")
             ->where("exist", 1)
             ->first();
 
@@ -84,7 +88,6 @@ class UserController extends Controller
 
     // サインアウトの処理
     public function signout(Request $request){
-        // $request->session()->get('user');
         $request->session()->forget('user');
 
         // リダイレクト
@@ -115,6 +118,7 @@ class UserController extends Controller
             "birthday" => $request->year . "-" . $request->month . "-" . $request->day,
         ];
         
+        // 画像ファイルが選択されているとき
         if ($request->icon) {
             $icon_path = $request->file("icon")->store("image");
             $user_info_form["icon"] = $icon_path;
@@ -143,18 +147,12 @@ class UserController extends Controller
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
 
-        //  平均評価を計算し、代入
-        // $average_seller_point = $user->getAverageSellerPoint();
-        // $average_customer_point = $user->getAverageCustomerPoint();
-
         // フォロー数とフォロワー数を計算
         $follower_count = User_follower::where("follow_id", $user->id)->count();
         $follow_count = User_follower::where("follower_id", $user->id)->count();
 
         $data = [
             "user" => $user,
-            // "average_seller_point" => $average_seller_point,
-            // "average_customer_point" => $average_customer_point,
             "follow_count" => $follow_count,
             "follower_count" => $follower_count,
         ];
@@ -168,7 +166,7 @@ class UserController extends Controller
         $message_list = $chat_f->stylist_customer_get_message($id);
         $stylist_info = $chat_f->stylist_customer_get_info($id);
         return view("user.chat_stylist",["message_list"=>$message_list,"stylist_info"=>$stylist_info]);
-}
+    }
 
     // 出品商品一覧画面の表示
     public function exhibitedIndex(Request $request)
@@ -284,8 +282,6 @@ class UserController extends Controller
             "sold_items" => $sold_items,
         ];
 
-        // var_dump($sold_items->first()->item_history->buyer_id);
-
         // 購買履歴一覧画面の表示
         return view("user.sold", $data);
     }
@@ -303,11 +299,41 @@ class UserController extends Controller
             ->get();
 
         $data = [
+            "msg" => "",
             "order_histories" => $order_histories,
         ];
 
+        // リダイレクト時のmsgの代入
+        if ($request->old("msg")) {
+            $data["msg"] = $request->old("msg");
+        }
+
         // 注文履歴一覧画面の表示
         return view("user.ordered", $data);
+    }
+
+    public function assessStylist(Request $request)
+    {
+        // インスタンスを受け取る
+        $order_history = json_decode($request->order_history);
+
+        $stylist_comment = new Stylist_comment;
+
+        // stylist_commentsに保存する値
+        $values = [
+            "stylist_id" => $order_history->stylist_id,
+            "customer_id" => $order_history->customer_id,
+            "stylist_history_id" => $order_history->id,
+            "text" => $request->comment,
+            "point" => $request->point,
+        ];
+
+        // DBに保存
+        $stylist_comment->fill($values)->save();
+
+        // 注文一覧画面へリダイレクト
+        return redirect(asset("/user/ordered/" . $order_history->customer_id))
+            ->withInput(["msg" => "評価しました"]);
     }
 
     // フォロワー一覧画面の表示
@@ -489,6 +515,7 @@ class UserController extends Controller
                 "birthday" => $request->year . "-" . $request->month . "-" . $request->day,
             ];
 
+            // 画像ファイルが選択されているとき
             if ($request->icon) {
                 $icon_path = $request->file("icon")->store("image");
                 $user_info_form["icon"] = $icon_path;
@@ -518,14 +545,9 @@ class UserController extends Controller
 
     // ユーザープロフィール画面の表示
     public function showIndex(Request $request)
-    {
-        
+    {   
         $access_user = unserialize($request->session()->get("user"));
         $page_user = User::where("id", $request->id)->first();
-
-        // //  平均評価を計算し、代入
-        // $average_seller_point = $page_user->getAverageSellerPoint();
-        // $average_customer_point = $page_user->getAverageCustomerPoint();
 
         // フォロー数とフォロワー数を計算
         $follower_count = User_follower::where("follow_id", $page_user->id)->count();
@@ -564,8 +586,6 @@ class UserController extends Controller
         $data = [
             "page_user_id" => $request->id,
             "user" => $page_user,
-            // "average_seller_point" => $average_seller_point,
-            // "average_customer_point" => $average_customer_point,
             "follow_flg" => $follow_flg,
             "follow_count" => $follow_count,
             "follower_count" => $follower_count,
@@ -576,14 +596,66 @@ class UserController extends Controller
         return view("user.show", $data);
     }
 
+    // FAQ画面の表示
     public function faq()
     {
+        // 論理削除されていないFAQを抽出
         $faqs = Faq::where("exist", 1)->get();
 
         $data = [
             "faqs" => $faqs,
         ];
 
+        // FAQ画面の表示
         return view("user.faq", $data);
     }
+
+    // 購入者評価一覧画面の表示
+    public function getCustomerAssessment(Request $request)
+    {
+        // ページのユーザーのidを取得
+        $id = $request->id;
+        $page_user = User::where("id", $id)->first();
+
+        // ページのユーザーが評価されている情報を取り出す
+        // users,user_infosとjoinして取り出す
+        $assessment_users = Customer_assessment::where("to_id", $id)
+            ->join("user_infos", "customer_assessments.from_id", "=", "user_infos.id")
+            ->join("users", "users.id", "=", "customer_assessments.from_id")
+            ->select("*", "users.id as user_id", "customer_assessments.created_at as assessment_date")
+            ->get();
+
+        $data = [
+            "page_user" => $page_user,
+            "assessment_users" => $assessment_users,
+        ];
+
+        // 購入者評価一覧画面の表示
+        return view("user.customer_assessment", $data);
+    }
+
+    // 販売者評価一覧画面の表示
+    public function getSellerAssessment(Request $request)
+    {
+        // ページのユーザーのidを取得
+        $id = $request->id;
+        $page_user = User::where("id", $id)->first();
+
+        // ページのユーザーが評価されている情報を取り出す
+        // users,user_infosとjoinして取り出す
+        $assessment_users = Seller_assessment::where("to_id", $id)
+            ->join("user_infos", "seller_assessments.from_id", "=", "user_infos.id")
+            ->join("users", "users.id", "=", "seller_assessments.from_id")
+            ->select("*", "users.id as user_id", "seller_assessments.created_at as assessment_date")
+            ->get();
+
+        $data = [
+            "page_user" => $page_user,
+            "assessment_users" => $assessment_users,
+        ];
+
+        // 購入者評価一覧画面の表示
+        return view("user.seller_assessment", $data);
+    }
+
 }

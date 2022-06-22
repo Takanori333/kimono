@@ -27,6 +27,7 @@
         "着付け","メイク","ヘアアレンジ","講師"
     ]
   @endphp
+  @include('header')
     <div class="container">
       <div class="contents pt-5 mt-5 w-100 mx-auto text-center">
         <form action="{{ asset("/stylist") }}" method="GET" id="bar_form">
@@ -125,6 +126,7 @@
           @endif
       </ul>
     </nav>
+    @include('footer')
     <script>
       function form_submit(){
         document.getElementById('bar_form').submit();

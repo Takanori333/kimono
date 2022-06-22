@@ -9,6 +9,8 @@
     let customer_info_box = document.getElementById('customer_info');
     let customer_list;
     let customer_info;
+    let first = true;
+    let reserve_name = document.getElementById("reserve_name");
     socket.emit('stylist_join',stylist_id);
     //textareaにshift+enterキーでメッセージ送信
     message_body.addEventListener('keyup',function(e){
@@ -58,8 +60,10 @@
     })
     //顧客からのメッセージを表示する
     socket.on('from_customer',function(msg){
-        make_message_customer(msg);
-        scrollToBottom();
+        if(msg[1]==customer_id){
+            make_message_customer(msg[0]);
+            scrollToBottom();    
+        }
     })
     //顧客の一覧を獲得する
     function get_customer_list(){
@@ -81,6 +85,8 @@
                     a.classList.add("customer_item");
                     a.classList.add("d-flex");
                     a.classList.add("align-items-center");
+                    a.classList.add("justify-content-between");
+                    a.classList.add("border-bottom")
                     a.href = "javascript:void(0);";
                     a.addEventListener("click",function(){
                         change_customer_message('http://192.168.10.209:8000/chat/stylist_user_get_message',customer_csrf,customer.id,i);                        
@@ -91,19 +97,34 @@
                     img.style.borderRadius = "50%";
                     img.style.height = '30px';
                     img.style.width = '30px';
-                    p.textContent = customer.name + ":" + customer.readed;
+                    // p.textContent = customer.name + ":" + customer.readed;
+                    p.textContent = customer.name;
                     p.style.margin = "0";
                     a.appendChild(img);
                     a.appendChild(p);
+                    if(customer.readed!="0"){
+                        let span = document.createElement("span");
+                        span.classList.add("badge");
+                        span.classList.add("bg-danger");
+                        span.classList.add("rounded-pill");
+                        span.textContent = customer.readed;    
+                        a.appendChild(span);
+                    }
                     li.appendChild(a);
                     customer_list_box.appendChild(li);
                     // index++;
                     // console.log(customer);
                 }
+                if(first){
+                    $(document.getElementsByClassName('customer_item')[0]).click();
+                    console.log(document.getElementsByClassName('customer_item')[0]);
+                    console.log(1);
+                    first = false;
+                }
             },
             error:function(msg){
                 console.log(msg);
-            }
+            }            
         })
     }
     //顧客からのメッセージを画面に表示する
@@ -156,9 +177,11 @@
                         make_message_customer(msg['text']);
                     }
                 }
+                reserve_name.textContent = customer_info.name;
                 scrollToBottom();
                 change_customer_info();
                 get_customer_list();
+                console.log(2);
             },
             error:function(msg){
                 console.log(msg);
@@ -261,5 +284,5 @@
         })
     }
     get_customer_list();
-    $(document.getElementsByClassName('customer_item')[0]).click();
+    
 

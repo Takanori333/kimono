@@ -42,7 +42,7 @@ function stylist_send(&$socket,&$io){
 //スタイリスト顧客からのメッセージをスタイリストと顧客に送る
 function stylist_customer_send(&$socket,&$io){
     $socket->on('stylist_customer_send',function ($msg)use ($io,$socket){
-        $io->to('stylist:'.$msg['stylist_id'])->emit('from_customer',$msg['message']);
+        $io->to('stylist:'.$msg['stylist_id'])->emit('from_customer',[$msg['message'],$msg['customer_id']]);
         $socket->emit('from_customer',$msg['message']);
     });
 }

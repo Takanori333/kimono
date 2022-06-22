@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Customer_assessment extends Model
 {
     use HasFactory;
+
 }

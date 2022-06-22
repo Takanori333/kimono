@@ -5,7 +5,6 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -13,11 +12,8 @@
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&family=Shippori+Mincho&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/my-sheet.css') }}">
     <!-- CDN読み込み -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="{{ asset('js/header.js') }}"></script>
 </head>
 
 <body>
@@ -56,11 +52,11 @@
             <div class="fleM row">
                 <div class="col mt-5 ms-5 d-flex justify-content-center align-items-end">
                     <div class="m-4">
-                        <a href="" class="fs-5 link-dark text-decoration-none border-bottom d-block">フリマ</a>
+                        <a href="{{ asset('/fleamarket') }}" class="fs-5 link-dark text-decoration-none border-bottom d-block">フリマ</a>
                         <p class="mt-4">商品を購入。</p>
                         <p>もう着ない和服を出品できる。</p>
                         <p>など説明をする。</p>
-                        <a href="" class="btnarrow4 link-dark">商品を見る</a>
+                        <a href="{{ asset('/fleamarket') }}" class="btnarrow4 link-dark">商品を見る</a>
                     </div>
                 </div>
                 <div class="col"></div>
@@ -74,12 +70,12 @@
                 <div class="col"></div>
                 <div class="col mt-5 d-flex justify-content-center align-items-end">
                     <div class="m-4">
-                        <a href="" class="fs-5 link-dark text-decoration-none border-bottom d-block">着付け</a>
+                        <a href="{{ asset('/stylist') }}" class="fs-5 link-dark text-decoration-none border-bottom d-block">着付け</a>
                         <p class="mt-4">スタイリストを選んで依頼。</p>
                         <p>着付けを依頼する。</p>
                         <p>着付け依頼を請ける。</p>
                         <p>とか説明をする。</p>
-                        <a href="" class="btnarrow4 link-dark">着付け師を見る</a>
+                        <a href="{{ asset('/stylist') }}" class="btnarrow4 link-dark">着付け師を見る</a>
                     </div>
                 </div>
                 <img src="{{ asset('image/kitsuke.jpg') }}" alt="">

@@ -27,6 +27,8 @@
             $stylist_chat->text = $request->message;
             $stylist_chat->from = $request->from;
             $stylist_chat->save();
+            DB::table('stylist_chats')->where('stylist_id','=',$request->stylist_id)
+            ->where('customer_id','=',$request->customer_id)->where('from','=',(int)$request->from==0?1:0)->update(['readed'=>0]);
         }
         //スタイリストの顧客一覧を戻す
         function stylist_customer_list(){
@@ -58,18 +60,18 @@
         }
         //スタイリスト顧客が選択したスタイリストのメッセージを取得する
         function stylist_customer_get_message($id){
-            // $user = unserialize(session()->get("user"));
-            // $user_id = $user->id;
-            $user_id = 9999999;
+            $user = unserialize(session()->get("user"));
+            $user_id = $user->id;
+            // $user_id = 9999999;
             $message_list = DB::table('stylist_chats')->where('stylist_id','=',$id)->where('customer_id','=',$user_id)->get();
-            DB::table('stylist_chat')->where('customer_id','=',$user_id)->where('stylist_id','=',$id)->where('from','=',0)->update(['readed'=>0]);
+            DB::table('stylist_chats')->where('customer_id','=',$user_id)->where('stylist_id','=',$id)->where('from','=',0)->update(['readed'=>0]);
             return $message_list;            
         }
         //スタイリスト顧客が選択したスタイリストの情報を取得する
         function stylist_customer_get_info($id){
-            // $user = unserialize(session()->get("user"));
-            // $user_id = $user->id;
-            $user_id = 9999999;
+            $user = unserialize(session()->get("user"));
+            $user_id = $user->id;
+            // $user_id = 9999999;
             $stylist_info = DB::table('stylist_infos')->where('id','=',$id)->first();
             return $stylist_info;
         }
