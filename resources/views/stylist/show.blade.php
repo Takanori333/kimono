@@ -22,10 +22,10 @@
     @php
         use Illuminate\Support\Carbon;
     @endphp
-    <div class="container">
-        <div class="contents p-5 mt-5 w-75 mx-auto text-center border_shadow">
-            <div class="row text-end">
-                <a href="{{ asset('/user/stylist_chat/'.$stylist->id) }}">チャット</a>
+    <div class="container mt-5 pt-5">
+        <div class="contents p-5 mt-5 w-75 mx-auto text-center">
+            <div class="row text-end justify-content-end">
+                <a class="link-secondary" href="{{ asset('/user/stylist_chat/'.$stylist->id) }}" style="width: auto">チャット</a>
             </div>
             <div class="row my-4">
                 <div class="col-12 col-xl-4 col-xxl-4 d-grid gap-2">
@@ -120,7 +120,23 @@
             <div class="row justify-content-center">
                 <div class="row h1 justify-content-center">レビュー</div>
                 <div class="row border overflow-auto justify-content-center align-items-center h2" style="height: 200px">
-                    レビューはありません
+                    @if ($comments->isEmpty())
+                        レビューはありません
+                    @else
+                    @foreach ($comments as $comment)
+                    <div class="row">
+                        <div class="row h6 text-start">             
+                            <div class="col  m-0 p-0">
+                                <a class=" link-secondary  m-0 p-0" href="{{ asset("/user/show/".$comment->customer_id) }}" style="width:auto">{{ $comment->name }}</a> 
+                            </div>
+                            <div class="col flex-grow-1 Stars mb-1 fs-4 text-end" style='--rating: {{$comment->point}};' aria-label='Rating of this product is {{$comment->point}} out of 5.'></div>
+                        </div>
+                        <div class="row h5 rounded p-2 ml-1" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;">
+                            {{ $comment->text }}
+                        </div>
+                    </div>
+                    @endforeach                        
+                    @endif
                 </div>
             </div>
         </div>

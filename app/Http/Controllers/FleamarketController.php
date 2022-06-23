@@ -21,10 +21,15 @@ use Illuminate\Support\Facades\DB;
 class FleamarketController extends Controller
 {
     // 4-1
-    public function index(){
+    public function index(Request $request){
         $item_infos = SelectItem::getAllItemInfos();
         $categories = SelectItem::getCategories($item_infos);
-        return view('fleamarket.index', compact('item_infos', 'categories'));
+        $sort_type = is_null( $request->get('sort') )? 0: $request->get('sort');
+        $onsale = is_null( $request->get('onsale') )? false: $request->get('onsale');
+        $selected_category = is_null( $request->get('category') )? null: $request->get('category');
+        SelectItem::sortItemInfos($item_infos, $sort_type);
+        SelectItem::filterItemInfos($item_infos, $onsale, $selected_category);
+        return view('fleamarket.index', compact('item_infos', 'categories', 'sort_type', 'onsale', 'selected_category'));
     }
 
     // 4-2
@@ -60,7 +65,7 @@ class FleamarketController extends Controller
     }
 
     // 4-1-1(ソート)
-    
+
 
     // 4-4
     public function show($id){

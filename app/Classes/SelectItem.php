@@ -7,6 +7,7 @@ use App\Models\Item_info;
 use App\Models\Item_photo;
 use App\Models\Item_comment;
 use App\Models\User_info;
+use Datetime;
 
 class SelectItem{
     public static function getAllItemInfos(){
@@ -223,11 +224,125 @@ class SelectItem{
         return $categories;
     }
 
+    // 絞り込み
+    public static function filterItemInfos(&$item_infos, $is_only_sale=false, $selected_category=null){
+        // 販売中のitem_infoを格納する配列
+        $onsale_item_infos = array();
+        // 選択されたカテゴリであるitem_infoを格納する配列
+        $category_item_infos = array();
+        // 上2つの配列に含まれるitem_infoを格納する配列
+        $filtered_item_infos = array();
+
+        // 販売中のitem_infoを格納
+        if( $is_only_sale ){
+            foreach( $item_infos as $item_info ){
+                if( $item_info['onsale'] == 1 ){
+                    $onsale_item_infos[] = $item_info;
+                }
+            }
+        }else{
+            $onsale_item_infos = $item_infos;
+        }
+
+        // 選択されたカテゴリのitem_infoを格納
+        if( !is_null( $selected_category ) ){
+            foreach( $item_infos as $item_info ){
+                if( $item_info['category'] == $selected_category ){
+                    $category_item_infos[] = $item_info;
+                }
+            }
+        }else{
+            $category_item_infos = $item_infos;
+        }
+
+        // 両方に含まれるitem_infoを格納
+        foreach( $onsale_item_infos as $onsale_item_info ){
+            $is_both_exist = false;
+            foreach( $category_item_infos as $category_item_info ){
+                if( $onsale_item_info['id'] == $category_item_info['id'] ){
+                    $is_both_exist = true;
+                }
+            }
+            if( $is_both_exist ){
+                $filtered_item_infos[] = $onsale_item_info;
+            }
+        }
+
+        $item_infos = $filtered_item_infos;
+    }
+
 
     // ソート
-    public function sortItem($type){
-        // $type [0->新しい順, 1->古い順, 2->高評価順, 3->低評価順, 4->値段が高い順, 5->値段が安い順]
-        
+    public static function sortItemInfos(&$item_infos, $type=0){
+        switch( $type ){
+            case 0:
+            case 1:
+                self::sortItemDateTime($item_infos, $type);
+                break;
+            case 2:
+            case 3:
+                self::sortItemPrice($item_infos, $type);
+                break;
+            default:
+                break;
+        }
+    }
+
+    // 出品日時でのソート
+    // $type [0->新しい順, 1->古い順]
+    public static function sortItemDateTime(&$item_infos, $type){
+        // 昇順(asc)->古い順, 降順(desc)->新しい順
+
+        $created_ats = array();
+        foreach( $item_infos as $item_info ){
+            $year = is_null( $item_info['created_at']['year'] ) ? 1000:$item_info['created_at']['year'];
+            $month = is_null( $item_info['created_at']['month'] ) ? 01:$item_info['created_at']['month'];
+            $day = is_null( $item_info['created_at']['day'] ) ? 01:$item_info['created_at']['day'];
+            $hour = is_null( $item_info['created_at']['hour'] ) ? 00:$item_info['created_at']['hour'];
+            $minutes = is_null( $item_info['created_at']['minutes'] ) ? 00:$item_info['created_at']['minutes'];
+            $second = is_null( $item_info['created_at']['second'] ) ? 00:$item_info['created_at']['second'];
+
+            $str_datetime = $year . '-' . $month . '-' . $day . ' ' . $hour . ':' . $minutes . ':' . $second;
+
+            $objDateTime = new DateTime($str_datetime);
+            $created_ats[] = $objDateTime;
+        }
+
+        // ソート後の$item_infos
+        $sorted_item_infos = array();
+
+        if( $type == 0 ){
+            arsort($created_ats);
+        }elseif( $type == 1 ){
+            asort($created_ats);
+        }
+        foreach( $created_ats as $key => $created_at ){
+            $sorted_item_infos[] = $item_infos[$key];
+        }
+        $item_infos = $sorted_item_infos;
+    }
+
+    // 値段でのソート
+    // $type [2->値段が高い順, 3->値段が安い順]
+    public static function sortItemPrice(&$item_infos, $type){
+        // 昇順(asc)->安い順, 降順(desc)->高い順
+        $prices = array();
+        foreach( $item_infos as $item_info ){
+            $prices[] = $item_info['price'];
+        }
+
+        // ソート後の$item_infos
+        $sorted_item_infos = array();
+
+        if( $type == 2 ){
+            arsort($prices);
+        }elseif( $type == 3 ){
+            asort($prices);
+        }
+        foreach( $prices as $key => $price ){
+            $sorted_item_infos[] = $item_infos[$key];
+        }
+        $item_infos = $sorted_item_infos;
     }
 }
 

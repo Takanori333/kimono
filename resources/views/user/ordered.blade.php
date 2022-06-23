@@ -50,7 +50,7 @@
                             <div class="text-start mb-1">
                                 <label class="">評価</label>
                                 <select name="point" id="" class="">
-                                    @for ($i=1;$i<=5;$i++) <option value="{{ $i }}">{{ $i }}</option>
+                                    @for ($i=1;$i<=5;++$i) <option value="{{ $i }}">{{ $i }}</option>
                                         @endfor
                                 </select>
                             </div>

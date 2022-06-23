@@ -61,11 +61,11 @@
                             <p class="m-3 text-start text-break">{{ $item->detail }}</p>
                             <div class="row d-flex justify-content-center">
                                 @if ($item->onsale)
-                                    <button class="btn btn-outline-danger px-3 mt-4 mx-1 col-5" id="delete{{ $item->id }}" value="{{ $item->id }}" name="delete" disabled>削除</button>
-                                    <button class="btn btn-outline-secondary px-3 mt-4 mx-1 col-5" id="recover{{ $item->id }}" value="{{ $item->id }}" name="recover">復旧</button>
-                                @else
                                     <button class="btn btn-outline-danger px-3 mt-4 mx-1 col-5" id="delete{{ $item->id }}" value="{{ $item->id }}" name="delete">削除</button>
                                     <button class="btn btn-outline-secondary px-3 mt-4 mx-1 col-5" id="recover{{ $item->id }}" value="{{ $item->id }}" name="recover" disabled>復旧</button>
+                                @else
+                                    <button class="btn btn-outline-danger px-3 mt-4 mx-1 col-5" id="delete{{ $item->id }}" value="{{ $item->id }}" name="delete" disabled>削除</button>
+                                    <button class="btn btn-outline-secondary px-3 mt-4 mx-1 col-5" id="recover{{ $item->id }}" value="{{ $item->id }}" name="recover">復旧</button>
                                 @endif
                             </div>
                         </div>

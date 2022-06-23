@@ -2,6 +2,9 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="{{ asset('js/header.js') }}"></script>
 <nav id="header" class="p-3 fixed-top">
+    @php
+            use App\Functions\ChatFunction;
+    @endphp
     <div class="p-3 fixed-top d-flex border-bottom flex-wrap w-100 js-header">
         <!-- サイト名 -->
         <h5 class="me-auto my-0 mr-mb-auto font-weight-normal p-2">
@@ -13,7 +16,18 @@
             <li class="nav-item"><a href="{{ asset('/stylist') }}" class="nav-link p-2 js-header header-link">着付け師</a></li>
             <!-- ユーザー用 -->
             @if ( session("user") )
+            @php
+                $chat_f = new ChatFunction();
+                $chat_count = $chat_f->user_listen_chat();
+            @endphp
             <li class="nav-item"><a href="{{ asset('/user/info/{id}') }}" class="nav-link p-2 js-header header-link">マイページ</a></li>
+            <li class="nav-item">
+                <a href="{{  asset('/user/chat') }}" class="nav-link p-2 js-header header-link" target="_blank">
+                        チャット @if ($chat_count!=0)
+                        <span class="badge bg-danger rounded-pill ">{{ $chat_count }}</span>
+                        @endif
+                </a>
+            </li>
             <li class="nav-item"><a href="{{ asset('/user/signout') }}" class="nav-link p-2 js-header header-link">ログアウト</a></li>
             @else
             @if ( session("stylist") )

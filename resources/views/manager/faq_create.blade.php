@@ -44,7 +44,7 @@
             @endforeach
             @endif
             </p>
-            <p>{{ $msg }}</p>
+            {{ $msg }}
             <div class="">
                 <form action="{{ asset('/manager/faq/create_DB') }}">
                     @csrf

@@ -175,6 +175,7 @@
                         make_message_customer(msg['text']);
                     }
                 }
+                console.log(customer_info);
                 reserve_name.textContent = customer_info.name;
                 scrollToBottom();
                 change_customer_info();
@@ -196,6 +197,10 @@
         a.classList.add("link-dark");
         a.classList.add("text-decoration-none");
         a.classList.add("h5");
+        a.style.width = "auto";
+        a.style.margin = "0px";
+        p.style.marginLeft = "5px";
+        p.style.marginBottom = "0px";
         a.href = 'http://192.168.10.209:8000/user/show/' + customer_info.id;
         a.target = '_blank';
         img.src = 'http://192.168.10.209:8000/' + customer_info.icon;

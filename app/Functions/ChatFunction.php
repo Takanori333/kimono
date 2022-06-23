@@ -93,19 +93,22 @@
         //フリーマチャット
         function chat_trade($item_id){
             $user = unserialize(session()->get("user"));
-            $user_id = $user->id;
-            //もしユーザがurlのitem_idに対応する商品の販売者か購入者じゃないと、チャットがない画面にいく
-            $seller_id = DB::table('items')->where('id','=',$item_id)->value('user_id');            
-            $buyer_id = DB::table('item_histories')->where('item_id','=',$item_id)->value('buyer_id');
-            $other_id = $user_id!=$seller_id?$seller_id:$buyer_id;
-            if($seller_id==$user_id||$buyer_id==$user_id){
-                $message_list = DB::table('item_chats')->where('item_id','=',$item_id)->get();
-                $buyer_info = DB::table('user_infos')->where('id','=',$buyer_id)->first();
-                $seller_info = DB::table('user_infos')->where('id','=',$seller_id)->first();
-                $status = DB::table('trade_statuses')->where('item_id','=',$item_id)->value('status');
-                //メッセージを既読にする
-                DB::table('item_chats')->where('from','=',$other_id)->update(['readed'=>0]);
-                return [$message_list,$buyer_info,$seller_info,$status];
+            if($user){
+                $user_id = $user->id;
+                //もしユーザがurlのitem_idに対応する商品の販売者か購入者じゃないと、チャットがない画面にいく
+                $seller_id = DB::table('items')->where('id','=',$item_id)->value('user_id');            
+                $buyer_id = DB::table('item_histories')->where('item_id','=',$item_id)->value('buyer_id');
+                $other_id = $user_id!=$seller_id?$seller_id:$buyer_id;
+                $item_name = DB::table('item_infos')->where('id','=',$item_id)->value('name');
+                if($seller_id==$user_id||$buyer_id==$user_id){
+                    $message_list = DB::table('item_chats')->where('item_id','=',$item_id)->get();
+                    $buyer_info = DB::table('user_infos')->where('id','=',$buyer_id)->first();
+                    $seller_info = DB::table('user_infos')->where('id','=',$seller_id)->first();
+                    $status = DB::table('trade_statuses')->where('item_id','=',$item_id)->value('status');
+                    //メッセージを既読にする
+                    DB::table('item_chats')->where('from','=',$other_id)->update(['readed'=>0]);
+                    return [$message_list,$buyer_info,$seller_info,$status,$item_name];
+                }    
             }
             return false;
         }
@@ -114,8 +117,9 @@
             $item_chat = new Item_chat();
             $item_chat->item_id = $request->item_id;
             $item_chat->text = $request->message;
-            $item_chat->from = $request->from;
+            $item_chat->from = $request->from;            
             $item_chat->save();
+            DB::table('item_chats')->where('item_id','=',$request->item_id)->where('from','<>',$request->from)->update(['readed'=>"0"]);
         }
         //取引ステージの情報を変更する
         function change_trade_status(Request $request){
@@ -148,29 +152,34 @@
         function user_chat_list(){
             $user = unserialize(session()->get("user"));
             $user_id = $user->id;
-            $items = [];
+            $sell_items = [];
             $sell_item = DB::table('items')->where('user_id','=',$user_id)->pluck('id');
             foreach($sell_item as $id){
-                $items[] = $id;
+                $sell_items[] = $id;
             }
+            $buy_items = [];
             $buy_item = DB::table('item_histories')->where('buyer_id','=',$user_id)->pluck('item_id');
             foreach($buy_item as $id){
-                $items[] = $id;
+                $buy_items[] = $id;
             }
+            $items = array_merge($sell_items,$buy_items);
+            $items_name = DB::table('item_infos')->select('id','name')->whereIn('id',$items);
             $last_message_other = DB::table('item_chats')->
-            select('from',DB::raw('SUM(readed) as readed,MAX(created_at) as last_message'))
-            ->whereIn('item_id',$items)->where('from','<>',$user_id)->orderBy('last_message','desc')->
-            groupBy('from');
+            select('from','item_id',DB::raw('SUM(readed) as readed,MAX(created_at) as last_message'))
+            ->whereIn('item_id',$items)->where('from','<>',$user_id)->orderBy('last_message','desc')
+            ->groupBy('from')->groupBy('item_id');
 
             $chat_other_list = DB::table('user_infos')->
-            select('user_infos.name','user_infos.icon','user_infos.id','chat.last_message','chat.readed')
+            select('user_infos.name','user_infos.icon','user_infos.id','chat.last_message','chat.readed','chat.item_id','names.name as item_name')
             ->joinSub($last_message_other,'chat',function($join){
                 $join->on('user_infos.id','=','chat.from');
+            })->joinSub($items_name,'names',function($join){
+                $join->on('chat.item_id','=','names.id');
             })->get();
 
             $last_message_stylist = DB::table('stylist_chats')->
             select('stylist_id',DB::raw('SUM(readed) as readed,MAX(created_at) as last_message'))
-            ->where('customer_id','=',$user_id)->where('from','=',0)->orderBy('last_message','desc')->
+            ->where('customer_id','=',$user_id)->where('from','=','0')->orderBy('last_message','desc')->
             groupBy('stylist_id');
 
             $stylist_list = DB::table('stylist_infos')->
@@ -178,6 +187,7 @@
             ->joinSub($last_message_stylist,'stylist',function($join){
                 $join->on('stylist_infos.id','=','stylist.stylist_id');
             })->get();
+
             return [$chat_other_list,$stylist_list];
         }
 

@@ -47,12 +47,14 @@
                         <p class="m-3 text-start">￥{{ number_format($exhibited_item->item_info->price) }}</p>
                     </div>
                     <div class="col my-3 d-flex align-items-center justify-content-center">
-                        <div class="">
+                        @if($user_flg)
                             <div class="">
-                                <a href="{{ asset('/fleamarket/item/edit/'. $exhibited_item->id) }}" class="border border-secondary text-decoration-none py-2 px-3 secondary-link-bg">編集</a>
+                                <div class="">
+                                    <a href="{{ asset('/fleamarket/edit/'. $exhibited_item->id) }}" class="border border-secondary text-decoration-none py-2 px-3 secondary-link-bg">編集</a>
+                                </div>
+                                <button name="delete" value="{{ $exhibited_item->id }}" class="delete btn btn-danger px-3 mt-4 rounded-0">削除</button>
                             </div>
-                            <button name="delete" value="{{ $exhibited_item->id }}" class="delete btn btn-danger px-3 mt-4 rounded-0">削除</button>
-                        </div>
+                        @endif
                     </div>
                 </div>
 

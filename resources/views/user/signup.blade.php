@@ -199,6 +199,18 @@
                         </div>
                     </div>
 
+                    <div class="row mb-3">
+                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+
+                        </div>
+                        <label for="" class="col-sm-3 col-form-label">アイコン画像</label>
+                        <p class="col-sm text-secondary py-2 m-0">任意</p>
+                        <div class="col-sm-8">
+                            <input type="file" name="icon" value="{{ old('post') }}" class="form-control rounded-0">
+                        </div>
+                    </div>
+
                     <div class="d-grid gap-2 my-2">
                         <button type="submit" name="signup" class="btn btn-secondary btn-block my-2 py-3 rounded-0">登録</button>
                     </div>

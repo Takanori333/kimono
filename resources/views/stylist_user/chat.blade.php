@@ -41,7 +41,7 @@
             <div class="col-12 col-lg-3 col-md-3 col-sm-3 col-xl-3 col-xxl-3" style="height: 1px"></div>
             <div class="col-12 col-lg-8 col-md-8 col-sm-8 col-xl-8 col-xxl-8  vh-100 min-vh-100 " style="padding-top: 40px">
                 <div class="border-secondary border" style="width: 100%;height: 100%">
-                    <div class="row border-secondary border-bottom d-flex align-items-end " style="height: 7%;max-height: 100px;width: 100%;margin:0" id="customer_info">
+                    <div class="row border-secondary border-bottom d-flex align-items-end " style="height: 7%;max-height: 100px;width: 100%;margin:0;align-content: center;" id="customer_info">
                         {{-- <a class="d-flex">
                             <img src="http://192.168.10.209:8000/image/default.png" width="25" height="25" style="border-radius: 50%"><p>test</p>
                         </a> --}}

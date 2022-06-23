@@ -5,6 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>和服フリマ（仮）- 商品詳細</title>
@@ -29,24 +30,30 @@
                 @endisset
 
                 <!-- 商品画像スライドショー -->
-                <div id="carouselExampleIndicators" class="carousel slide col-sm-6" data-bs-ride="carousel">
+                <div id="carouselExampleIndicators" class="carousel slide col-sm-6 item-img-size-500" data-bs-ride="carousel">
                     <!-- 下のバー -->
                     <div class="carousel-indicators">
+                        @foreach ( $item_info["image"] as $i=> $image)
+                        @if ($i == 0)
                         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        @else
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ $i }}" aria-label="Slide {{ $i }}"></button>
+                        @endif
+                        @endforeach
                     </div>
                     <!-- 画像 -->
                     <div class="carousel-inner">
+                        @foreach ( $item_info["image"] as $i=> $image)
+                        @if ($i == 0)
                         <div class="carousel-item active">
-                            <img src="./images/animal_kuma.png" class="d-block w-100 ob-fit item-img-size-500" alt="">
+                            <img src="{{asset($image['path'])}}" class="d-block w-100 ob-fit item-img-size-500" alt="">
                         </div>
+                        @else
                         <div class="carousel-item">
-                            <img src="./images/jeans-1161035_960_720.jpg" class="d-block w-100 ob-fit item-img-size-500" alt="">
+                            <img src="{{asset($image['path'])}}" class="d-block w-100 ob-fit item-img-size-500" alt="">
                         </div>
-                        <div class="carousel-item">
-                            <img src="./images/woman_65.png" class="d-block w-100 ob-fit item-img-size-500" alt="">
-                        </div>
+                        @endif
+                        @endforeach
                     </div>
                     <!-- 左矢印 -->
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -104,7 +111,8 @@
 
                         <!-- コメント欄 -->
                         <p>コメント</p>
-                        <div id="comments" class="overflow-auto" style="height: 300px;">
+                        
+                        <div id="comments" class="overflow-auto" style="max-height: 300px;">
 
                             @foreach ( $item_comments as $item_comment )
 
@@ -112,15 +120,15 @@
                                 <div class="col-1 p-0">
                                     <a href="/user/show/{{$item_comment['user_id']}}">
                                         <!-- アイコン -->
-                                        <img src="./images/animal_kuma.png" alt="" class="w-100">
+                                        <img src="{{ asset('$item_comment->icon') }}" alt="" class="w-100">
                                     </a>
                                 </div>
                                 <div class="col-10">
                                     <!-- ユーザ名 -->
                                     @if ( $item_comment['is_seller'] )
-                                    <label>出品者:</label>
+                                    <label class="me-1">出品者:</label>
                                     @endif
-                                    <a href="/user/show/{{$item_comment['user_id']}}" class="link-dark text-decoration-none my-1 d-block">{{$item_comment['user_name']}}</a>
+                                    <a href="/user/show/{{$item_comment['user_id']}}" class="link-dark text-decoration-none my-1">{{$item_comment['user_name']}}</a>
                                     <div class="bg-lightoff m-2 rounded p-2">
                                         <!-- コメント本文 -->
                                         <p class="text-break mb-0">{{$item_comment['text']}}</p>
@@ -134,21 +142,19 @@
                         </div>
 
                         <!-- コメント入力欄 -->
-                        <form action="" method="post">
+                        <!-- <form action="" method="post"> -->
                             <div class="my-2">
                                 <textarea name="" id="comment" class="w-100" placeholder="コメントを入力" style="border: solid 1px lightgray;"></textarea>
                             </div>
                             <div class="d-flex">
                                 <!-- バリデーションメッセージ -->
                                 <p class="text-danger me-auto" id="comment_errors"></p>
-                                <!-- <p class="text-danger me-auto">テキストを入力してから送信してください</p> -->
-                                <!-- <p class="text-danger me-auto">入力可能な文字数は 200 文字です</p> -->
                                 <div class="justify-content-end">
                                     <!-- 送信ボタン -->
                                     <button class="btn btn-secondary" id="comment_send">送信</button>
                                 </div>
                             </div>
-                        </form>
+                        <!-- </form> -->
                     </div>
                 </div>
 
@@ -157,15 +163,16 @@
         </div>
     </div>
 
-    {{-- 商品詳細 --}}
+    <!-- {{-- 商品詳細 --}}
     <div>
         @isset( $msg )
         {{ $msg }}
         @endisset
         {{-- 商品画像 --}}
         <div>
-            @foreach ( $item_info["image"] as $image )
+            @foreach ( $item_info["image"] as $i=> $image)
             <img src="{{asset($image["path"])}}">
+            {{$i}}
             @endforeach
         </div>
         {{-- 商品情報, 購入ボタン, お気に入りボタン, チャット --}}
@@ -220,7 +227,7 @@
             {{-- 送信ボタン --}}
             <button id="comment_send">送信</button>
         </div>
-    </div>
+    </div> -->
 
     @include('footer')
 
@@ -236,11 +243,7 @@
             $.ajax("/fleamarket/favorite/insert", {
                 type: 'post',
                 data: {
-                    'item_id': {
-                        {
-                            $item_info["id"]
-                        }
-                    }
+                    'item_id': {{$item_info["id"]}}
                 },
                 dataType: 'json',
                 success: function(data) {
@@ -253,7 +256,7 @@
                     $('#favorite_messages').empty();
                     $('#favorite_messages').append('<p>お気に入りに追加出来ませんでした</p>');
                 }
-            })
+            });
         });
 
         // お気に入りから削除
@@ -262,16 +265,12 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
-            });
+            })
 
             $.ajax("/fleamarket/favorite/delete", {
                 type: 'post',
                 data: {
-                    'item_id': {
-                        {
-                            $item_info["id"]
-                        }
-                    }
+                    'item_id': {{$item_info["id"]}}
                 },
                 dataType: 'json',
                 success: function(data) {
@@ -304,15 +303,19 @@
                     success: function(data) {
                         $('#comment').val('');
                         $('#comments').empty();
+                        
                         for (let i = 0; i < data.length; i++) {
                             let appendElement = '';
-                            appendElement += '<p>'
+                            appendElement += '<div class="row m-0"><div class="col-1 p-0">'
+                            appendElement += '<img src="' + '" alt="" class="w-100">'
+                            appendElement += '</div>'
+                            appendElement += '<div class="col-10">'
                             if (data[i].is_seller) {
-                                appendElement += '出品者:';
+                                appendElement += '<label class="me-1">出品者:</label>';
                             }
-                            appendElement += '<a href="/user/show/' + data[i].user_id + '">' + data[i].user_name + '</a>';
-                            appendElement += '>' + data[i].text;
-                            appendElement += '</p>'
+                            appendElement += '<a href="/user/show/' + data[i].user_id + '" class="link-dark text-decoration-none my-1">' + data[i].user_name + '</a>';
+                            appendElement += '<div class="bg-lightoff m-2 rounded p-2"><p class="text-break mb-0">' + data[i].text + '</p></div>';
+                            appendElement += '</div></div>'
 
                             $('#comments').append(appendElement);
                         }

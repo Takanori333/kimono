@@ -28,6 +28,7 @@
             <h2 class="text-center pt-5">ログイン</h2>
             <div class="">
                 <form action="{{ asset('/user/signin_DB') }}" method="post" novalidate>
+                    @csrf
                     <!-- バリデーションメッセージ -->
                     @if ($errors->any())
                     @foreach ($errors->all() as $error)
@@ -46,7 +47,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="form-label">パスワード</label>
-                        <input type="text" name="password" class="form-control my-2 py-2 rounded-0">
+                        <input type="password" name="password" class="form-control my-2 py-2 rounded-0">
                     </div>
                     <div class="d-grid gap-2 my-2">
                         <button type="submit" name="singin" id="" value="サインイン" class="btn btn-secondary btn-block my-2 py-3 rounded-0">ログイン</button>

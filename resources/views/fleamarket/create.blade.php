@@ -5,119 +5,207 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <title>商品登録</title>
+    <title>和服フリマ（仮）- 商品登録</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&family=Shippori+Mincho&display=swap"
+        rel="stylesheet">
+    <!-- CDN読み込み -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 </head>
 <body>
     {{-- ヘッダー --}}
-    {{-- @include(); --}}
+    @include('header');
 
-    {{-- フリマヘッダー --}}
-    <div>
-        <div>
-            {{-- タイトル --}}
-            <h1>商品登録</h1>
-            <p>検索</p>
-            <form action="/fleamarket/search" method="GET">
-                <input type="text" name="keyword">
-                <input type="submit" value="🔍">
-            </form>
-        </div>
-        {{-- お気に入り商品閲覧ページ --}}
-        @if ( session('user') )
-            <a href="{{asset("/fleamarket/favorite")}}">お気に入り商品</a>
-        @endif
-        {{-- 出品ボタン --}}
-        <a href="{{asset("/fleamarket/exhibit/new")}}">出品</a>
-    </div>
+    <div class="container">
+        <div class="contents pt-5 mt-5 w-75 mx-auto">
 
-    {{-- 商品登録フォーム --}}
-    <div>
-        <form action="/fleamarket/exhibit/confirm" method="POST" enctype="multipart/form-data" id="item_create_form">
-        @csrf
-            @foreach ($errors->all() as $error)
-                <li>{{$error}}</li>
-            @endforeach
-            <label for="name">商品名:</label>
-            <input type="text" name="name" value="{{ old("name") }}">
-            <br>
+            <h2 class="text-center py-5 mt-5">商品登録</h2>
 
-            @php
-                $images = old("image");
-            @endphp
-            <label for="image">商品画像:</label>
-            <input type="file" id="input_img" multiple>
-
-            <div id="show_img_area">
-                @isset( $images )
-                    @foreach ($images as $image )
-                        <img src="{{ $image }}">
+            {{-- 商品登録フォーム --}}
+            <div>
+                <form action="/fleamarket/exhibit/confirm" method="POST" enctype="multipart/form-data" id="item_create_form">
+                    @csrf
+                    @foreach ($errors->all() as $error)
+                    <li>{{$error}}</li>
                     @endforeach
-                @endisset
-            </div>
-            <br>
 
-            <label for="category">カテゴリ:</label>
-            <input type="text" name="category" value="{{ old("category") }}">
-            <br>
+                    <div class="row my-3">
+                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            <p class="text-danger mb-1">商品名が記入されていません</p>
+                        </div>
+                        <div class="col-sm-4 col-form-label">商品名</div>
+                        <div class="col-sm-8">
+                            <input type="text" name="name" value="{{ old('name') }}" class="form-control rounded-0">
+                        </div>
+                        </div>
+                    </div>
 
-            <label for="price">値段:</label>
-            <input type="text" name="price" value="{{ old("price") }}">
-            <br>
+                    @php
+                    $images = old("image");
+                    @endphp
+                    <div class="row my-3">
+                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            <p class="text-danger mb-1"></p>
+                        </div>
+                        <div class="col-sm-4 col-form-label">商品画像</div>
+                        <div class="col-sm-8">
+                            <input type="file" name="" id="input_img" class="form-control rounded-0" multiple>
+                            <div id="show_img_area">
+                                @isset( $images )
+                                @foreach ($images as $image )
+                                <img src="{{ $image }}">
+                                @endforeach
+                                @endisset
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row my-3">
+                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            <p class="text-danger mb-1"></p>
+                        </div>
+                        <div class="col-sm-4 col-form-label">カテゴリ</div>
+                        <div class="col-sm-8">
+                            <input type="text" name="category" value="{{ old('category') }}" class="form-control rounded-0">
+                        </div>
+                    </div>
 
-            <label for="pref">発送元都道府県:</label>
-            <input type="text" name="pref" value="{{ old("pref") }}">
-            <br>
+                    <div class="row my-3">
+                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            <p class="text-danger mb-1"></p>
+                        </div>
+                        <div class="col-sm-4 col-form-label">値段</div>
+                        <div class="col-sm-8">
+                            <input type="text" name="price" value="{{ old('price') }}" class="form-control rounded-0">
+                        </div>
+                    </div>
 
-            <label for="material">素材:</label>
-            <input type="text" name="material" value="{{ old("material") }}">
-            <br>
+                    <div class="row my-3">
+                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            <p class="text-danger mb-1"></p>
+                        </div>
+                        <div class="col-sm-4 col-form-label">発送元都道府県</div>
+                        <div class="col-sm-8">
+                            <input type="text" name="pref" value="{{ old('pref') }}" class="form-control rounded-0">
+                        </div>
+                    </div>
 
-            <label for="color">色:</label>
-            <input type="text" name="color" value="{{ old("color") }}">
-            <br>
+                    <div class="row my-3">
+                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            <p class="text-danger mb-1"></p>
+                        </div>
+                        <div class="col-sm-4 col-form-label">素材</div>
+                        <div class="col-sm-8">
+                            <input type="text" name="material" value="{{ old('material') }}" class="form-control rounded-0">
+                        </div>
+                    </div>
 
-            <label for="status">商品状態:</label>
-            <input type="text" name="status" value="{{ old("status") }}">
-            <br>
+                    <div class="row my-3">
+                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            <p class="text-danger mb-1"></p>
+                        </div>
+                        <div class="col-sm-4 col-form-label">色</div>
+                        <div class="col-sm-8">
+                            <input type="text" name="color" value="{{ old('color') }}" class="form-control rounded-0">
+                        </div>
+                    </div>
 
-            <label for="smell">におい:</label>
-            <input type="text" name="smell" value="{{ old("smell") }}">
-            <br>
+                    <div class="row my-3">
+                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            <p class="text-danger mb-1"></p>
+                        </div>
+                        <div class="col-sm-4 col-form-label">商品状態</div>
+                        <div class="col-sm-8">
+                            <input type="text" name="status" value="{{ old('status') }}" class="form-control rounded-0">
+                        </div>
+                    </div>
 
-            <label for="size_heigh">身丈:</label>
-            <input type="text" name="size_height" value="{{ old("size_height") }}">
-            <br>
-            <label for="size_length">裄丈:</label>
-            <input type="text" name="size_length" value="{{ old("size_length") }}">
-            <br>
-            <label for="size_sleeve">袖丈:</label>
-            <input type="text" name="size_sleeve" value="{{ old("size_sleeve") }}">
-            <br>
-            <label for="size_sleeves">袖幅:</label>
-            <input type="text" name="size_sleeves" value="{{ old("size_sleeves") }}">
-            <br>
-            <label for="size_front">前幅:</label>
-            <input type="text" name="size_front" value="{{ old("size_front") }}">
-            <br>
-            <label for="size_back">後幅:</label>
-            <input type="text" name="size_back" value="{{ old("size_back") }}">
-            <br>
+                    <div class="row my-3">
+                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            <p class="text-danger mb-1"></p>
+                        </div>
+                        <div class="col-sm-4 col-form-label">におい</div>
+                        <div class="col-sm-8">
+                            <input type="text" name="smell" value="{{ old('smell') }}" class="form-control rounded-0">
+                        </div>
+                    </div>
 
-            <label for="detail">自由記入欄</label>
-            <textarea name="detail" cols="30" rows="10">{{ old("detail") }}</textarea>
-            <br>
+                    <div class="row my-3">
+                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            <p class="text-danger mb-1"></p>
+                        </div>
+                        <div class="col-sm-4 col-form-label">サイズ</div>
+                        <div class="col-sm-8">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label for="" class="col-form-label">身丈</label>
+                                    <div class=""><input type="text" name="size_height" value="{{ old('size_height') }}" class="form-control rounded-0"></div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="" class="col-form-label">裄</label>
+                                    <div class=""><input type="text" name="size_length" value="{{ old('size_length') }}" class="form-control rounded-0"></div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="" class="col-form-label">袖丈</label>
+                                    <div class=""><input type="text" name="size_sleeve" value="{{ old('size_sleeve') }}" class="form-control rounded-0"></div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="" class="col-form-label">袖幅</label>
+                                    <div class=""><input type="text" name="size_sleeves" value="{{ old('size_sleeves') }}" class="form-control rounded-0"></div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="" class="col-form-label">前幅</label>
+                                    <div class=""><input type="text" name="size_front" value="{{ old('size_front') }}" class="form-control rounded-0"></div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="" class="col-form-label">後ろ幅</label>
+                                    <div class=""><input type="text" name="size_back" value="{{ old('size_back') }}" class="form-control rounded-0"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <div id="hidden_input">
-                @isset( $images )
-                    @foreach ($images as $key => $image )
+                    <div class="row my-3">
+                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            <p class="text-danger mb-1"></p>
+                        </div>
+                        <div class="col-sm-4 col-form-label">自由記入欄</div>
+                        <div class="col-sm-8">
+                            <textarea name="detail" id="" class="form-control rounded-0" cols="30" rows="10">{{ old("detail") }}</textarea>
+                        </div>
+                    </div>
+
+                    <div id="hidden_input">
+                        @isset( $images )
+                        @foreach ($images as $key => $image )
                         <input type="hidden" name="image[{{$key}}]" value="{{ $image }}">
-                    @endforeach
-                @endisset
-            </div>
+                        @endforeach
+                        @endisset
+                    </div>
 
-            <input type="button" value="内容を確認" onclick="submit()">
-        </form>
+                    <div class="d-grid gap-2">
+                        <button type="button" value="内容を確認" onclick="submit()" class="btn btn-secondary rounded-0">内容を確認</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+
+    @include('footer')
+
     <script>
         // <input type="file" id="input_img" multiple>にchangeイベントを設定
         document.getElementById( "input_img" ).addEventListener( "change", function() {
@@ -150,5 +238,13 @@
 
 
     </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
 </body>
 </html>

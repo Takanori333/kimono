@@ -80,7 +80,7 @@ Route::get('/faq',[UserController::class,'faq']);
 Route::get('/user/assessment/customer/{id}',[UserController::class,'getCustomerAssessment']);
 Route::get('/user/assessment/seller/{id}',[UserController::class,'getSellerAssessment']);
 
-
+Route::get('/user/chat/',[UserController::class,'chat']);
 Route::get('/user/stylist_chat/{id}',[UserController::class,'chat_stylist']);
 Route::get('/user/trade_chat/{item_id}',[UserController::class,'chat_trade']);
 Route::post('/change_trade_status/{item_id}',[ChatController::class,'change_trade_status']);

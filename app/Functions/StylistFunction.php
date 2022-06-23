@@ -66,7 +66,8 @@ use App\Models\Stylist_service;
             $user = unserialize(session()->get("user"));
             $stylist = DB::table('stylist_infos')->where('id','=',$id)->first();
             $services = DB::table('stylist_services')->where('stylist_id','=',$id)->pluck("service");
-            $freetime_list = DB::table('stylist_freetimes')->where("stylist_id","=",$id)->where("end_time",">=",date("Y-m-d H:i:s"))->orderBy('start_time')->get();            
+            $freetime_list = DB::table('stylist_freetimes')->where("stylist_id","=",$id)->where("end_time",">=",date("Y-m-d H:i:s"))->orderBy('start_time')->get();
+            $comments = DB::table('stylist_comments')->where("stylist_id","=",$id)->rightJoin('user_infos','user_infos.id','=','stylist_comments.customer_id')->get();
             $service = [];
             foreach($services as $s){
                 $service[] = $s;
@@ -85,7 +86,7 @@ use App\Models\Stylist_service;
                 }
             }
             $follower_count = DB::table('stylist_followers')->where('stylist_id','=',$id)->count();
-            return [$stylist,implode(" , ",$service),implode(" , ",$area),$freetime_list,$is_follow,$follower_count];
+            return [$stylist,implode(" , ",$service),implode(" , ",$area),$freetime_list,$is_follow,$follower_count,$comments];
         }
         //予約画面
         function reserve($reserve_id){

@@ -36,9 +36,9 @@ class SigninRequest extends FormRequest
             "email.required" => "メールアドレスが記入されていません",
             "email.email" => "メールアドレスの形式が正しくありません",
             "email.max" => "メールアドレスは50文字以下で入力してください",
-            
+
             "password.required" => "パスワードが記入されていません",
-            "password.max:20" => "パスワードは20文字以下で入力してください",
+            "password.max" => "パスワードは20文字以下で入力してください",
         ];
     }
 }

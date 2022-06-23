@@ -35,11 +35,11 @@ class SignupRequest extends FormRequest
             ],
             'phone' => 'required|digits_between:10,11|numeric',
             'sex' => 'required',
-            'year' => 'required|numeric|digits:4',
+            'year' => 'required|integer|digits:4',
             'month' => 'required|numeric|digits_between:1,2',
             'day' => 'required|numeric|digits_between:1,2',
             'post' => 'required|digits:7|numeric',
-            'address' => 'required|max:200',
+            'address' => 'required|max:100',
             'password' => 'required|confirmed|max:20',
             'height' => 'numeric|nullable|digits_between:1,3',
             'icon' => 'nullable|image',
@@ -67,7 +67,7 @@ class SignupRequest extends FormRequest
             'sex.required' => '性別が選択されていません',
 
             'year.required' => '誕生年が記入されていません',
-            'year.numeric' => '誕生年は数字で入力してください',
+            'year.integer' => '誕生年は数字で入力してください',
             'year.digits' => '誕生年が正しくありません',
 
             'month.required' => '誕生月が記入されていません',
@@ -83,7 +83,7 @@ class SignupRequest extends FormRequest
             'post.digits' => '郵便番号が正しくありません',
 
             'address.required' => '住所が記入されていません',
-            'address.max' => '住所は200文字以下で入力してください',
+            'address.max' => '住所は100文字以下で入力してください',
 
             'password.required' => 'パスワードが記入されていません',
             'password.confirmed' => 'パスワードが一致しません',

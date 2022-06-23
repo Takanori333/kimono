@@ -182,10 +182,25 @@ class UserController extends Controller
     public function exhibitedIndex(Request $request)
     {
         // セッションからuserインスタンスを受け取る
-        $user = unserialize($request->session()->get("user"));
+        $access_user = unserialize($request->session()->get("user"));
+
+        // ページのユーザーidを受け取る
+        $page_user_id = $request->id;
+
+        // ログイン状態である確認
+        // 未ログインのときはaccess_userがnullになる
+        if ($access_user) {
+            if ($access_user->id == $page_user_id) {
+                $user_flg = true;
+            } else {
+                $user_flg = false;
+            }
+        } else {
+            $user_flg = false;
+        }
 
         // ユーザーが出品した商品の中から、現在出品中の物を検索
-        $exhibited_items = Item::where("user_id", $user->id)
+        $exhibited_items = Item::where("user_id", $request->id)
                     ->where("onsale", 1)
                     ->with(["item_info", "item_photo"])
                     ->get();
@@ -194,6 +209,7 @@ class UserController extends Controller
             // msgの初期値
             "msg" => "",
             "exhibited_items" =>$exhibited_items,
+            "user_flg" => $user_flg,
         ];
 
         // リダイレクト時のmsgの代入
@@ -227,7 +243,7 @@ class UserController extends Controller
         ];
 
         // 出品商品一覧画面へリダイレクト
-        return redirect(asset("user/exhibited/") . $user->id)->withInput($data);
+        return redirect(asset("user/exhibited/". $user->id))->withInput($data);
     }
 
     //フリーマチャット画面にいく
@@ -240,12 +256,19 @@ class UserController extends Controller
                 'buyer_info'=>$chat_info_list[1],
                 'seller_info'=>$chat_info_list[2],
                 'status'=>$chat_info_list[3],
-                'item_id'=>$item_id
+                'item_id'=>$item_id,
+                'item_name'=>$chat_info_list[4]
             ]);
         }else{
             //もしユーザがurlのitem_idに対応する商品の販売者か購入者じゃないと、チャットがない画面にいく
             return redirect(asset('notfound'));
         }
+    }
+
+    function chat(){
+        $chat_f = new ChatFunction();
+        $chat_list = $chat_f->user_chat_list();
+        return view('user.chat',['trade_chat'=>$chat_list[0],'stylist_chat'=>$chat_list[1]]);
     }
 
     // 購買履歴一覧画面の表示
@@ -340,7 +363,8 @@ class UserController extends Controller
 
         // DBに保存
         $stylist_comment->fill($values)->save();
-
+        $avg_point = DB::table("stylist_comments")->where('stylist_id','=',$order_history->stylist_id)->avg('point');
+        DB::table("stylist_infos")->where('stylist_id','=',$order_history->stylist_id)->update(['point'=>$avg_point]);
         // 注文一覧画面へリダイレクト
         return redirect(asset("/user/ordered/" . $order_history->customer_id))
             ->withInput(["msg" => "評価しました"]);

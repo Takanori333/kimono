@@ -15,8 +15,8 @@
     @endphp
     @include('header')
     <div class="h-100 w-100">
-        <div class="row">
-            <div class="start-50  position-absolute translate-middle-x border secondary col-10 col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-xl-4" style="padding: 30px;margin-top: 50px;margin-bottom: 50px;background: white;box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;">                    
+        <div class="row mt-5 p-5">
+            <div class="mt-5 border secondary col-10 col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-xl-4" style="padding: 30px;margin-top: 50px;margin-bottom: 50px;background: white;box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;">                    
                     <div class="container gap-1 d-grid">
                         <form action="{{ asset('stylist/confirm') }}" method="POST">
                             @csrf
