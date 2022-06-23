@@ -36,6 +36,7 @@ class FaqRequest extends FormRequest
             "question.required" => "質問が記入されていません",
             "question.string" => "質問が正しくありません",
             "question.max" => "質問は200文字以下で入力してください",
+            
             "answer.required" => "回答が記入されていません",
             "answer.string" => "回答が正しくありません",
             "answer.max" => "回答は200文字以下で入力してください",

@@ -26,5 +26,10 @@ class Stylist extends Model
         return $this->hasMany(Stylist_area::class);
     }
 
+    public function stylist_service()
+    {
+        return $this->hasMany(Stylist_service::class);
+    }
+
     
 }

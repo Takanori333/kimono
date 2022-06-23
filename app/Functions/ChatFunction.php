@@ -118,9 +118,10 @@
             $item_chat->save();
         }
         //取引ステージの情報を変更する
-        function change_trade_status($item_id){
-            $status = (int)DB::table('trade_statuses')->where('item_id','=',$item_id)->value('status')+1;
-            DB::table('trade_statuses')->where('item_id','=',$item_id)->update(
+        function change_trade_status(Request $request){
+            $status = DB::table('trade_statuses')->where('item_id','=',$request->id)->value('status');
+            $status = (int)$status + 1;
+            DB::table('trade_statuses')->where('item_id','=',$request->id)->update(
                 ['status'=>$status]
             );
         }

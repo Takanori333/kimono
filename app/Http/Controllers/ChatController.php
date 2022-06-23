@@ -29,5 +29,10 @@ class ChatController extends Controller
         $chat_f = new ChatFunction();
         $chat_f->insert_item_chats($request);
     }
+
+    function change_trade_status(Request &$request){
+        $chat_f = new ChatFunction();
+        $chat_f->change_trade_status($request);
+    }
     
 }

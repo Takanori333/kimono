@@ -108,13 +108,11 @@ Route::post('/fleamarket/favorite/insert', [FleamarketController::class, 'insert
 Route::post('/fleamarket/favorite/delete', [FleamarketController::class, 'deleteFavorite']);
 Route::get('/fleamarket/favorite', [FleamarketController::class, 'showFavorites']);
 
-
-
-
 // 管理者
 Route::get('/manager',[ManagerController::class,'index']);
 Route::get('/manager/signin',[ManagerController::class,'signinIndex']);
 Route::post('/manager/signin_DB',[ManagerController::class,'signin']);
+Route::get('/manager/signout',[ManagerController::class,'signout']);
 Route::get('/manager/user',[ManagerController::class,'userManageIndex']);
 Route::get('/manager/user/delete',[ManagerController::class,'deleteUser']);
 Route::get('/manager/user/recover',[ManagerController::class,'recoverUser']);

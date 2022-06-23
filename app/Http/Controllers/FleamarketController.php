@@ -59,6 +59,9 @@ class FleamarketController extends Controller
         return view('fleamarket.show_favorites', compact('item_infos', 'categories', 'msg'));
     }
 
+    // 4-1-1(ソート)
+    
+
     // 4-4
     public function show($id){
         $item_info = SelectItem::getItemInfosById($id)[0];

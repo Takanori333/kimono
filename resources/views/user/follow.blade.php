@@ -40,15 +40,20 @@
                         <a href="{{ asset('/user/show/' . $follow_of_page_user->user_id) }}" class="text-decoration-none link-dark">{{ $follow_of_page_user->name }}</a>
                     </div>
                     <div class="col d-flex align-items-center justify-content-end">
+                        {{-- ログイン状態であるかを確認 --}}
+                        @if ($user)
                         {{-- アクセスしたユーザーがフォローしているかを確認 --}}
-                        @if (in_array($follow_of_page_user->id, $follows_of_access_user))
-                        {{-- フォローしているときは解除ボタンの表示 --}}
-                        <button value="{{ $follow_of_page_user->user_id }}" id="{{ $follow_of_page_user->user_id }}" name="unfollow" class="btn btn-outline-secondary">解除</button>
-                        @elseif ($user->id == $follow_of_page_user->user_id)
-                        {{-- ユーザーがアクセスしたユーザー自身の時は何も表示しない --}}
+                            @if (in_array($follow_of_page_user->id, $follows_of_access_user))
+                            {{-- フォローしているときは解除ボタンの表示 --}}
+                            <button value="{{ $follow_of_page_user->user_id }}" id="{{ $follow_of_page_user->user_id }}" name="unfollow" class="btn btn-outline-secondary">解除</button>
+                            @elseif ($user->id == $follow_of_page_user->user_id)
+                            {{-- ユーザーがアクセスしたユーザー自身の時は何も表示しない --}}
+                            @else
+                            {{-- フォローしていないときはフォローボタンの表示 --}}
+                            <button value="{{ $follow_of_page_user->user_id }}" id="{{ $follow_of_page_user->user_id }}" name="follow" class="btn btn-secondary">フォローする</button>
+                            @endif
                         @else
-                        {{-- フォローしていないときはフォローボタンの表示 --}}
-                        <button value="{{ $follow_of_page_user->user_id }}" id="{{ $follow_of_page_user->user_id }}" name="follow" class="btn btn-secondary">フォローする</button>
+                            {{-- ログインしていないときは何も表示しない --}}
                         @endif
                     </div>
                 </div>
@@ -104,11 +109,11 @@
         @if (in_array($follow_of_page_user->id, $follows_of_access_user))
         {{-- フォローしているときは解除ボタンの表示 --}}
         <button value="{{ $follow_of_page_user->user_id }}" id="{{ $follow_of_page_user->user_id }}" name="unfollow">解除</button>
-        @elseif ($user->id == $follow_of_page_user->user_id)
+        {{-- @elseif ($user->id == $follow_of_page_user->user_id) --}}
         {{-- ユーザーがアクセスしたユーザー自身の時は何も表示しない --}}
         @else
         {{-- フォローしていないときはフォローボタンの表示 --}}
-        <button value="{{ $follow_of_page_user->user_id }}" id="{{ $follow_of_page_user->user_id }}" name="follow">フォローする</button>
+        {{-- <button value="{{ $follow_of_page_user->user_id }}" id="{{ $follow_of_page_user->user_id }}" name="follow">フォローする</button> --}}
         @endif
     </div>
     @endforeach

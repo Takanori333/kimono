@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Http\Request;
 
 class UserEditRequest extends FormRequest
 {
@@ -21,14 +23,23 @@ class UserEditRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(Request $request)
     {
+        // セッションからuserインスタンスを受け取る
+        $user = unserialize($request->session()->get("user"));
+
         return [
             'name' => 'required|string|max:20',
             'year' => 'required|integer|digits:4',
             'month' => 'required|integer|digits_between:1,2',
             'day' => 'required|integer|digits_between:1,2',
-            'email' => 'required|email|max:50',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')
+                    ->where(fn ($query) => $query->where('exist', '!=', '0')->where("id", '!=', $user->id)),
+                'max:50',
+            ],
             'phone' => 'required|digits_between:10,11|numeric',
             'post' => 'required|digits:7|numeric',
             'address' => 'required|max:200',
@@ -60,6 +71,7 @@ class UserEditRequest extends FormRequest
 
             'email.required' => "メールアドレスが記入されていません",
             'email.email' => "メールアドレスの形式が正しくありません",
+            'email.unique' => 'そのメールアドレスは既に使用されています',
             'email.max' => "メールアドレスは50文字以下で入力してください",
 
             'phone.required' => "電話番号が記入されていません",

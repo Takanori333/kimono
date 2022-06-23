@@ -130,8 +130,9 @@ class UserController extends Controller
         $user_info->fill($user_info_form)->save();
 
         // 登録したユーザーのidを代入
-        $user = User::with("user_infos", "users.id", "=", "user_infos.id")
+        $user = User::join("user_infos", "users.id", "=", "user_infos.id")
             ->where("email", $request->email)
+            ->where("exist", 1)
             ->first();
 
         // セッションにuserのインスタンスを格納
@@ -243,7 +244,7 @@ class UserController extends Controller
             ]);
         }else{
             //もしユーザがurlのitem_idに対応する商品の販売者か購入者じゃないと、チャットがない画面にいく
-            return redirect(asset('not_found_chat'));
+            return redirect(asset('notfound'));
         }
     }
 
@@ -361,6 +362,8 @@ class UserController extends Controller
             ->select("*", "user_infos.id as user_id")
             ->get();
  
+        // ログイン状態化を判別
+        // ログインしていないときは$userがnullになる
         if ($user) {
             // アクセスしたユーザーがフォローしている人を検索する
             // フォローしているユーザーのidを取り出し、配列に格納する
@@ -459,27 +462,31 @@ class UserController extends Controller
             ->select("*", "user_infos.id as user_id")
             ->get();
 
+        // ログイン状態化を判別
+        // ログインしていないときは$userがnullになる
+        if ($user) {        
+            // アクセスしたユーザーがフォローしている人を検索する
+            // フォローしているユーザーのidを取り出し、配列に格納する
+            // アクセスしたユーザーがフォローしているかで、フォローボタン等の表示を変える
+            $follows_of_access_user = User_follower::where("follower_id", $user->id)
+                ->join("users", "follower_id", "=", "users.id")
+                ->select("follow_id")
+                ->where("users.exist", "1")
+                ->get()
+                ->map(function ($row) {
+                    return $row->follow_id;
+                })
+                ->toArray();
+        } else {
+            $follows_of_access_user = array();
+        }
         
-        // アクセスしたユーザーがフォローしている人を検索する
-        // フォローしているユーザーのidを取り出し、配列に格納する
-        // アクセスしたユーザーがフォローしているかで、フォローボタン等の表示を変える
-        $follows_of_access_user = User_follower::where("follower_id", $user->id)
-            ->join("users", "follower_id", "=", "users.id")
-            ->select("follow_id")
-            ->where("users.exist", "1")
-            ->get()
-            ->map(function ($row) {
-                return $row->follow_id;
-            })
-            ->toArray();
-
         $data = [
             "user" => $user,
             "follows_of_page_user" => $follows_of_page_user,
             "follows_of_access_user" => $follows_of_access_user,
         ];
-
-
+        
         // フォロー一覧画面の表示
         return view("user.follow", $data);
     }
@@ -511,56 +518,43 @@ class UserController extends Controller
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
 
-        // バリデーションチェック
-        $user_count = User::where("email", $request->email)
-            ->where("id", "!=", $user->id)    
-            ->count();
+        $user_info = User_info::where("id", $user->id)->first();
+        
+        // usersに保存する値
+        $user_form = [
+            "email" => $request->email,
+            "password" => $request->password,
+        ];
 
-        if (!$user_count) {
-            // $user = User::where("id", $request->id)->first();
-            $user_info = User_info::where("id", $user->id)->first();
-            
-            // usersに保存する値
-            $user_form = [
-                "email" => $request->email,
-                "password" => $request->password,
-            ];
-    
-            // user_infosに保存する値
-            $user_info_form = [
-                "name" => $request->name,
-                "address" => $request->address,
-                "sex" => $request->sex,
-                // heightはnullable
-                "height" => $request->height,
-                "phone" => $request->phone,
-                "post" => $request->post,
-                "birthday" => $request->year . "-" . $request->month . "-" . $request->day,
-            ];
+        // user_infosに保存する値
+        $user_info_form = [
+            "name" => $request->name,
+            "address" => $request->address,
+            "sex" => $request->sex,
+            // heightはnullable
+            "height" => $request->height,
+            "phone" => $request->phone,
+            "post" => $request->post,
+            "birthday" => $request->year . "-" . $request->month . "-" . $request->day,
+        ];
 
-            // 画像ファイルが選択されているとき
-            if ($request->icon) {
-                $icon_path = $request->file("icon")->store("image");
-                $user_info_form["icon"] = $icon_path;
-            }
-    
-            // DBに保存
-            $user->fill($user_form)->save();
-            $user_info->fill($user_info_form)->save();
-    
-            // セッションのuserインスタンスを更新
-            $request->session()->put("user", serialize($user));
-            
-            $data = [
-                // 変更完了メッセージ
-                "msg" => "変更しました"
-            ];
-        } else {
-            $data = [
-                // エラーメッセージ
-                "msg" => "そのメールアドレスは既に使用されています"
-            ];
+        // 画像ファイルが選択されているとき
+        if ($request->icon) {
+            $icon_path = $request->file("icon")->store("image");
+            $user_info_form["icon"] = $icon_path;
         }
+
+        // DBに保存
+        $user->fill($user_form)->save();
+        $user_info->fill($user_info_form)->save();
+
+        // セッションのuserインスタンスを更新
+        $request->session()->put("user", serialize($user));
+        
+        $data = [
+            // 変更完了メッセージ
+            "msg" => "変更しました"
+        ];
 
         // ユーザー情報変更画面へリダイレクト
         return redirect(asset("user/edit/". $user->id))->withInput($data); 

@@ -1,46 +1,171 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>和服フリマ（仮）- 商品詳細</title>
+    <!-- フォント読み込み -->
+    <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&family=Shippori+Mincho&display=swap" rel="stylesheet">
+    <!-- CDN読み込み -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <title>商品詳細</title>
 </head>
+
 <body>
     {{-- ヘッダー --}}
-    {{-- @include(); --}}
+    @include('header');
 
-    {{-- フリマヘッダー --}}
-    <div>
-        {{-- 検索窓 --}}
-        <div>
-            {{-- タイトル --}}
-            <h1>商品詳細</h1>
-            <p>検索</p>
-            <form action="/fleamarket/search" method="GET">
-                <input type="text" name="keyword">
-                <input type="submit" value="🔍">
-            </form>
+    <div class="container">
+        <div class="contents pt-5 mt-5 w-100 mx-auto">
+
+            <div class="row mt-5">
+
+                @isset( $msg )
+                {{ $msg }}
+                @endisset
+
+                <!-- 商品画像スライドショー -->
+                <div id="carouselExampleIndicators" class="carousel slide col-sm-6" data-bs-ride="carousel">
+                    <!-- 下のバー -->
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
+                    <!-- 画像 -->
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="./images/animal_kuma.png" class="d-block w-100 ob-fit item-img-size-500" alt="">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="./images/jeans-1161035_960_720.jpg" class="d-block w-100 ob-fit item-img-size-500" alt="">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="./images/woman_65.png" class="d-block w-100 ob-fit item-img-size-500" alt="">
+                        </div>
+                    </div>
+                    <!-- 左矢印 -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <!-- 右矢印 -->
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+
+                <!-- 詳細 -->
+                <div class="col-sm-6 p-5">
+                    <p class="fs-4">{{ $item_info["name"] }}</p>
+                    <p class="fs-5 d-inline">￥{{ $item_info["price"] }}</p>
+                    <!-- <p class="d-inline">（送料：￥400）</p> -->
+                    <!-- <p>税込</p> -->
+                    <div class="my-3">
+                        <p>商品について</p>
+                        <div class="row ms-2 border-start">
+                            <p class="col-2 mb-0">カテゴリ</p>
+                            <p class="col-9 mb-0">{{ $item_info["category"] }}</p>
+                            <div class="w-100"></div>
+                            <p class="col-2 mb-0">商品状態</p>
+                            <p class="col-9 mb-0">{{ $item_info["item_status"] }}</p>
+                        </div>
+                        <div class="bg-secondary-link py-2 my-3 mx-4">
+                            <a href="{{asset('/fleamarket/purchase/'. $item_info['id'])}}'" class="d-block text-center link-light text-decoration-none">購入に進む</a>
+                        </div>
+                        <div class="ms-2">
+                            <div class="">
+                                <p class="d-inline">出品日時：</p>
+                                <p class="d-inline ps-1">{{$item_info["created_at"]["date"]}}</p>
+                            </div>
+                            <div class="">
+                                <p class="d-inline">発送元：</p>
+                                <p class="d-inline ps-1">{{$item_info["area"]}}</p>
+                            </div>
+                            <div class="">
+                                <p class="d-inline">出品者：</p>
+                                <p class="d-inline ps-1"><a href="/user/show/{{$item_info['user_info']['id']}}" class="link-dark">{{$item_info["user_info"]["name"]}}</a></p>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 my-3 mx-4">
+                            @if ( $is_favorite )
+                            <button id="deleteFavorite" class="btn btn-secondary rounded-0">お気に入りから削除</button>
+                            @else
+                            <button id="insertFavorite" class="btn btn-secondary rounded-0">お気に入りに追加</button>
+                            @endif
+                            {{-- メッセージ表示エリア --}}
+                            <div id="favorite_messages"></div>
+                        </div>
+
+                        <!-- コメント欄 -->
+                        <p>コメント</p>
+                        <div id="comments" class="overflow-auto" style="height: 300px;">
+
+                            @foreach ( $item_comments as $item_comment )
+
+                            <div class="row m-0">
+                                <div class="col-1 p-0">
+                                    <a href="/user/show/{{$item_comment['user_id']}}">
+                                        <!-- アイコン -->
+                                        <img src="./images/animal_kuma.png" alt="" class="w-100">
+                                    </a>
+                                </div>
+                                <div class="col-10">
+                                    <!-- ユーザ名 -->
+                                    @if ( $item_comment['is_seller'] )
+                                    <label>出品者:</label>
+                                    @endif
+                                    <a href="/user/show/{{$item_comment['user_id']}}" class="link-dark text-decoration-none my-1 d-block">{{$item_comment['user_name']}}</a>
+                                    <div class="bg-lightoff m-2 rounded p-2">
+                                        <!-- コメント本文 -->
+                                        <p class="text-break mb-0">{{$item_comment['text']}}</p>
+                                        <!-- <p class="text-secondary mb-0 small">13:00</p> -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            @endforeach
+
+                        </div>
+
+                        <!-- コメント入力欄 -->
+                        <form action="" method="post">
+                            <div class="my-2">
+                                <textarea name="" id="comment" class="w-100" placeholder="コメントを入力" style="border: solid 1px lightgray;"></textarea>
+                            </div>
+                            <div class="d-flex">
+                                <!-- バリデーションメッセージ -->
+                                <p class="text-danger me-auto" id="comment_errors"></p>
+                                <!-- <p class="text-danger me-auto">テキストを入力してから送信してください</p> -->
+                                <!-- <p class="text-danger me-auto">入力可能な文字数は 200 文字です</p> -->
+                                <div class="justify-content-end">
+                                    <!-- 送信ボタン -->
+                                    <button class="btn btn-secondary" id="comment_send">送信</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
-        {{-- お気に入り商品閲覧ページ --}}
-        @if ( session('user') )
-            <a href="{{asset("/fleamarket/favorite")}}">お気に入り商品</a>
-        @endif
-        {{-- 出品ボタン --}}
-        <a href="{{asset("/fleamarket/exhibit/new")}}">出品</a>
     </div>
 
     {{-- 商品詳細 --}}
     <div>
         @isset( $msg )
-            {{ $msg }}
+        {{ $msg }}
         @endisset
         {{-- 商品画像 --}}
         <div>
             @foreach ( $item_info["image"] as $image )
-                <img src="{{asset($image["path"])}}">
+            <img src="{{asset($image["path"])}}">
             @endforeach
         </div>
         {{-- 商品情報, 購入ボタン, お気に入りボタン, チャット --}}
@@ -65,9 +190,9 @@
                 {{-- お気に入りに追加ボタン --}}
                 <div id="favorite_btn_wrapper">
                     @if ( $is_favorite )
-                        <button id="deleteFavorite">お気に入りから削除</button>
+                    <button id="deleteFavorite">お気に入りから削除</button>
                     @else
-                        <button id="insertFavorite">お気に入りに追加</button>
+                    <button id="insertFavorite">お気に入りに追加</button>
                     @endif
                     {{-- メッセージ表示エリア --}}
                     <div id="favorite_messages"></div>
@@ -77,16 +202,16 @@
             {{-- チャット欄 --}}
             <p>コメント</p>
             <div id="comments">
-            @foreach ( $item_comments as $item_comment )
+                @foreach ( $item_comments as $item_comment )
                 <p>
                     @if ( $item_comment['is_seller'] )
-                        出品者:
+                    出品者:
                     @endif
                     <a href="/user/show/{{$item_comment['user_id']}}">
                         {{$item_comment['user_name']}}
                     </a>>{{$item_comment['text']}}
                 </p>
-            @endforeach
+                @endforeach
             </div>
             {{-- テキスト入力欄 --}}
             <textarea id="comment" cols="30" rows="2"></textarea><br>
@@ -96,6 +221,9 @@
             <button id="comment_send">送信</button>
         </div>
     </div>
+
+    @include('footer')
+
     <script>
         // お気に入り追加
         $('body').on('click', '#insertFavorite', function() {
@@ -105,25 +233,27 @@
                 }
             });
 
-            $.ajax("/fleamarket/favorite/insert",
-                {
-                    type: 'post',
-                    data: {
-                        'item_id' : {{ $item_info["id"] }}
-                    },
-                    dataType: 'json',
-                    success:function(data){
-                        $('#favorite_btn_wrapper').empty();
-                        $('#favorite_btn_wrapper').append('<button id="deleteFavorite">お気に入りから削除</button>');
-                        $('#favorite_btn_wrapper').append('<div id="favorite_messages"></div>');
-                        $('#favorite_messages').append('<p>お気に入りに追加しました</p>');
-                    },
-                    error:function(error){
-                        $('#favorite_messages').empty();
-                        $('#favorite_messages').append('<p>お気に入りに追加出来ませんでした</p>');
+            $.ajax("/fleamarket/favorite/insert", {
+                type: 'post',
+                data: {
+                    'item_id': {
+                        {
+                            $item_info["id"]
+                        }
                     }
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#favorite_btn_wrapper').empty();
+                    $('#favorite_btn_wrapper').append('<button id="deleteFavorite">お気に入りから削除</button>');
+                    $('#favorite_btn_wrapper').append('<div id="favorite_messages"></div>');
+                    $('#favorite_messages').append('<p>お気に入りに追加しました</p>');
+                },
+                error: function(error) {
+                    $('#favorite_messages').empty();
+                    $('#favorite_messages').append('<p>お気に入りに追加出来ませんでした</p>');
                 }
-            )
+            })
         });
 
         // お気に入りから削除
@@ -134,49 +264,50 @@
                 }
             });
 
-            $.ajax("/fleamarket/favorite/delete",
-                {
-                    type: 'post',
-                    data: {
-                        'item_id' : {{ $item_info["id"] }}
-                    },
-                    dataType: 'json',
-                    success:function(data){
-                        $('#favorite_btn_wrapper').empty();
-                        $('#favorite_btn_wrapper').append('<button id="insertFavorite">お気に入りに追加</button>');
-                        $('#favorite_btn_wrapper').append('<div id="favorite_messages"></div>');
-                        $('#favorite_messages').append('<p>お気に入りから削除しました</p>');
-                    },
-                    error:function(error){
-                        $('#favorite_messages').empty();
-                        $('#favorite_messages').append('<p>お気に入りから削除できませんでした</p>');
+            $.ajax("/fleamarket/favorite/delete", {
+                type: 'post',
+                data: {
+                    'item_id': {
+                        {
+                            $item_info["id"]
+                        }
                     }
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#favorite_btn_wrapper').empty();
+                    $('#favorite_btn_wrapper').append('<button id="insertFavorite">お気に入りに追加</button>');
+                    $('#favorite_btn_wrapper').append('<div id="favorite_messages"></div>');
+                    $('#favorite_messages').append('<p>お気に入りから削除しました</p>');
+                },
+                error: function(error) {
+                    $('#favorite_messages').empty();
+                    $('#favorite_messages').append('<p>お気に入りから削除できませんでした</p>');
                 }
-            )
+            })
         });
 
         // コメントの追加
-        $('#comment_send').click(function(){
+        $('#comment_send').click(function() {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            
-            $.ajax("/fleamarket/item/{{$item_info["id"]}}/upload/comment",
-                {
+
+            $.ajax("/fleamarket/item/{{$item_info["id"]}}/upload/comment", {
                     type: 'post',
                     data: {
-                        'comment' : $('#comment').val() 
+                        'comment': $('#comment').val()
                     },
                     dataType: 'json',
-                    success:function(data){
+                    success: function(data) {
                         $('#comment').val('');
                         $('#comments').empty();
-                        for(let i=0;i<data.length;i++){
+                        for (let i = 0; i < data.length; i++) {
                             let appendElement = '';
                             appendElement += '<p>'
-                            if( data[i].is_seller ){
+                            if (data[i].is_seller) {
                                 appendElement += '出品者:';
                             }
                             appendElement += '<a href="/user/show/' + data[i].user_id + '">' + data[i].user_name + '</a>';
@@ -186,13 +317,21 @@
                             $('#comments').append(appendElement);
                         }
                     },
-                    error:function(error){
+                    error: function(error) {
                         $('#comment_errors').empty();
-                        $('#comment_errors').append('<p>' + error.responseJSON.message +'</p>');
+                        $('#comment_errors').append('<p>' + error.responseJSON.message + '</p>');
                     }
                 }
             )
         });
     </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
+
 </html>

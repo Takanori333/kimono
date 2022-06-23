@@ -13,6 +13,7 @@ class SelectItem{
         // フリマの全商品を取得する
         $temp_infos = Item::join('item_infos', 'items.id', '=' ,'item_infos.id')
         ->select('items.user_id', 'items.onsale', 'item_infos.*')
+        ->where('items.onsale', '!=', 0)
         ->get()
         ->toArray();
         // 画像ファイルを全て配列に格納する
@@ -112,6 +113,7 @@ class SelectItem{
         $temp_infos = Item::join('item_infos', 'items.id', '=' ,'item_infos.id')
         ->select('items.user_id', 'items.onsale', 'item_infos.*')
         ->where('item_infos.id', '=', $id)
+        ->where('items.onsale', '!=', 0)
         ->get()
         ->toArray();
         // 画像ファイルを全て配列に格納する
@@ -219,6 +221,13 @@ class SelectItem{
             }
         }
         return $categories;
+    }
+
+
+    // ソート
+    public function sortItem($type){
+        // $type [0->新しい順, 1->古い順, 2->高評価順, 3->低評価順, 4->値段が高い順, 5->値段が安い順]
+        
     }
 }
 

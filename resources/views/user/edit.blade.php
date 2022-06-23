@@ -178,7 +178,7 @@
                     <div class="row my-2">
                         <input type="hidden" name="id" value="{{ $user->id }}">
                         <div class="col text-center">
-                            <button onclick="location.href='{{ asset('/user/info/' . $user->id) }}'" class="btn btn-secondary my-2 py-2 rounded-0">戻る</button>
+                            <button type="button" onclick="location.href='{{ asset('/user/info/' . $user->id) }}'" class="btn btn-secondary my-2 py-2 rounded-0">戻る</button>
                         </div>
                         <div class="col text-center">
                             <button type="submit" name="signup" class="btn btn-secondary my-2 py-2 rounded-0">変更</button>

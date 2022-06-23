@@ -55,7 +55,8 @@ function trade_join(&$socket,&$io){
 //フリーマチャットのメッセージを送る
 function trade_send(&$socket,&$io){
     $socket->on('trade_send',function ($msg)use ($io,$socket){
-        $io->to('trade:'.$msg['getter_id'])->emit('from_other_side',$msg['message']);
+        $io->to('trade:'.$msg['getter_id'])->emit('from_other_side',[$msg['message'],$msg['sender_id']]);
+
         $socket->emit('from_self',$msg['message']);
     });
 }

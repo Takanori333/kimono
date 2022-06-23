@@ -62,12 +62,22 @@ class ManagerController extends Controller
         }
     }
 
+    // サインアウトの処理
+    public function signout(Request $request){
+        $request->session()->forget('manager');
+
+        // 管理者サインインページにリダイレクト
+        return redirect(asset("/manager/signin"));
+    }
+
     public function userManageIndex(Request $request)
     {
         // セッションからmanagerインスタンスを受け取る
-        // $manager = unserialize($request->session()->get("manager"));
+        // $manager = $request->session()->get("manager");
 
-        $users = User::with("User_info")->get();
+        $users = User::with("User_info")
+            ->where("exist", "!=", "0")
+            ->get();
 
         $data = [
             "users" => $users,
@@ -81,7 +91,7 @@ class ManagerController extends Controller
         $user_id = $request->user_id;
 
         $user = User::where("id", $user_id)->first();
-        $user->fill(["exist" => 0])->save();
+        $user->fill(["exist" => 2])->save();
 
         $data = [
             "user_id" => $user_id,
@@ -107,7 +117,7 @@ class ManagerController extends Controller
     public function itemManageIndex(Request $request)
     {
         // セッションからmanagerインスタンスを受け取る
-        // $manager = unserialize($request->session()->get("manager"));
+        // $manager = $request->session()->get("manager");
 
         $items = Item::where("onsale", "!=", "2")
             ->with(["item_info", "item_photo", "user_info"])
@@ -151,10 +161,10 @@ class ManagerController extends Controller
     public function stylistManageIndex(Request $request)
     {
         // セッションからmanagerインスタンスを受け取る
-        // $manager = unserialize($request->session()->get("manager"));
+        // $manager = $request->session()->get("manager");
 
         $stylists = Stylist::where("exist", "!=", "0")
-            ->with(["stylist_info", "stylist_area", "stylist_comment"])
+            ->with(["stylist_info", "stylist_area", "stylist_service","stylist_comment"])
             ->get();
 
         $data = [
@@ -195,7 +205,7 @@ class ManagerController extends Controller
     public function faqManageIndex(Request $request)
     {
         // セッションからmanagerインスタンスを受け取る
-        // $manager = unserialize($request->session()->get("manager"));
+        // $manager = $request->session()->get("manager");
 
         $faqs = Faq::all();
 
@@ -242,7 +252,7 @@ class ManagerController extends Controller
         // リダイレクト時のmsgの代入
         if ($request->old("msg")) {
             $msg = $request->old("msg");
-            $faq_id = $request->old("id");
+            $faq_id = $request->old("faq_id");
         }
 
         $faq = Faq::where("id", $faq_id)->first();
@@ -265,15 +275,15 @@ class ManagerController extends Controller
             "question" => $request->question,
             "answer" => $request->answer,
         ];
-
+        
         $faq->fill($values)->save();
         
         $data = [
             "msg" => "変更しました",
-            "id" => $faq_id,
+            "faq_id" => $faq_id,
         ];
 
-        return redirect("/manager/faq/edit/" . $faq->id)->withInput($data);
+        return redirect("/manager/faq/edit/" . $faq_id)->withInput($data);
     }
 
     public function createFaqIndex(Request $request)
@@ -292,7 +302,6 @@ class ManagerController extends Controller
 
     public function createFaq(FaqRequest $request)
     {
-
         $faq = new Faq;
 
         $values = [

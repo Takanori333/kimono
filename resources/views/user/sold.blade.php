@@ -67,15 +67,6 @@
 
             </div>
 
-            @else
-
-            <!-- 商品販売歴が無い場合 -->
-            <div class="d-flex align-items-center justify-content-center" style="height: 250px;">
-                <p class="text-center text-secondary">商品を販売していません。</p>
-            </div>
-
-            @endif
-
             <!-- ページネーション -->
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
@@ -94,6 +85,15 @@
                     </li>
                 </ul>
             </nav>
+
+            @else
+
+            <!-- 商品販売歴が無い場合 -->
+            <div class="d-flex align-items-center justify-content-center" style="height: 400px;">
+                <p class="text-center text-secondary">商品を販売していません。</p>
+            </div>
+
+            @endif
 
         </div>
     </div>

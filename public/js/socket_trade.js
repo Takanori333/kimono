@@ -36,8 +36,10 @@ socket.on('from_self',function(msg){
     scrollToBottom();
 })
 socket.on('from_other_side',function(msg){
-    make_message_other_side(msg);
-    scrollToBottom();
+    if(msg[1]==getter_id){
+        make_message_other_side(msg[0]);
+        scrollToBottom();    
+    }
 })
 
 function make_message_other_side(message){
@@ -80,7 +82,7 @@ function changeTradeStatus(trade_url,trade_csrf,e){
         $.ajax({
             url:trade_url,
             type:'POST',
-            data:{"_token":trade_csrf},
+            data:{"_token":trade_csrf,"id":item_id},
             success:function(){
             },
             error:function(msg){

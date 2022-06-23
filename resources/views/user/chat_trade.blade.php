@@ -14,7 +14,7 @@
 <body>
     @php
         $user = unserialize(session()->get("user"));
-        $user_id = $user->getId();
+        $user_id = $user->id;
         $self_info = $user_id==$buyer_info->id?$buyer_info:$seller_info;
         $other_info = $user_id!=$buyer_info->id?$buyer_info:$seller_info;
     @endphp
@@ -30,19 +30,28 @@
                     </div>
                     <div class="row border-secondary border-bottom" style="height: 61%;margin:0;display:block;overflow-y:auto;overflow-x:hidden" id="message_box">
                         @foreach ($message_list as $message)
-                            <div class='@if ($message->from==$user_id) self @else other_side @endif'>
-                                <div class="inner_div">
-                                    <pre>{{ $message->text }}</pre>
+                            @if ($message->from==$user_id)
+                                <div class="self">
+                                    <div class="inner_div">
+                                        <pre>{{ $message->text }}</pre>
+                                    </div>    
                                 </div>
-                            </div>
+                            @else
+                                <div class="other_side">
+                                    <img src="{{ asset("$other_info->icon") }}" width="0" height="0" style="border-radius: 50%; height: 30px; width: 30px;">
+                                    <div class="inner_div">
+                                        <pre>{{ $message->text }}</pre>
+                                    </div>  
+                                </div>
+                            @endif
                         @endforeach
                     </div>
                     <div class="row border-secondary border-bottom" style="height: 7%;max-height: 100px;margin:0">
                         @if ($self_info==$seller_info&&$status=='0')
-                            <button class="btn btn-outline-secondary" style="width: 20%;max-width: 80px;height: 80%;max-height: 40px;left: 80%;position: relative;padding: 0;margin: 0;align-self: center;font-size: 15px;" onclick='changeTradeStatus({{ asset("/change_trade_status/".$item_id) }},{{ csrf_token() }},this)'>発送済み</button> 
+                            <button class="btn btn-outline-secondary" style="max-width: 120px;height: 80%;max-height: 40px;left: 80%;position: relative;padding: 0;margin: 0;align-self: center;font-size: 15px;margin-right:20px" onclick='changeTradeStatus("{{ asset("/change_trade_status/".$item_id) }}","{{ csrf_token() }}",this)'>発送済み</button> 
                         @endif
                         @if ($self_info==$buyer_info&&$status=='1')
-                            <button class="btn btn-outline-secondary" style="width: 20%;max-width: 80px;height: 80%;max-height: 40px;left: 80%;position: relative;padding: 0;margin: 0;align-self: center;font-size: 15px;" onclick='changeTradeStatus({{ asset("/change_trade_status/".$item_id) }},{{ csrf_token() }},this)'>受け取り済み</button>
+                            <button class="btn btn-outline-secondary" style="max-width: 120px;height: 80%;max-height: 40px;left: 80%;position: relative;padding: 0;margin: 0;align-self: center;font-size: 15px;margin-right:20px" onclick='changeTradeStatus("{{ asset("/change_trade_status/".$item_id) }}","{{ csrf_token() }}",this)'>受け取り済み</button>
                         @endif
                         <button class="btn btn-outline-secondary" style="width: 20%;max-width: 80px;height: 80%;max-height: 40px;left: 80%;position: relative;padding: 0;margin: 0;align-self: center;font-size: 15px;" onclick="sendMsg()">送信</button>
                     </div>
@@ -55,6 +64,7 @@
     </div>
     <input type="hidden" id="self_id" value="{{ $self_info->id}}">
     <input type="hidden" id="other_side_id" value="{{ $other_info->id}}">
+    <input type="hidden" id="item_id" value="{{ $item_id}}">
     <input type="hidden" id="csrf" value="{{ csrf_token() }}">
     <input type="hidden" id="url" value="{{ asset('/chat/insert_trade') }}">
     <script>         

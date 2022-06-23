@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SignupRequest extends FormRequest
 {
@@ -25,8 +26,15 @@ class SignupRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:20',
-            'email' => 'required|email|unique:users|confirmed|max:50',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->where(fn ($query) => $query->where('exist', '!=', '0')),
+                'confirmed',
+                'max:50',
+            ],
             'phone' => 'required|digits_between:10,11|numeric',
+            'sex' => 'required',
             'year' => 'required|numeric|digits:4',
             'month' => 'required|numeric|digits_between:1,2',
             'day' => 'required|numeric|digits_between:1,2',
@@ -42,19 +50,21 @@ class SignupRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => "名前が記入されていません",
-            'name.string' => "名前が正しくありません",
-            'name.max' => "名前は20文字以下で入力してください",
+            'name.required' => '名前が記入されていません',
+            'name.string' => '名前が正しくありません',
+            'name.max' => '名前は20文字以下で入力してください',
             
-            'email.required' => "メールアドレスが記入されていません",
-            'email.email' => "メールアドレスの形式が正しくありません",
-            'email.unique' => "そのメールアドレスは既に使用されています",
-            'email.confirmed' => "メールアドレスが一致しません",
-            'email.max' => "メールアドレスは50文字以下で入力してください",
+            'email.required' => 'メールアドレスが記入されていません',
+            'email.email' => 'メールアドレスの形式が正しくありません',
+            'email.unique' => 'そのメールアドレスは既に使用されています',
+            'email.confirmed' => 'メールアドレスが一致しません',
+            'email.max' => 'メールアドレスは50文字以下で入力してください',
             
-            'phone.required' => "電話番号が記入されていません",
-            'phone.digits_between' => "電話番号が正しくありません",
-            'phone.numeric' => "電話番号は数字で入力してください",
+            'phone.required' => '電話番号が記入されていません',
+            'phone.digits_between' => '電話番号が正しくありません',
+            'phone.numeric' => '電話番号は数字で入力してください',
+
+            'sex.required' => '性別が選択されていません',
 
             'year.required' => '誕生年が記入されていません',
             'year.numeric' => '誕生年は数字で入力してください',
@@ -68,19 +78,19 @@ class SignupRequest extends FormRequest
             'day.numeric' => '誕生日は数字で入力してください',
             'day.digits_between' => '誕生日が正しくありません',
 
-            'post.required' => "郵便番号が記入されていません",
-            'post.numeric' => "郵便番号は数字で入力してください",
-            'post.digits' => "郵便番号が正しくありません",
+            'post.required' => '郵便番号が記入されていません',
+            'post.numeric' => '郵便番号は数字で入力してください',
+            'post.digits' => '郵便番号が正しくありません',
 
-            'address.required' => "住所が記入されていません",
-            'address.max' => "住所は200文字以下で入力してください",
+            'address.required' => '住所が記入されていません',
+            'address.max' => '住所は200文字以下で入力してください',
 
-            'password.required' => "パスワードが記入されていません",
-            'password.confirmed' => "パスワードが一致しません",
-            'password.max' => "パスワードは20文字以下で入力してください",
+            'password.required' => 'パスワードが記入されていません',
+            'password.confirmed' => 'パスワードが一致しません',
+            'password.max' => 'パスワードは20文字以下で入力してください',
 
-            'height.numeric' => "身長は数字で入力してください",
-            'height.digits_between' => "身長が正しくありません",
+            'height.numeric' => '身長は数字で入力してください',
+            'height.digits_between' => '身長が正しくありません',
 
             'icon.image' => '画像ファイルが正しくありません',
         ];

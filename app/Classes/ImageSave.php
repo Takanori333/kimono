@@ -21,7 +21,7 @@ class ImageSave{
         // ランダムなファイル名生成
         $fileName = md5(uniqid(rand(), true)). ".$extension";
         // サーバー に保存する
-        Storage::disk('local')->put($fileName, $fileData);
+        Storage::disk('local')->put('image/' . $fileName, $fileData);
         // データベースに保存するためのパスを返す
         // return Storage::disk('local')->url($fileName);
         return "image/" . $fileName;
