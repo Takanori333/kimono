@@ -17,27 +17,27 @@
     @include('header');
 
     <div class="container">
-        <div class="contents pt-5 w-75 mx-auto">
+        <div class="contents pt-5 mt-5 w-75 mx-auto">
 
-            <h2 class="text-center py-5">商品編集</h2>
+            <h2 class="text-center py-5 mt-5">商品編集</h2>
 
             {{-- 商品登録フォーム --}}
             <div class="">
-                <form action="/fleamarket/edit/{{$item_infos['id']}}" method="POST" enctype="multipart/form-data" id="item_create_form" class="">
+                <form action="/fleamarket/edit/{{$item_info['id']}}" method="POST" enctype="multipart/form-data" id="item_create_form" class="">
                     @csrf
                     <!-- @foreach ($errors->all() as $error)
                     <li>{{$error}}</li>
                     @endforeach -->
                     <div class="row my-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('name') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">商品名</div>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control rounded-0" name="name" value="{{ old('name', $item_infos['name']) }}">
+                            <input type="text" class="form-control rounded-0" name="name" value="{{ old('name', $item_info['name']) }}">
                         </div>
                     </div>    
                     
@@ -45,10 +45,10 @@
                     $images = old("image", $item_images);
                     @endphp
                     <div class="row my-3">
-                        <div class="invalid-feedb ack col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('image') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">商品画像</div>
@@ -70,49 +70,49 @@
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-feedb ack col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('category') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">カテゴリ</div>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control rounded-0" name="category" value="{{ old('category', $item_infos['category']) }}">
+                            <input type="text" class="form-control rounded-0" name="category" value="{{ old('category', $item_info['category']) }}">
                         </div>
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-fee dback col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('price') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">値段</div>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control rounded-0" name="price" value="{{ old('price', $item_infos['price']) }}">
+                            <input type="text" class="form-control rounded-0" name="price" value="{{ old('price', $item_info['price']) }}">
                         </div>
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-feedb ack col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('pref') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">発送元都道府県</div>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control rounded-0" name="pref" value="{{ old('pref', $item_infos['area']) }}">
+                            <input type="text" class="form-control rounded-0" name="pref" value="{{ old('pref', $item_info['area']) }}">
                         </div>
                     </div>
 
                     <!-- <div class="row my-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             バリデーションメッセージ
                             @foreach ($errors->get('') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">販売利益</div>
@@ -122,77 +122,77 @@
                     </div> -->
 
                     <div class="row my-3">
-                        <div class="invalid-fe edback col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('material') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">素材</div>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control rounded-0" name="material" value="{{ old('material', $item_infos['material']) }}">
+                            <input type="text" class="form-control rounded-0" name="material" value="{{ old('material', $item_info['material']) }}">
                         </div>
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-fee dback col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('color') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">色</div>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control rounded-0" name="color" value="{{ old('color', $item_infos['color']) }}">
+                            <input type="text" class="form-control rounded-0" name="color" value="{{ old('color', $item_info['color']) }}">
                         </div>
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-feed back col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('item_status') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">商品状態</div>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control rounded-0" name="status" value="{{ old('status', $item_infos['item_status']) }}">
+                            <input type="text" class="form-control rounded-0" name="status" value="{{ old('status', $item_info['item_status']) }}">
                         </div>
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-f eedback col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('smell') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">におい</div>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control rounded-0" name="smell" value="{{ old('smell', $item_infos['smell']) }}">
+                            <input type="text" class="form-control rounded-0" name="smell" value="{{ old('smell', $item_info['smell']) }}">
                         </div>
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-fee dback col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('size_height') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                             @foreach ($errors->get('size_length') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                             @foreach ($errors->get('size_sleeve') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                             @foreach ($errors->get('size_sleeves') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                             @foreach ($errors->get('size_front') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                             @foreach ($errors->get('size_back') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">サイズ</div>
@@ -200,47 +200,47 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label for="" class="col-form-label">身丈</label>
-                                    <div class=""><input type="text" class="form-control rounded-0" name="size_height" value="{{ old('size_height', $item_infos['height']) }}"></div>
+                                    <div class=""><input type="text" class="form-control rounded-0" name="size_height" value="{{ old('size_height', $item_info['height']) }}"></div>
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="" class="col-form-label">裄</label>
-                                    <div class=""><input type="text" class="form-control rounded-0" name="size_length" value="{{ old('size_length', $item_infos['length']) }}"></div>
+                                    <div class=""><input type="text" class="form-control rounded-0" name="size_length" value="{{ old('size_length', $item_info['length']) }}"></div>
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="" class="col-form-label">袖丈</label>
-                                    <div class=""><input type="text" class="form-control rounded-0" name="size_sleeve" value="{{ old('size_sleeve', $item_infos['sleeve']) }}"></div>
+                                    <div class=""><input type="text" class="form-control rounded-0" name="size_sleeve" value="{{ old('size_sleeve', $item_info['sleeve']) }}"></div>
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="" class="col-form-label">袖幅</label>
-                                    <div class=""><input type="text" class="form-control rounded-0" name="size_sleeves" value="{{ old('size_sleeves', $item_infos['sleeves']) }}"></div>
+                                    <div class=""><input type="text" class="form-control rounded-0" name="size_sleeves" value="{{ old('size_sleeves', $item_info['sleeves']) }}"></div>
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="" class="col-form-label">前幅</label>
-                                    <div class=""><input type="text" class="form-control rounded-0" name="size_front" value="{{ old('size_front', $item_infos['front']) }}"></div>
+                                    <div class=""><input type="text" class="form-control rounded-0" name="size_front" value="{{ old('size_front', $item_info['front']) }}"></div>
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="" class="col-form-label">後ろ幅</label>
-                                    <div class=""><input type="text" class="form-control rounded-0" name="size_back" value="{{ old('size_back', $item_infos['back']) }}"></div>
+                                    <div class=""><input type="text" class="form-control rounded-0" name="size_back" value="{{ old('size_back', $item_info['back']) }}"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-f eedback col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('detail') as $msg)
-                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            <small class="text-danger d-block mb-1">{{ $msg }}</small>
                             @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">自由記入欄</div>
                         <div class="col-sm-8">
-                            <textarea name="detail" id="" class="form-control rounded-0" cols="30" rows="10">{{ old("detail", $item_infos["detail"]) }}</textarea>
+                            <textarea name="detail" id="" class="form-control rounded-0" cols="30" rows="10">{{ old("detail", $item_info["detail"]) }}</textarea>
                         </div>
                     </div>
 
                     <div id="hidden_input">
-                        <input type="hidden" name="id" value="{{ $item_infos['id'] }}">
+                        <input type="hidden" name="id" value="{{ $item_info['id'] }}">
                         @isset( $images )
                         @foreach ($images as $key => $image )
                         <input type="hidden" name="image[{{$key}}]" value="{{ $image }}">

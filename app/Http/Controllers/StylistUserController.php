@@ -30,11 +30,14 @@ class StylistUserController extends Controller
     }
     //情報編集
     function info(){
-        $s_function = new StylistUserFunction();
-        $service_area = $s_function->get_service_area();
-        $service = $s_function->get_service_menu();
-        return view('stylist_user.info',["service_area"=>$service_area,"service"=>$service]);
-
+        $stylist = unserialize(session()->get("stylist"));
+        if($stylist){
+            $s_function = new StylistUserFunction();
+            $service_area = $s_function->get_service_area();
+            $service = $s_function->get_service_menu();
+            return view('stylist_user.info',["service_area"=>$service_area,"service"=>$service]);    
+        }
+        return redirect(asset('/stylist_user/signin'));
     }
     //スタイリストの情報を更新する
     function info_update(StylistUpRequest &$request){
@@ -64,21 +67,33 @@ class StylistUserController extends Controller
     }    
     //スタイリストのトップページ
     function top(){
-        $s_function = new StylistUserFunction();
-        $info_list = $s_function->top();
-        return view('stylist_user.top',["reserve_list"=>$info_list[0],"freetime"=>$info_list[1],"status"=>$info_list[2],"follower_count"=>$info_list[3]]);
+        $stylist = unserialize(session()->get("stylist"));
+        if($stylist){
+            $s_function = new StylistUserFunction();
+            $info_list = $s_function->top();
+            return view('stylist_user.top',["reserve_list"=>$info_list[0],"freetime"=>$info_list[1],"status"=>$info_list[2],"follower_count"=>$info_list[3]]);
+        }
+        return redirect(asset('/stylist_user/signin'));
     }
     //予約詳細
     function reserve_detail($id){
-        $s_function = new StylistUserFunction();
-        $reserve = $s_function->reserve_detail($id);
-        return view('stylist_user.reserve_detail',["reserve"=>$reserve]);
+        $stylist = unserialize(session()->get("stylist"));
+        if($stylist){
+            $s_function = new StylistUserFunction();
+            $reserve = $s_function->reserve_detail($id);
+            return view('stylist_user.reserve_detail',["reserve"=>$reserve]);
+        }
+        return redirect(asset('/stylist_user/signin'));
     }
     //活動履歴
     function reserve(){
-        $s_function = new StylistUserFunction();
-        $reserve_list = $s_function->reserve();
-        return view('stylist_user.reserve',["reserve_list"=>$reserve_list]);
+        $stylist = unserialize(session()->get("stylist"));
+        if($stylist){
+            $s_function = new StylistUserFunction();
+            $reserve_list = $s_function->reserve();
+            return view('stylist_user.reserve',["reserve_list"=>$reserve_list]);
+        }
+        return redirect(asset('/stylist_user/signin'));            
     }
     //活動可能時間を追加
     function freetime_DB(Request &$request){
@@ -97,12 +112,16 @@ class StylistUserController extends Controller
     }    
     //スタイリストユーザーのチャット画面
     function chat(){
-        $chat_f = new ChatFunction();
-        $customer_list = $chat_f->stylist_customer_list();
-        $stylist_f = new StylistUserFunction();
-        $service = $stylist_f->get_service_menu();
-        // var_dump($customer_list);
-        return view('stylist_user.chat',['customer_list'=>$customer_list,'service'=>$service]);
+        $stylist = unserialize(session()->get("stylist"));
+        if($stylist){
+            $chat_f = new ChatFunction();
+            $customer_list = $chat_f->stylist_customer_list();
+            $stylist_f = new StylistUserFunction();
+            $service = $stylist_f->get_service_menu();
+            // var_dump($customer_list);
+            return view('stylist_user.chat',['customer_list'=>$customer_list,'service'=>$service]);
+        }
+        return redirect(asset('/stylist_user/signin'));            
     }
     //スタイリストユーザーの一覧を取得する
     function get_customer(){

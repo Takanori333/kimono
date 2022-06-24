@@ -84,7 +84,7 @@
                 }
             }
             $follower_count = DB::table('stylist_followers')->where('stylist_id','=',$id)->count();
-            return [$stylist,implode(" , ",$service),implode(" , ",$area),$freetime_list,$is_follow,$follower_count,$comments];
+            return [$stylist,implode(" , ",$service),implode(" , ",$area),$freetime_list,$is_follow,$follower_count,$comments];    
         }
         //予約画面
         function reserve($reserve_id){

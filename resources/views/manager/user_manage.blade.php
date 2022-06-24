@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -61,14 +60,22 @@
                                 <p class="m-3 text-start">{{ $user->user_info->post }}</p>
                                 <p class="m-3 text-start text-break">{{ $user->user_info->address }}</p>
                                 <div class="row d-flex justify-content-center">
-                                    @if ($user->exist)
-                                    <button class="btn btn-outline-danger px-3 mt-4 mx-1 col-5 manage" id="delete{{ $user->id }}" value="{{ $user->id }}" name="delete">削除</button>
-                                    <button class="btn btn-outline-secondary px-3 mt-4 mx-1 col-5 manage" id="recover{{ $user->id }}" value="{{ $user->id }}" name="recover" disabled>復旧</button>
-                                @else
-                                    <button class="btn btn-outline-danger px-3 mt-4 mx-1 col-5 manage" id="delete{{ $user->id }}" value="{{ $user->id }}" name="delete" disabled>削除</button>
-                                    <button class="btn btn-outline-secondary px-3 mt-4 mx-1 col-5 manage" id="recover{{ $user->id }}" value="{{ $user->id }}" name="recover">復旧</button>
-                                @endif
-                            </div>
+                                    @switch($user->exist)
+                                        @case(1)
+                                            <button class="btn btn-outline-danger px-3 mt-4 mx-1 col-5 manage" id="delete{{ $user->id }}" value="{{ $user->id }}" name="delete">削除</button>
+                                            <button class="btn btn-outline-secondary px-3 mt-4 mx-1 col-5 manage" id="recover{{ $user->id }}" value="{{ $user->id }}" name="recover" disabled>復旧</button>                                            
+                                            @break
+                                        @case(2)
+                                            <button class="btn btn-outline-danger px-3 mt-4 mx-1 col-5 manage" id="delete{{ $user->id }}" value="{{ $user->id }}" name="delete" disabled>削除</button>
+                                            <button class="btn btn-outline-secondary px-3 mt-4 mx-1 col-5 manage" id="recover{{ $user->id }}" value="{{ $user->id }}" name="recover">復旧</button>                                            
+                                            @break
+                                        @case(0)
+                                            <button class="btn btn-outline-secondary px-3 mt-4 mx-1 col-5 manage" id="recover{{ $user->id }}" value="{{ $user->id }}" name="recover">復旧</button>                                            
+                                    @endswitch
+                                    @if ($user->exist == 1)
+                                    @elseif ($user->exist == 2)
+                                    @endif
+                                </div>
                         </div>
                     </div>            
                 </div>

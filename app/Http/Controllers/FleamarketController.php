@@ -22,7 +22,9 @@ use Illuminate\Support\Collection;
 
 class FleamarketController extends Controller
 {
-    // 4-1
+    const QUANTITY_PER_PAGE = 16;
+
+    // 4-1 
     public function index(Request $request){
         $item_infos = SelectItem::getAllItemInfos();
         $categories = SelectItem::getCategories($item_infos);
@@ -38,16 +40,21 @@ class FleamarketController extends Controller
 
         // ページネーションのために前処理
         $page = is_null($request->get('page'))? 1 : $request->get('page');
-        $item_infos = collect( $item_infos );
-        $quantity_per_page = 3;
+        $item_infos_collection = collect( $item_infos );
         $parameter = explode(url()->current(), url()->full())[1];
-        $item_infos = new LengthAwarePaginator(
-            $item_infos->forPage($page, $quantity_per_page), // 現在のページのsliceした情報(現在のページ, 1ページあたりの件数)
-            count($item_infos), // 総件数
-            $quantity_per_page,
-            $page, // 現在のページ(ページャーの色がActiveになる)
-            ["path" => '/fleamarket' . $parameter ],
-        );
+        do{
+            $item_infos = new LengthAwarePaginator(
+                $item_infos_collection->forPage($page, self::QUANTITY_PER_PAGE), // 現在のページのsliceした情報(現在のページ, 1ページあたりの件数)
+                count($item_infos_collection), // 総件数
+                self::QUANTITY_PER_PAGE,
+                $page, // 現在のページ(ページャーの色がActiveになる)
+                ["path" => '/fleamarket' . $parameter ],
+            );
+            $page--;
+            if( $page == 0 ){
+                break;
+            }
+        }while( $item_infos->count() == 0 );
 
         return view('fleamarket.index', compact('item_infos', 'categories', 'msg', 'sort_type', 'onsale', 'selected_category'));
     }
@@ -69,22 +76,30 @@ class FleamarketController extends Controller
 
         // ページネーションのために前処理
         $page = is_null($request->get('page'))? 1 : $request->get('page');
-        $item_infos = collect( $item_infos );
-        $quantity_per_page = 3;
+        $item_infos_collection = collect( $item_infos );
         $parameter = explode(url()->current(), url()->full())[1];
-        $item_infos = new LengthAwarePaginator(
-            $item_infos->forPage($page, $quantity_per_page), // 現在のページのsliceした情報(現在のページ, 1ページあたりの件数)
-            count($item_infos), // 総件数
-            $quantity_per_page,
-            $page, // 現在のページ(ページャーの色がActiveになる)
-            ["path" => '/fleamarket/search' . $parameter ],
-        );
+        do{
+            $item_infos = new LengthAwarePaginator(
+                $item_infos_collection->forPage($page, self::QUANTITY_PER_PAGE), // 現在のページのsliceした情報(現在のページ, 1ページあたりの件数)
+                count($item_infos_collection), // 総件数
+                self::QUANTITY_PER_PAGE,
+                $page, // 現在のページ(ページャーの色がActiveになる)
+                ["path" => '/fleamarket/search' . $parameter ],
+            );
+            $page--;
+            if( $page == 0 ){
+                break;
+            }
+        }while( $item_infos->count() == 0 );
 
         return view('fleamarket.search_result', compact('item_infos', 'categories', 'msg', 'sort_type', 'onsale', 'selected_category', 'keyword'));
     }
 
     // 4-3
     public function showFavorites(Request $request){
+        if( is_null( session('user') ) ){
+            return redirect('/fleamarket');
+        }
         $user_id = unserialize(session('user'))->id;
         $item_ids = Item_favorite::where('user_id', '=', unserialize(session('user'))->id )
         ->select('item_id')
@@ -127,42 +142,43 @@ class FleamarketController extends Controller
 
 
         // ページネーションのために前処理
-        $decriment = 0;
         $page = is_null($request->get('page'))? 1 : $request->get('page');
         $item_infos_collection = collect( $item_infos );
-        $quantity_per_page = 3;
         $parameter = explode(url()->current(), url()->full())[1];
         do{
-            $page -= $decriment;
             $item_infos = new LengthAwarePaginator(
-                $item_infos_collection->forPage($page, $quantity_per_page), // 現在のページのsliceした情報(現在のページ, 1ページあたりの件数)
+                $item_infos_collection->forPage($page, self::QUANTITY_PER_PAGE), // 現在のページのsliceした情報(現在のページ, 1ページあたりの件数)
                 count($item_infos_collection), // 総件数
-                $quantity_per_page,
+                self::QUANTITY_PER_PAGE,
                 $page, // 現在のページ(ページャーの色がActiveになる)
                 ["path" => '/fleamarket/favorite' . $parameter ],
             );
-            $decriment--;
+            $page--;
+            if( $page == 0 ){
+                break;
+            }
         }while( $item_infos->count() == 0 );
 
         return view('fleamarket.show_favorites', compact('item_infos', 'categories', 'msg', 'sort_type', 'onsale', 'selected_category'));
     }
 
-    // 4-1-1(ソート)
-
 
     // 4-4
     public function show($id){
+        $user = unserialize(session('user'));
         $item_info = SelectItem::getItemInfosById($id)[0];
         $item_comments = SelectItem::getItemCommentsById($id);
-        $item_favorite_record = Item_favorite::where('item_id', '=', $id)
-        ->where('user_id', '=', unserialize(session('user'))->id )
-        ->first();
-        $is_favorite = true;
-        if( is_null($item_favorite_record) ){
-            $is_favorite = false;
+        if($user){
+            $item_favorite_record = Item_favorite::where('item_id', '=', $id)
+            ->where('user_id', '=', $user->id )
+            ->first();
+            $is_favorite = true;
+            if( is_null($item_favorite_record) ){
+                $is_favorite = false;
+            }    
+            return view('fleamarket.show', compact('item_info', 'item_comments', 'is_favorite'));
         }
-
-        return view('fleamarket.show', compact('item_info', 'item_comments', 'is_favorite'));
+        return view('fleamarket.show', compact('item_info', 'item_comments'));
     }
 
     // 4-4-1(コメントアップロード用)
@@ -226,24 +242,42 @@ class FleamarketController extends Controller
 
     // 4-5
     public function purchase($id){
+        if( is_null( session('user') ) ){
+            return redirect('/user/signin');
+        }
         $item_info = SelectItem::getItemInfosById($id)[0];
-        $user_info = User_info::where('id', '=', unserialize(session('user'))->id)->first()->toArray();
-        // $user_info = User_info::where('id', '=', 1)->first()->toArray();
+        $user_id = unserialize(session('user'))->id;
+        if( $item_info['user_id'] == $user_id ){
+            return redirect('/fleamarket');
+        }
+        $user_info = User_info::where('id', '=', $user_id)->first()->toArray();
         $item_info['user_info'] = $user_info;
+
+
 
         return view('fleamarket.purchase', compact('item_info'));
     }
 
     // 4-6
     public function purchaseConfirm(PurchaseItemRequest $request, $id){
+        if( is_null( session('user') ) ){
+            return redirect('/fleamarket');
+        }
         $payment_way = $request->validated();
         $item_info = SelectItem::getItemInfosById($id)[0];
+        $user_id = unserialize(session('user'))->id;
+        if( $item_info['user_id'] == $user_id ){
+            return redirect('/fleamarket');
+        }
 
         return view('fleamarket.purchase_confirm', compact('item_info', 'payment_way'));
     }
 
     // 4-7
     public function purchaseDone(PurchaseItemRequest $request, $id){
+        if( is_null( session('user') ) ){
+            return redirect('/fleamarket');
+        }
         $payment_way = $request->validated();
         // 戻るボタンが押された場合
         if ($request->get('back')) {
@@ -251,6 +285,11 @@ class FleamarketController extends Controller
         }
 
         $item_info = SelectItem::getItemInfosById($id)[0];
+        $user_id = unserialize(session('user'))->id;
+        if( $item_info['user_id'] == $user_id ){
+            return redirect('/fleamarket');
+        }
+
         // トランザクション処理
         try {
             DB::beginTransaction();
@@ -262,7 +301,7 @@ class FleamarketController extends Controller
 
             Item_history::create([
                 'item_id' => $id,
-                'buyer_id' => unserialize(session('user'))->id,
+                'buyer_id' => $user_id,
             ]);
 
             Item::where('id', '=', $id)->update([
@@ -281,24 +320,34 @@ class FleamarketController extends Controller
 
     // 4-9
     public function createIndex(){
-        // ユーザー以外のアクセスをブロック
+        if( is_null( session('user') ) ){
+            return redirect('/user/signin');
+        }
         // 出品登録画面へのviewを返す
         return view('fleamarket.create');
     }
 
     // 4-10
     public function createConfirm(StoreItemRequest $request){
+        if( is_null( session('user') ) ){
+            return redirect('/fleamarket');
+        }
         $item_infos = $request->validated();
         return view('fleamarket.create_confirm', compact('item_infos'));
     }
 
     // 4-11
     public function create(StoreItemRequest $request){
+        if( is_null( session('user') ) ){
+            return redirect('/fleamarket');
+        }
         // 戻るボタンが押された場合
         if ($request->get('back')) {
             return redirect('/fleamarket/exhibit/new')->withInput();
         }
-        $item_infos = $request->validated();
+
+        $item_info = $request->validated();
+        $user_id = unserialize(session('user'))->id;
 
         // トランザクション処理
         try {
@@ -306,32 +355,31 @@ class FleamarketController extends Controller
 
             // itemsテーブルに値を追加
             $newRecord = Item::create([
-                'user_id' => unserialize(session('user'))->id,
-                // 'user_id' => 1,
+                'user_id' => $user_id,
             ]);
 
             // item_infosに値を追加
             Item_info::create([
                 'id'            => $newRecord->id,
-                'name'          => $item_infos['name'],
-                'detail'        => $item_infos['detail'],
-                'price'         => $item_infos['price'],
-                'category'      => $item_infos['category'],
-                'material'      => $item_infos['material'],
-                'item_status'   => $item_infos['status'],
-                'smell'         => $item_infos['smell'],
-                'color'         => $item_infos['color'],
-                'area'          => $item_infos['pref'],
-                'height'        => $item_infos['size_height'],
-                'length'        => $item_infos['size_length'],
-                'sleeve'        => $item_infos['size_sleeve'],
-                'sleeves'       => $item_infos['size_sleeves'],
-                'front'         => $item_infos['size_front'],
-                'back'          => $item_infos['size_back'],
+                'name'          => $item_info['name'],
+                'detail'        => $item_info['detail'],
+                'price'         => $item_info['price'],
+                'category'      => $item_info['category'],
+                'material'      => $item_info['material'],
+                'item_status'   => $item_info['status'],
+                'smell'         => $item_info['smell'],
+                'color'         => $item_info['color'],
+                'area'          => $item_info['pref'],
+                'height'        => $item_info['size_height'],
+                'length'        => $item_info['size_length'],
+                'sleeve'        => $item_info['size_sleeve'],
+                'sleeves'       => $item_info['size_sleeves'],
+                'front'         => $item_info['size_front'],
+                'back'          => $item_info['size_back'],
             ]);
 
             // imageを一つずつ取り出してサーバーとデータベースに追加
-            foreach( $item_infos['image'] as $key => $image ){
+            foreach( $item_info['image'] as $key => $image ){
                 $img_path = ImageSave::uploadBase64($image);
                 Item_photo::create([
                     'item_id'   => $newRecord->id,
@@ -351,10 +399,18 @@ class FleamarketController extends Controller
 
     // 4-12 商品編集画面
     public function edit($id){
-        $item_infos = Item::join('item_infos', 'items.id', '=' ,'item_infos.id')
+        if( is_null( session('user') ) ){
+            return redirect('/fleamarket');
+        }
+        $item_info = Item::join('item_infos', 'items.id', '=' ,'item_infos.id')
         ->where('items.id', '=', $id)
-        ->select('items.user_id', 'item_infos.*')
+        ->select('items.user_id', 'items.onsale', 'item_infos.*')
         ->first();
+
+        $user_id = unserialize(session('user'))->id;
+        if( $item_info['user_id'] != $user_id ){
+            return redirect('/fleamarket');
+        }
 
 
         $temp_images = Item_photo::where('item_id', '=', $id)
@@ -367,11 +423,14 @@ class FleamarketController extends Controller
         }
 
 
-        return view('fleamarket.edit', compact('item_infos', 'item_images'));
+        return view('fleamarket.edit', compact('item_info', 'item_images'));
     }
 
     // 4-13 商品編集確認画面
     public function editConfirm(StoreItemRequest $request, $id){
+        if( is_null( session('user') ) ){
+            return redirect('/fleamarket');
+        }
         // バリデーションチェック
         $item_infos = $request->validated();
         $item_infos['id'] = $request->get('id');
@@ -381,6 +440,9 @@ class FleamarketController extends Controller
 
     // 編集確認画面からの画面遷移
     public function editDone(StoreItemRequest $request, $id){
+        if( is_null( session('user') ) ){
+            return redirect('/fleamarket');
+        }
         // 戻るボタンが押された場合
         if ($request->get('back')) {
             return redirect('/fleamarket/edit/'.$id)->withInput();

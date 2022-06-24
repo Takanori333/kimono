@@ -9,7 +9,6 @@
     use Illuminate\Http\Request;
     use Illuminate\Support\Carbon;
     use Illuminate\Support\Facades\DB;
-
     class StylistUserFunction{
         function __construct()
         {
@@ -125,7 +124,7 @@
         }
         //スタイリストのトップページにこれからの予約リと予約可能時間をデータベースから取得し、画面で表示する
         function top(){
-            $stylist = unserialize(session()->get("stylist"));
+            $stylist = unserialize(session()->get("stylist"));            
             $reserve_list = DB::table('stylist_histories')->where("stylist_id","=",$stylist->getId())->where("end_time",">=",date("Y-m-d H:i:s"))->orderBy('start_time')->take(3)->get();
             $freetime_list = DB::table('stylist_freetimes')->where("stylist_id","=",$stylist->getId())->where("end_time",">=",date("Y-m-d H:i:s"))->orderBy('start_time')->get();
             $status = DB::table('stylists')->where('id','=',$stylist->getId())->value('exist');

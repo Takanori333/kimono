@@ -17,6 +17,9 @@
 </head>
 
 <body>
+    @php
+        $user = unserialize(session()->get("user"));
+    @endphp
     {{-- ヘッダー --}}
     @include('header');
 
@@ -81,10 +84,30 @@
                             <div class="w-100"></div>
                             <p class="col-2 mb-0">商品状態</p>
                             <p class="col-9 mb-0">{{ $item_info["item_status"] }}</p>
+                            <div class="w-100"></div>
+                            {{$item_info["smell"]}}
                         </div>
-                        <div class="bg-secondary-link py-2 my-3 mx-4">
-                            <a href="{{asset('/fleamarket/purchase/'. $item_info['id'])}}'" class="d-block text-center link-light text-decoration-none">購入に進む</a>
-                        </div>
+                            @if ($user)
+                                @if ( $user->id!=$item_info['user_id'] && $item_info['onsale'] == 1 )
+                                <div class="bg-secondary-link py-2 my-3 mx-4">
+                                    <a href="{{asset('/fleamarket/purchase/'. $item_info['id'])}}'" class="d-block text-center link-light text-decoration-none">購入に進む</a>
+                                </div>
+                                @elseif( $user->id!=$item_info['user_id'] && $item_info['onsale'] != 1 )
+                                    <div class="bg-danger py-2 my-3 mx-4">
+                                        <span class="d-block text-center link-light text-decoration-none">売り切れです</span>
+                                    </div>
+                                @endif
+                            @else
+                                @if ( $item_info['onsale'] == 1 )
+                                <div class="bg-secondary-link py-2 my-3 mx-4">
+                                    <a href="{{asset('/fleamarket/purchase/'. $item_info['id'])}}'" class="d-block text-center link-light text-decoration-none">購入に進む</a>
+                                </div>
+                                @elseif( $item_info['onsale'] != 1 )
+                                    <div class="bg-danger py-2 my-3 mx-4">
+                                        <span class="d-block text-center link-light text-decoration-none">売り切れです</span>
+                                    </div>
+                                @endif
+                            @endif
                         <div class="ms-2">
                             <div class="">
                                 <p class="d-inline">出品日時：</p>
@@ -100,13 +123,17 @@
                             </div>
                         </div>
                         <div class="d-grid gap-2 my-3 mx-4" id="favorite_btn_wrapper">
-                            @if ( $is_favorite )
-                            <button id="deleteFavorite" class="btn btn-secondary rounded-0">お気に入りから削除</button>
-                            @else
-                            <button id="insertFavorite" class="btn btn-secondary rounded-0">お気に入りに追加</button>
+                            @if ( $item_info['onsale'] == 1 )
+                                @if (isset($is_favorite))
+                                    @if ( $is_favorite )
+                                    <button id="deleteFavorite" class="btn btn-secondary rounded-0">お気に入りから削除</button>
+                                    @else
+                                    <button id="insertFavorite" class="btn btn-secondary rounded-0">お気に入りに追加</button>
+                                    @endif                                
+                                    <div id="favorite_messages"></div>
+                                @endif
                             @endif
                             {{-- メッセージ表示エリア --}}
-                            <div id="favorite_messages"></div>
                         </div>
 
                         <!-- コメント欄 -->
@@ -120,7 +147,7 @@
                                 <div class="col-1 p-0">
                                     <a href="/user/show/{{$item_comment['user_id']}}">
                                         <!-- アイコン -->
-                                        <img src="{{ asset('$item_comment->icon') }}" alt="" class="w-100">
+                                        <img src="" alt="" class="w-100">
                                     </a>
                                 </div>
                                 <div class="col-10">
@@ -128,7 +155,7 @@
                                     @if ( $item_comment['is_seller'] )
                                     <label class="me-1">出品者:</label>
                                     @endif
-                                    <a href="/user/show/{{$item_comment['user_id']}}" class="link-dark text-decoration-none my-1">{{$item_comment['user_name']}}</a>
+                                    <a href="/user/show/{{$item_comment['user_id']}}" class="link-dark text-decoration-none my-1 hover-line">{{$item_comment['user_name']}}</a>
                                     <div class="bg-lightoff m-2 rounded p-2">
                                         <!-- コメント本文 -->
                                         <p class="text-break mb-0">{{$item_comment['text']}}</p>
@@ -136,25 +163,20 @@
                                     </div>
                                 </div>
                             </div>
-
                             @endforeach
-
                         </div>
-
                         <!-- コメント入力欄 -->
-                        <!-- <form action="" method="post"> -->
-                            <div class="my-2">
-                                <textarea name="" id="comment" class="w-100" placeholder="コメントを入力" style="border: solid 1px lightgray;"></textarea>
+                        <div class="my-2">
+                            <textarea name="" id="comment" class="w-100" placeholder="コメントを入力" style="border: solid 1px lightgray;"></textarea>
+                        </div>
+                        <div class="d-flex">
+                            <!-- バリデーションメッセージ -->
+                            <p class="text-danger me-auto" id="comment_errors"></p>
+                            <div class="justify-content-end">
+                                <!-- 送信ボタン -->
+                                <button class="btn btn-secondary" id="comment_send">送信</button>
                             </div>
-                            <div class="d-flex">
-                                <!-- バリデーションメッセージ -->
-                                <p class="text-danger me-auto" id="comment_errors"></p>
-                                <div class="justify-content-end">
-                                    <!-- 送信ボタン -->
-                                    <button class="btn btn-secondary" id="comment_send">送信</button>
-                                </div>
-                            </div>
-                        <!-- </form> -->
+                        </div>
                     </div>
                 </div>
 
@@ -163,71 +185,6 @@
         </div>
     </div>
 
-    <!-- {{-- 商品詳細 --}}
-    <div>
-        @isset( $msg )
-        {{ $msg }}
-        @endisset
-        {{-- 商品画像 --}}
-        <div>
-            @foreach ( $item_info["image"] as $i=> $image)
-            <img src="{{asset($image["path"])}}">
-            {{$i}}
-            @endforeach
-        </div>
-        {{-- 商品情報, 購入ボタン, お気に入りボタン, チャット --}}
-        <div>
-            {{-- 商品情報, 購入・お気に入りボタン --}}
-            <div>
-                {{-- 商品名 --}}
-                <p>{{ $item_info["name"] }}</p>
-                {{-- 値段 --}}
-                <p>￥{{ $item_info["price"] }}</p>
-                {{-- 商品について --}}
-                <p>商品について</p>
-                <p>カテゴリ: {{ $item_info["category"] }}</p>
-                <p>商品状態: {{ $item_info["item_status"] }}</p>
-                {{-- 購入ボタン --}}
-                <button onclick="location.href='{{asset('/fleamarket/purchase/'. $item_info['id'])}}'">購入に進む</button>
-
-                {{-- その他商品情報 --}}
-                <p>出品日時: {{$item_info["created_at"]["date"]}}</p>
-                <p>発送元: {{$item_info["area"]}}</p>
-                <p>出品者: <a href="/user/show/{{$item_info["user_info"]["id"]}}">{{$item_info["user_info"]["name"]}}</a></p>
-                {{-- お気に入りに追加ボタン --}}
-                <div id="favorite_btn_wrapper">
-                    @if ( $is_favorite )
-                    <button id="deleteFavorite">お気に入りから削除</button>
-                    @else
-                    <button id="insertFavorite">お気に入りに追加</button>
-                    @endif
-                    {{-- メッセージ表示エリア --}}
-                    <div id="favorite_messages"></div>
-                </div>
-            </div>
-
-            {{-- チャット欄 --}}
-            <p>コメント</p>
-            <div id="comments">
-                @foreach ( $item_comments as $item_comment )
-                <p>
-                    @if ( $item_comment['is_seller'] )
-                    出品者:
-                    @endif
-                    <a href="/user/show/{{$item_comment['user_id']}}">
-                        {{$item_comment['user_name']}}
-                    </a>>{{$item_comment['text']}}
-                </p>
-                @endforeach
-            </div>
-            {{-- テキスト入力欄 --}}
-            <textarea id="comment" cols="30" rows="2"></textarea><br>
-            {{-- エラーメッセージ --}}
-            <div id="comment_errors"></div>
-            {{-- 送信ボタン --}}
-            <button id="comment_send">送信</button>
-        </div>
-    </div> -->
 
     @include('footer')
 
@@ -297,7 +254,8 @@
             $.ajax("/fleamarket/item/{{$item_info["id"]}}/upload/comment", {
                     type: 'post',
                     data: {
-                        'comment': $('#comment').val()
+                        'user_id' : @if( is_null( $user = unserialize( session('user') )) ){{ $user->id }}@else''@endif,
+                        'comment': $('#comment').val(),
                     },
                     dataType: 'json',
                     success: function(data) {
@@ -322,8 +280,11 @@
                     },
                     error: function(error) {
                         $('#comment_errors').empty();
-                        let message_obj = JSON.parse(error.responseText);
-                        $('#comment_errors').append('<p>' + message_obj.message + '</p>');
+                        let errors_obj = JSON.parse(error.responseText).errors;
+                        let errors = Object.keys(errors_obj).map(function (key) {return [errors_obj[key]];});;
+                        errors.forEach(function(e){
+                            $('#comment_errors').append('<p>' + e + '</p>');
+                        });
                     }
                 }
             )

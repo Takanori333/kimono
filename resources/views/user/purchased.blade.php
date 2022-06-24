@@ -52,8 +52,14 @@
                             {{-- 何も表示しない --}}
                             @endswitch
                             @endif
+                            {{-- 購入後のやりとりのチャットへのリンク --}}
+                            <div class="me-2 d-inline">
+                                <a href="{{ asset('user/trade_chat/' . $purchased_item->item->id) }}" class="link-dark">販売者とのチャットへ</a>
+                            </div>
                             <label>販売者：</label>
-                            <a href="{{ asset('/user/show/' . $purchased_item->item->user_id) }}" class="link-dark text-decoration-none">{{ $purchased_item->item->user_info->name }}</a>
+                            <a href="{{ asset('/user/show/' . $purchased_item->item->user_id) }}" class="link-dark text-decoration-none hover-line">{{ $purchased_item->item->user_info->name }}</a>
+
+
                         </div>
                     </div>
                 </div>
@@ -71,7 +77,7 @@
 
             @endif
 
-            <!-- ページネーション -->
+            {{-- <!-- ページネーション -->
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
@@ -88,7 +94,7 @@
                         </a>
                     </li>
                 </ul>
-            </nav>
+            </nav> --}}
 
         </div>
     </div>

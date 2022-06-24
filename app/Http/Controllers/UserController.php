@@ -172,10 +172,14 @@ class UserController extends Controller
 
     //スタイリストとのチャットページに移動
     function chat_stylist($id){
-        $chat_f = new ChatFunction();
-        $message_list = $chat_f->stylist_customer_get_message($id);
-        $stylist_info = $chat_f->stylist_customer_get_info($id);
-        return view("user.chat_stylist",["message_list"=>$message_list,"stylist_info"=>$stylist_info]);
+        $user = unserialize(session()->get("user"));
+        if($user){
+            $chat_f = new ChatFunction();
+            $message_list = $chat_f->stylist_customer_get_message($id);
+            $stylist_info = $chat_f->stylist_customer_get_info($id);    
+            return view("user.chat_stylist",["message_list"=>$message_list,"stylist_info"=>$stylist_info]);
+        }
+        return redirect(asset('/user/signin'));
     }
 
     // 出品商品一覧画面の表示
@@ -603,7 +607,7 @@ class UserController extends Controller
         // アクティブユーザーのみを検索
         // アクティブユーザーでないときは、プロフィール画面を表示させない
         $page_user = User::where("id", $request->id)
-            ->where("exist", 1)    
+            // ->where("exist", 1)    
             ->first();
 
         // フォロー数とフォロワー数を計算

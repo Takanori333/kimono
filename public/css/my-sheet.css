@@ -32,6 +32,11 @@ body {
     background-color: #5e656b;
 }
 
+/* ホバーで下線 */
+.hover-line:hover{
+    border-bottom: solid 1px #2c2c2c;
+}
+
 /* inputタグ */
 textarea:focus,
 input:focus,
@@ -377,4 +382,10 @@ select:focus {
 }
 body{
     overflow-x: hidden;
+}
+
+.page-item:focus,
+.page-link:focus{
+    box-shadow: none;
+    outline: none;
 }

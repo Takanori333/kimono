@@ -24,11 +24,11 @@
         
     @endphp
     <div class="container mt-5 pt-5">
-        <div class="contents p-5 mt-5 w-75 mx-auto text-center">
+        <div class="contents p-5 w-75 mx-auto text-center">
             <div class="row text-end justify-content-end">
-                @if (!session('stylist'))
-                    <a class="link-secondary" href="{{ asset('/user/stylist_chat/'.$stylist->id) }}" style="width: auto">チャット</a>                    
-                @endif
+                @if (!session('stylist')&&!session('manager'))
+                    <a class="link-secondary" href="{{ asset('/user/stylist_chat/'.$stylist->id) }}" style="width: auto" target="_blank">チャット</a>                
+                @endif            
             </div>
             <div class="row my-4">
                 <div class="col-12 col-xl-4 col-xxl-4 d-grid gap-2">
@@ -102,10 +102,10 @@
                         </div>
                         <div class="row border-bottom">
                             <div class="col text-start">
-                                     活動場所可能時間:
+                                     活動可能時間:
                                 <div class="row overflow-auto" style="max-height: 60px;">
                                     @if ($freetime->isEmpty())
-                                         活動場所可能時間はありません
+                                         活動可能時間はありません
                                     @endif
                                     @foreach ($freetime as $time)
                                     <div class="">

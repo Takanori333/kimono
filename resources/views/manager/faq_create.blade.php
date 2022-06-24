@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -52,11 +51,11 @@
                         <div class="w-75 row m-0 mx-auto  my-4">
                             <div class="row text-start">
                                 <label for="question" class="form-label p-0">質問</label>
-                                <textarea class="form-control" name="question" id="question"></textarea>
+                                <textarea class="form-control" name="question" id="question">{{ old("question") }}</textarea>
                             </div>
                             <div class="row text-start">
                                 <label for="answer" class="form-label p-0">回答</label>
-                                <textarea class="form-control" name="answer" id="answer"></textarea>
+                                <textarea class="form-control" name="answer" id="answer">{{ old("answer") }}</textarea>
                             </div>
                             <div class="row d-flex justify-content-center mb-3 w-100">
                                 <button class="btn btn-outline-primary px-3 mt-4 mx-1 col-3" type="submit">確定</button>

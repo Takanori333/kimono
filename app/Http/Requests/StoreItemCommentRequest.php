@@ -24,12 +24,15 @@ class StoreItemCommentRequest extends FormRequest
     public function rules()
     {
         return [
+            'user_id' => 'required',
             'comment' => 'required|string|max:200',
         ];
     }
 
     public function messages(){
         return [
+            'user_id.required' => 'ログインしてください',
+
             'comment.required' => 'テキストを入力してから送信してください',
             'comment.string' => ':attributeが正しくありません',
             'comment.max' => '200文字以内で入力してください',

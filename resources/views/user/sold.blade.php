@@ -36,8 +36,8 @@
                             <a href="{{ asset('/fleamarket/item/'. $sold_item->id) }}" class="link-dark text-decoration-none h4">{{ $sold_item->item_info->name }}</a>
                         </div>
                         <div class="row">
-                            <p class="col m-3 text-start">￥{{ number_format($sold_item->item_info->price) }}</p>
-                            <p class="col m-3 text-start">{{ str_replace('-', '/', $sold_item->item_history->created_at) }}</p>
+                            <p class="col-4 m-3 text-start">￥{{ number_format($sold_item->item_info->price) }}</p>
+                            <p class="col m-3 text-start">購入日時：{{ str_replace('-', '/', $sold_item->item_history->created_at) }}</p>
                         </div>
                         <div class="text-end me-3 mb-3">
                             {{-- ログイン状態であるか確認 --}}
@@ -55,10 +55,29 @@
                             @default
                             {{-- 何も表示しない --}}
                             @endswitch
+
+                            @switch($access_user->id)
+                            @case($sold_item->user_id)
+                            {{-- 購入者とのチャットへのリンク --}}
+                            <div class="me-2 d-inline">
+                                <a href="{{ asset('user/trade_chat/' . $sold_item->id) }}" class="link-dark">購入者とのチャットへ</a>
+                            </div>        
+                            @break
+                            @case($sold_item->item_history->buyer_id)
+                            {{-- 販売者とのチャットへのリンク --}}
+                            <div class="me-2 d-inline">
+                                <a href="{{ asset('user/trade_chat/' . $sold_item->id) }}" class="link-dark">販売者とのチャットへ</a>
+                            </div>
+                            @break
+                            @endswitch
                             @endif
                             @endif
+
+
                             <label>購入者：</label>
-                            <a href="{{ asset('/user/show/' . $sold_item->item_history->buyer_id) }}" class="link-dark text-decoration-none">{{ $sold_item->item_history->user_info->name }}</a>
+                            <a href="{{ asset('/user/show/' . $sold_item->item_history->buyer_id) }}" class="link-dark text-decoration-none hover-line">{{ $sold_item->item_history->user_info->name }}</a>
+
+
                         </div>
                     </div>
                 </div>
@@ -67,7 +86,7 @@
 
             </div>
 
-            <!-- ページネーション -->
+            {{-- <!-- ページネーション -->
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
@@ -84,7 +103,7 @@
                         </a>
                     </li>
                 </ul>
-            </nav>
+            </nav> --}}
 
             @else
 

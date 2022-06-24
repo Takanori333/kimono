@@ -79,7 +79,7 @@
 
             @endif
 
-            <!-- ページネーション -->
+            {{-- <!-- ページネーション -->
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
@@ -96,7 +96,7 @@
                         </a>
                     </li>
                 </ul>
-            </nav>
+            </nav> --}}
 
         </div>
     </div>

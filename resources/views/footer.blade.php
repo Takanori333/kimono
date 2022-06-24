@@ -8,7 +8,7 @@
                 <!-- Grid column -->
                 <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
                     <!-- Content -->
-                    <h6 class="text-uppercase fw-bold mb-4">和服フリマ（仮）</h6>
+                    <h6 class="text-uppercase fw-bold mb-4"><a href="{{ asset('/') }}" class="text-reset text-decoration-none footer-link">和服フリマ（仮）</a></h6>
                     <p>
                         Here you can use rows and columns to organize your footer content. Lorem ipsum
                         dolor sit amet, consectetur adipisicing elit.

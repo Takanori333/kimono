@@ -40,7 +40,7 @@
                         <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('name') as $error_msg)
-                            <small class="text-danger mb-1">{{ $error_msg }}</small>
+                            <small class="text-danger d-block mb-1">{{ $error_msg }}</small>
                             @endforeach
                         </div>
                         <div class="w-100 d-none d-md-block"></div>
@@ -55,7 +55,7 @@
                         <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('email') as $error_msg)
-                            <small class="text-danger mb-1">{{ $error_msg }}</small>
+                            <small class="text-danger d-block mb-1">{{ $error_msg }}</small>
                             @endforeach
                         </div>
                         <label for="" class="col-sm-3 col-form-label">メールアドレス</label>
@@ -77,7 +77,7 @@
                         <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('phone') as $error_msg)
-                            <small class="text-danger mb-1">{{ $error_msg }}</small>
+                            <small class="text-danger d-block mb-1">{{ $error_msg }}</small>
                             @endforeach
                         </div>
                         <label for="" class="col-sm-3 col-form-label">電話番号</label>
@@ -102,13 +102,13 @@
                         <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('year') as $error_msg)
-                            <small class="text-danger mb-1">{{ $error_msg }}</small>
+                            <small class="text-danger d-block mb-1">{{ $error_msg }}</small>
                             @endforeach
                             @foreach ($errors->get('month') as $error_msg)
-                            <small class="text-danger mb-1">{{ $error_msg }}</small>
+                            <small class="text-danger d-block mb-1">{{ $error_msg }}</small>
                             @endforeach
                             @foreach ($errors->get('day') as $error_msg)
-                            <small class="text-danger mb-1">{{ $error_msg }}</small>
+                            <small class="text-danger d-block mb-1">{{ $error_msg }}</small>
                             @endforeach
                         </div>
                         <label for="" class="col-sm-3 col-form-label">生年月日</label>
@@ -148,7 +148,7 @@
                         <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('post') as $error_msg)
-                            <small class="text-danger mb-1">{{ $error_msg }}</small>
+                            <small class="text-danger d-block mb-1">{{ $error_msg }}</small>
                             @endforeach
                         </div>
                         <label for="" class="col-sm-3 col-form-label">郵便番号</label>
@@ -162,7 +162,7 @@
                         <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('address') as $error_msg)
-                            <small class="text-danger mb-1">{{ $error_msg }}</small>
+                            <small class="text-danger d-block mb-1">{{ $error_msg }}</small>
                             @endforeach
                         </div>
                         <label for="" class="col-sm-3 col-form-label">住所</label>
@@ -176,7 +176,7 @@
                         <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('password') as $error_msg)
-                            <small class="text-danger mb-1">{{ $error_msg }}</small>
+                            <small class="text-danger d-block mb-1">{{ $error_msg }}</small>
                             @endforeach
                         </div>
                         <label for="" class="col-sm-3 col-form-label">パスワード</label>
@@ -198,7 +198,7 @@
                         <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('height') as $error_msg)
-                            <small class="text-danger mb-1">{{ $error_msg }}</small>
+                            <small class="text-danger d-block mb-1">{{ $error_msg }}</small>
                             @endforeach
                         </div>
                         <label for="" class="col-sm-3 col-form-label">身長</label>
@@ -219,7 +219,7 @@
                         <div class="invalid-fee dback col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('icon') as $error_msg)
-                            <small class="text-danger mb-1">{{ $error_msg }}</small>
+                            <small class="text-danger d-block mb-1">{{ $error_msg }}</small>
                             @endforeach
                         </div>
                         <label for="" class="col-sm-3 col-form-label">アイコン画像</label>

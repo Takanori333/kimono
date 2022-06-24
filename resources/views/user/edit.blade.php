@@ -27,12 +27,12 @@
 
             <h2 class="text-center py-5">登録情報変更</h2>
 
-            @if ($errors->any())
+            <!-- @if ($errors->any())
             @foreach ($errors->all() as $error)
             <span>{{ $error }}</span>
             <br>
             @endforeach
-            @endif
+            @endif -->
 
             <!-- 成功メッセージ -->
             <p class="text-center text-secondary">{{ $msg }}</p>
@@ -45,9 +45,11 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-
+                            @foreach ($errors->get('name') as $error_msg)
+                            <small class="text-danger d-block">{{ $error_msg }}</small>
+                            @endforeach
                         </div>
                         <div class="w-100 d-none d-md-block"></div>
                         <label for="" class="col-sm-3 col-form-label">名前</label>
@@ -58,9 +60,11 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-
+                            @foreach ($errors->get('email') as $error_msg)
+                            <small class="text-danger d-block">{{ $error_msg }}</small>
+                            @endforeach
                         </div>
                         <label for="" class="col-sm-3 col-form-label">メールアドレス</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
@@ -70,9 +74,11 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-
+                            @foreach ($errors->get('phone') as $error_msg)
+                            <small class="text-danger d-block">{{ $error_msg }}</small>
+                            @endforeach
                         </div>
                         <label for="" class="col-sm-3 col-form-label">電話番号</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
@@ -82,10 +88,6 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
-                            <!-- バリデーションメッセージ -->
-
-                        </div>
                         <label for="" class="col-sm-3 col-form-label">性別</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
                         <div class="col-sm-8 py-2">
@@ -103,29 +105,34 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-
+                            @foreach ($errors->get('year') as $error_msg)
+                            <small class="text-danger d-block">{{ $error_msg }}</small>
+                            @endforeach
+                            @foreach ($errors->get('month') as $error_msg)
+                            <small class="text-danger d-block">{{ $error_msg }}</small>
+                            @endforeach
+                            @foreach ($errors->get('day') as $error_msg)
+                            <small class="text-danger d-block">{{ $error_msg }}</small>
+                            @endforeach
                         </div>
                         <label for="" class="col-sm-3 col-form-label">生年月日</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
                         <div class="col-sm-8">
                             <div class="row">
-                                <div class="col-3 ">
-                                    <select class="form-select" aria-label="Default select example" id="year" name="year" style="width: 85px"></select>
+                                <div class="col-4">
+                                    <select class="form-select rounded-0" aria-label="Default select example" id="year" name="year"></select>
                                     <input type="hidden" class="form-control" id="old_year" placeholder="年" value="{{Carbon::parse($user->user_info->birthday)->format('Y')}}">                                        
                                 </div>
-                                <div class="col-1"></div>
-                                <div class="col-3">
-                                    <select class="form-select" aria-label="Default select example" id="month" name="month" style="width: 85px"></select>
+                                <div class="col-4">
+                                    <select class="form-select rounded-0" aria-label="Default select example" id="month" name="month"></select>
                                     <input type="hidden" class="form-control" id="old_month"  placeholder="月" value="{{Carbon::parse($user->user_info->birthday)->format('m')}}">
                                 </div>
-                                <div class="col-1"></div>
-                                <div class="col-3">
-                                    <select class="form-select" aria-label="Default select example" id="day" name="day" style="width: 85px"></select>
+                                <div class="col-4">
+                                    <select class="form-select rounded-0" aria-label="Default select example" id="day" name="day"></select>
                                     <input type="hidden" class="form-control" id="old_day"  placeholder="日" value="{{Carbon::parse($user->user_info->birthday)->format('d')}}">
                                 </div>
-                                <div class="col-1"></div>
                                 {{-- <div class="col-4"><input type="text" value="{{ explode('-', $user->user_info->birthday)[0] }}" name="year" placeholder="年" class="form-control rounded-0"></div>
                                 <div class="col-4"><input type="text" value="{{ intval(explode('-', $user->user_info->birthday)[1]) }}" name="month" placeholder="月" class="form-control rounded-0"></div>
                                 <div class="col-4"><input type="text" value="{{ intval(explode('-', $user->user_info->birthday)[2]) }}" name="day" placeholder="日" class="form-control rounded-0"></div> --}}
@@ -134,9 +141,11 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-
+                            @foreach ($errors->get('post') as $error_msg)
+                            <small class="text-danger d-block">{{ $error_msg }}</small>
+                            @endforeach
                         </div>
                         <label for="" class="col-sm-3 col-form-label">郵便番号</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
@@ -146,9 +155,11 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-
+                            @foreach ($errors->get('address') as $error_msg)
+                            <small class="text-danger d-block">{{ $error_msg }}</small>
+                            @endforeach
                         </div>
                         <label for="" class="col-sm-3 col-form-label">住所</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
@@ -158,9 +169,11 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-
+                            @foreach ($errors->get('password') as $error_msg)
+                            <small class="text-danger d-block">{{ $error_msg }}</small>
+                            @endforeach
                         </div>
                         <label for="" class="col-sm-3 col-form-label">パスワード</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
@@ -170,10 +183,6 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
-                            <!-- バリデーションメッセージ -->
-
-                        </div>
                         <label for="" class="col-sm-3 col-form-label">身長</label>
                         <p class="col-sm text-secondary py-2 m-0">任意</p>
                         <div class="col-sm-8 row p-0">
@@ -183,19 +192,15 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
-                            <!-- バリデーションメッセージ -->
-
-                        </div>
                         <label for="" class="col-sm-3 col-form-label">アイコン画像</label>
                         <p class="col-sm text-danger py-2 m-0"></p>
                         <div class="col-sm-8">
                             <input type="file" onchange="previewImage(this);" class="form-control rounded-0" name="icon">
                         </div>
+                        {{-- この中に画像のプレビューを追加 --}}
+                        <div id="show_img_area" class="img_view col-sm-8 offset-md-4 mt-2"></div>
                     </div>
 
-                    {{-- この中に画像のプレビューを追加 --}}
-                    <div id="show_img_area"></div>
 
                     <div class="row my-2">
                         <input type="hidden" name="id" value="{{ $user->id }}">
@@ -221,69 +226,11 @@
                 let show_img = document.getElementById("show_img_area");
                 // class_nameで追加したいクラスを定義
                 let class_name = "";
-                show_img.innerHTML = `<img src="${fileReader.result}" class="${class_name}">`
+                show_img.innerHTML = `<img src="${fileReader.result}" class="${class_name} w-25">`
             });
             fileReader.readAsDataURL(obj.files[0]);
         }
     </script>
-
-    <!-- <h1>登録情報変更</h1>
-    @if ($errors->any())
-    @foreach ($errors->all() as $error)
-    <span>{{ $error }}</span>
-    <br>
-    @endforeach
-    @endif
-    <p>{{ $msg }}</p>
-    <div>
-        <form action="{{ asset('/user/edit_DB') }}" method="post" enctype="multipart/form-data">
-            @csrf
-            <img src="{{ asset($user->user_info->icon) }}" alt="">
-            <br>
-            名前
-            <input type="text" value="{{ $user->user_info->name }}" name="name">
-            <br>
-            メールアドレス
-            <input type="text" value="{{ $user->email }}" name="email">
-            <br>
-            電話番号
-            <input type="text" value="{{ $user->user_info->phone }}" name="phone">
-            <br>
-            性別
-            @if ($user->user_info->sex)
-            <input type="radio" name="sex" value="1" checked>男
-            <input type="radio" name="sex" value="0">女
-            @else
-            <input type="radio" name="sex" value="1">男
-            <input type="radio" name="sex" value="0" checked>女
-            @endif
-            <br>
-            生年月日
-            <input type="text" value="{{ explode("-", $user->user_info->birthday)[0] }}" name="year">
-            /
-            <input type="text" value="{{ intval(explode("-", $user->user_info->birthday)[1]) }}" name="month">
-            /
-            <input type="text" value="{{ intval(explode("-", $user->user_info->birthday)[2]) }}" name="day">
-            <br>
-            郵便番号
-            <input type="text" value="{{ $user->user_info->post }}" name="post">
-            <br>
-            住所
-            <textarea name="address" id="" cols="30" rows="10">{{ $user->user_info->address }}</textarea>
-            <br>
-            身長
-            <input type="text" value="{{ $user->user_info->height }}" name="height">
-            <br>
-            パスワード
-            <input type="text" value="{{ $user->password }}" name="password">
-            <br>
-            <input type="file" name="icon">
-            <br>
-            <button type="button" onclick="location.href='{{ asset('/user/info/' . $user->id) }}'">戻る</button>
-            <input type="hidden" name="id" value="{{ $user->id }}">
-            <input type="submit" name="signup" value="確定">
-        </form>
-    </div> -->
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

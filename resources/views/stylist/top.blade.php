@@ -36,7 +36,7 @@
             <div class="col-12 col-xl-3 col-xxl-3">
               <div class="input-group m-3 p-1 mx-auto">
                 <input type="text" class="form-control" placeholder="検索する" name="stylist_name" value="{{ $stylist_name }}">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2" style="border: solid 1px #ced4da;">
                     <i class="bi bi-search"></i>
                 </button>
               </div>            
@@ -101,8 +101,8 @@
                     <p class="card-text mb-1 text-end">-</p>                        
                     @endif
                     <p class="card-text mb-1 text-end">￥{{ $stylist->min_price?$stylist->min_price."~".$stylist->max_price : "-"}}</p>
-                    <p class="card-text mb-1 text-start border-bottom">{{ $stylist->service }}</p>
-                    <p class="card-text mb-1 text-start">{{ $stylist->area }}</p>
+                    <p class="card-text mb-1 text-start border-bottom text-truncate">{{ $stylist->service }}</p>
+                    <p class="card-text mb-1 text-start text-truncate">{{ $stylist->area }}</p>
                   </div>
                 </a>
               </div>

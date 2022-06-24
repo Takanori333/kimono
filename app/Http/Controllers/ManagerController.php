@@ -77,7 +77,7 @@ class ManagerController extends Controller
         // $manager = $request->session()->get("manager");
 
         $users = User::with("User_info")
-            ->where("exist", "!=", "0")
+            // ->where("exist", "!=", "0")
             ->get();
 
         $data = [

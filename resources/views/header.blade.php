@@ -61,7 +61,7 @@
         <form action="/fleamarket/search" method="GET" class="w-50 mx-auto">
             <div class="input-group m-3 p-1">
                 <input type="text" name="keyword" class="form-control" placeholder="検索する">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2" style="border: solid 1px #ced4da;">
                     <i class="bi bi-search"></i>
                 </button>
             </div>

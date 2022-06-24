@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>スタイリスト一覧</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>スタイリスト一覧</title>
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('/css/star.css') }}">
@@ -59,7 +58,7 @@
                         <img src="{{ asset($stylist->stylist_info->icon) }}" width="263px" height="263px" alt="" class="col w-25 p-0">
                         <div class="col-sm">
                             <div class="mx-2 mt-4 text-start">
-                                <a href="{{ asset('/stylist/show/' . $stylist->id)}}" class="link-dark text-decoration-none h5">{{ $stylist->stylist_info->name }}</a>
+                                <a href="{{ asset('/stylist/show/' . $stylist->id)}}" class="link-dark text-decoration-none h5" target="_blank">{{ $stylist->stylist_info->name }}</a>
                             </div>
                             <p class="m-2 text-start">@if ($stylist->stylist_info->sex)男@else 女@endif {{ str_replace('-', '/', $stylist->stylist_info->birthday) }}</p>
                             <p class="m-2 text-start">{{ $stylist->email }}</p>
@@ -88,10 +87,10 @@
                                 @endforeach</p>
                             <a href="{{ asset('/manager/stylist/history/'.$stylist->id) }}" class="link-dark  text-start" target="_blank">活動履歴</a>
                             <div class="row d-flex justify-content-center">
-                                @if ($stylist->exist != 0)
+                                @if ($stylist->exist == 1)
                                 <button class="btn btn-outline-danger px-3 mt-4 mx-1 col-5 manage" id="delete{{ $stylist->id }}" value="{{ $stylist->id }}" name="delete">削除</button>
                                 <button class="btn btn-outline-secondary px-3 mt-4 mx-1 col-5 manage" id="recover{{ $stylist->id }}" value="{{ $stylist->id }}"  name="recover" disabled>復旧</button>
-                                @else
+                                @elseif ($stylist->exist == 2)
                                 <button class="btn btn-outline-danger px-3 mt-4 mx-1 col-5 manage" id="delete{{ $stylist->id }}" value="{{ $stylist->id }}" name="delete"  disabled>削除</button>
                                 <button class="btn btn-outline-secondary px-3 mt-4 mx-1 col-5 manage" id="recover{{ $stylist->id }}" value="{{ $stylist->id }}"  name="recover">復旧</button>
                                 @endif
