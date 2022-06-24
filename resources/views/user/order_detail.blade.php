@@ -11,16 +11,17 @@
     <link rel="stylesheet" href="{{ asset('/css/my-sheet.css') }}">
 </head>
 <body>
-    @include('stylist_user.header')
+    @include('header')
     @php
         use Illuminate\Support\Carbon;
     @endphp
+    <div class="pt-5 mt-5"></div>
     <div class="container p-5 mt-5 border secondary" style="padding: 50px;max-width: 600px">
         <table class="table text-center">
             <tbody>
                 <tr>
                     <td>顧客</td>
-                    <td><a class="link-secondary" href="{{ asset('/user/show/'.$reserve->customer_id) }}" target="_blank">{{ $reserve->name }} </a></td>
+                    <td><a class="link-secondary" href="{{ asset('/stylist/show/'.$reserve->stylist_id) }}" target="_blank">{{ $reserve->name }} </a></td>
                 </tr>
                 <tr>
                     <td>人数</td>
@@ -46,6 +47,6 @@
             </tbody>
         </table>
     </div>
-    @include('stylist_user.footer')
+    @include('footer')
 </body>
 </html>

@@ -11,7 +11,6 @@
     <script src="{{ asset('js/bootjs/js/bootstrap.bundle.min.js') }}"  crossorigin="anonymous"></script>
     <script src="{{ asset('/js/socketio.js') }}"></script>
     <script src="{{ asset('/js/jquery.js') }}"></script>
-
 </head>
 <body>
     @php

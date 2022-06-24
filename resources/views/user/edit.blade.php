@@ -18,6 +18,10 @@
 
     @include('header')
 
+    @php
+    use Illuminate\Support\Carbon;
+    @endphp
+
     <div class="container">
         <div class="contents pt-5 w-75 mx-auto">
 
@@ -107,9 +111,24 @@
                         <p class="col-sm text-danger py-2 m-0">必須</p>
                         <div class="col-sm-8">
                             <div class="row">
-                                <div class="col-4"><input type="text" value="{{ explode('-', $user->user_info->birthday)[0] }}" name="year" placeholder="年" class="form-control rounded-0"></div>
+                                <div class="col-3 ">
+                                    <select class="form-select" aria-label="Default select example" id="year" name="year" style="width: 85px"></select>
+                                    <input type="hidden" class="form-control" id="old_year" placeholder="年" value="{{Carbon::parse($user->user_info->birthday)->format('Y')}}">                                        
+                                </div>
+                                <div class="col-1"></div>
+                                <div class="col-3">
+                                    <select class="form-select" aria-label="Default select example" id="month" name="month" style="width: 85px"></select>
+                                    <input type="hidden" class="form-control" id="old_month"  placeholder="月" value="{{Carbon::parse($user->user_info->birthday)->format('m')}}">
+                                </div>
+                                <div class="col-1"></div>
+                                <div class="col-3">
+                                    <select class="form-select" aria-label="Default select example" id="day" name="day" style="width: 85px"></select>
+                                    <input type="hidden" class="form-control" id="old_day"  placeholder="日" value="{{Carbon::parse($user->user_info->birthday)->format('d')}}">
+                                </div>
+                                <div class="col-1"></div>
+                                {{-- <div class="col-4"><input type="text" value="{{ explode('-', $user->user_info->birthday)[0] }}" name="year" placeholder="年" class="form-control rounded-0"></div>
                                 <div class="col-4"><input type="text" value="{{ intval(explode('-', $user->user_info->birthday)[1]) }}" name="month" placeholder="月" class="form-control rounded-0"></div>
-                                <div class="col-4"><input type="text" value="{{ intval(explode('-', $user->user_info->birthday)[2]) }}" name="day" placeholder="日" class="form-control rounded-0"></div>
+                                <div class="col-4"><input type="text" value="{{ intval(explode('-', $user->user_info->birthday)[2]) }}" name="day" placeholder="日" class="form-control rounded-0"></div> --}}
                             </div>
                         </div>
                     </div>
@@ -171,11 +190,12 @@
                         <label for="" class="col-sm-3 col-form-label">アイコン画像</label>
                         <p class="col-sm text-danger py-2 m-0"></p>
                         <div class="col-sm-8">
-                            <input type="file" accept='image/*' onchange="previewImage(this); class="form-control rounded-0" name="icon">
+                            <input type="file" onchange="previewImage(this);" class="form-control rounded-0" name="icon">
                         </div>
                     </div>
 
-                    <img id="preview" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+                    {{-- この中に画像のプレビューを追加 --}}
+                    <div id="show_img_area"></div>
 
                     <div class="row my-2">
                         <input type="hidden" name="id" value="{{ $user->id }}">
@@ -196,9 +216,12 @@
     <script>
         function previewImage(obj)
         {
-            var fileReader = new FileReader();
+            let fileReader = new FileReader();
             fileReader.onload = (function() {
-                document.getElementById('preview').src = fileReader.result;
+                let show_img = document.getElementById("show_img_area");
+                // class_nameで追加したいクラスを定義
+                let class_name = "";
+                show_img.innerHTML = `<img src="${fileReader.result}" class="${class_name}">`
             });
             fileReader.readAsDataURL(obj.files[0]);
         }
@@ -267,6 +290,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="{{ asset('/js/birthday.js') }}"></script>
 </body>
 
 </html>

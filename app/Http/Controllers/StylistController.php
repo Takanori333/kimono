@@ -11,7 +11,7 @@ class StylistController extends Controller
     function top(Request &$request){
         $s_function = new StylistFunction();
         $stylist_list = $s_function->top($request);
-        return view('stylist.top',['stylist_list'=>$stylist_list,'area'=>$request->area,'service'=>$request->service,'sort'=>$request->sort]);
+        return view('stylist.top',['stylist_list'=>$stylist_list,'area'=>$request->area,'service'=>$request->service,'sort'=>$request->sort,'stylist_name'=>$request->stylist_name]);
     }
     //スタイリスト情報
     function stylist_info($id){
@@ -20,7 +20,6 @@ class StylistController extends Controller
         return view('stylist.show',["stylist"=>$info[0],"services"=>$info[1],"areas"=>$info[2],"freetime"=>$info[3],"is_follow"=>$info[4],"follower_count"=>$info[5],"comments"=>$info[6]]);
     }
 
-    //TODO:notfound画面
     //予約画面
     function reserve($reserve_id){
         $s_function = new StylistFunction();
@@ -30,7 +29,6 @@ class StylistController extends Controller
         }
         return redirect(asset('/notfound'));
     }
-    //TODO:感謝画面
     //予約を決定する
     function confirm(Request &$request){
         $s_function = new StylistFunction();

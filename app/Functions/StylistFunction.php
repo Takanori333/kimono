@@ -1,18 +1,12 @@
 <?php
     namespace App\Functions;
 
-    use App\Classes\Stylist;
-    use App\Models\Stylist as StylistDB;
-    use App\Models\Stylist_info;
-    use App\Models\Stylist_area;
-use App\Models\Stylist_followers;
-use App\Models\Stylist_service;
-    use App\Models\Stylist_freetime;
+    use App\Models\Stylist_followers;
     use App\Models\Stylist_history;
     use Illuminate\Http\Request;
-    use Illuminate\Support\Carbon;
     use Illuminate\Support\Facades\DB;
-    
+    use Illuminate\Support\Facades\Validator;
+
     class StylistFunction{
         function __construct()
         {
@@ -23,6 +17,7 @@ use App\Models\Stylist_service;
             $area = $request->area;
             $service = $request->service;
             $sort = $request->sort;
+            $stylist_name = $request->stylist_name;
             // $sort = $request->sort;
             $sql = DB::table('stylist_infos')->selectRaw('stylist_infos.id as id,name,icon,max_price,min_price,areas.area,services.service,stylist_infos.point as point');
             $services = DB::table('stylist_services')->selectRaw('stylist_id,GROUP_CONCAT(service) as service')->groupBy('stylist_id');
@@ -48,6 +43,9 @@ use App\Models\Stylist_service;
                     $stylist_id[] = $id;
                 }
                 $sql = $sql->whereIn('id',$stylist_id);
+            }
+            if($stylist_name){
+                $sql = $sql->where('name','like',"%{$stylist_name}%");
             }
             if($sort=="point"){
                 $sql = $sql->orderByDesc($sort);
@@ -105,6 +103,13 @@ use App\Models\Stylist_service;
         }
         //予約を決定する
         function confirm(Request &$request){
+            Validator::make($request->all(),
+            ['address' => 'required|max:100'],
+            [
+                'address.required' => '場所が記入されていません',
+                'address.max' => '場所は100文字以下で入力してください',
+                ]
+            )->validate();
             $reserve = DB::table('stylist_reserves')->where('reserve_id','=',$request->reserve_id)->first();
             $stylist_history = new Stylist_history();
             $stylist_history->stylist_id = $reserve->stylist_id;
@@ -118,7 +123,7 @@ use App\Models\Stylist_service;
             $stylist_history->save();
             DB::table('stylist_reserves')->where('reserve_id','=',$request->reserve_id)->delete();
         }
-
+        //スタイリストをフォローする
         function follow(Request &$request){
             $user = unserialize(session()->get("user"));
             $user_id = $user->id;
@@ -127,7 +132,7 @@ use App\Models\Stylist_service;
             $stylist_follow->customer_id = $user_id;
             $stylist_follow->save();
         }
-
+        //スタイリストをフォロー解除する
         function unfollow(Request &$request){
             $user = unserialize(session()->get("user"));
             $user_id = $user->id;

@@ -17,16 +17,6 @@
 
 </head>
 <body>
-    {{-- <form action="{{ asset('/stylist_user/signin_DB') }}" method="POST">
-        @csrf
-        <input type="email" name="email">
-        <br>
-        <input type="password" name="password" id="">
-        <br>
-        <button>サインイン</button>
-    </form>
-    <a href="{{ asset('/stylist_user/signup') }}">サインアップ</a> --}}
-
     <nav id="header" class="p-3">
         <div class="p-3 fixed-top d-flex border-bottom flex-wrap w-100">
             <h5 class="me-auto my-0 mr-mb-auto font-weight-normal p-2"><a href="{{ asset('/') }}" class="link-dark text-decoration-none h4">和服フリマ（仮）</a></h5>

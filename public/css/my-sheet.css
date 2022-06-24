@@ -36,6 +36,8 @@ body {
 textarea:focus,
 input:focus,
 input[type]:focus:not(input[type="radio"]:focus),
+.form-select:focus,
+textarea.form-control:focus,
 .uneditable-input:focus {
     outline: none;
     box-shadow: none;
@@ -45,6 +47,11 @@ input[type]:focus:not(input[type="radio"]:focus),
 
 input[type="radio"]:focus{
     box-shadow: none;
+}
+
+input[type="radio"]:checked{
+    background-color: #6c757d;
+    border-color: #6c757d;
 }
 
 textarea:focus {
@@ -367,4 +374,7 @@ select:focus {
 
 .border_shadow{
     box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+}
+body{
+    overflow-x: hidden;
 }

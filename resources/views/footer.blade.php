@@ -24,7 +24,9 @@
                         </h6> -->
                     <!-- スタイリストログイン時新規登録は非表示 -->
                     <p>
-                        <a href="{{ asset('/stylist_user/signup') }}" class="text-reset text-decoration-none footer-link">スタイリスト新規登録</a>
+                        @if (!session('stylist'))
+                            <a href="{{ asset('/stylist_user/signup') }}" class="text-reset text-decoration-none footer-link">スタイリスト新規登録</a>                            
+                        @endif
                     </p>
                     <p>
                         <a href="{{ asset('/faq') }}" class="text-reset text-decoration-none footer-link">よくあるご質問</a>

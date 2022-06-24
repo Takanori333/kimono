@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>予約一覧</title>
+    <title>活動一覧</title>
     <link href="{{ asset('css/bootcss/css/bootstrap.min.css') }}" rel="stylesheet"  crossorigin="anonymous">
     <script src="{{ asset('js/bootjs/js/bootstrap.bundle.min.js') }}"  crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/css/my-sheet.css') }}">
 </head>
 <body>
-    @include('stylist_user.header')
+    @include('header')
     @php
         use Illuminate\Support\Carbon;
     @endphp
-    <div class="container pt-5">
-        <table class="table table-striped table-hover">
+    <div class="container pt-5 mt-5">
+        <table class="table table-striped table-hover mt-5">
             <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -45,6 +45,6 @@
             </tbody>
         </table>
     </div>
-    @include('stylist_user.footer')
+    @include('footer')
 </body>
 </html>

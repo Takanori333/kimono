@@ -95,7 +95,7 @@ class StylistUserController extends Controller
         $s_function = new StylistUserFunction();
         $s_function->change_status($request);
     }    
-
+    //スタイリストユーザーのチャット画面
     function chat(){
         $chat_f = new ChatFunction();
         $customer_list = $chat_f->stylist_customer_list();
@@ -104,7 +104,7 @@ class StylistUserController extends Controller
         // var_dump($customer_list);
         return view('stylist_user.chat',['customer_list'=>$customer_list,'service'=>$service]);
     }
-
+    //スタイリストユーザーの一覧を取得する
     function get_customer(){
         $chat_f = new ChatFunction();
         $customer_list = $chat_f->stylist_customer_list();

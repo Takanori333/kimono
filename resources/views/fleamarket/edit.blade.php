@@ -25,9 +25,9 @@
             <div class="">
                 <form action="/fleamarket/edit/{{$item_infos['id']}}" method="POST" enctype="multipart/form-data" id="item_create_form" class="">
                     @csrf
-                    @foreach ($errors->all() as $error)
+                    <!-- @foreach ($errors->all() as $error)
                     <li>{{$error}}</li>
-                    @endforeach
+                    @endforeach -->
                     <div class="row my-3">
                         <div class="invalid-feedbac k col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
@@ -104,7 +104,7 @@
                         </div>
                         <div class="col-sm-4 col-form-label">発送元都道府県</div>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control rounded-0" name="pref" value="{{ old('pref') }}">
+                            <input type="text" class="form-control rounded-0" name="pref" value="{{ old('pref', $item_infos['area']) }}">
                         </div>
                     </div>
 
@@ -156,7 +156,7 @@
                         </div>
                         <div class="col-sm-4 col-form-label">商品状態</div>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control rounded-0" name="item_status" value="{{ old('item_status', $item_infos['item_status']) }}">
+                            <input type="text" class="form-control rounded-0" name="status" value="{{ old('status', $item_infos['item_status']) }}">
                         </div>
                     </div>
 
@@ -239,108 +239,21 @@
                         </div>
                     </div>
 
+                    <div id="hidden_input">
+                        <input type="hidden" name="id" value="{{ $item_infos['id'] }}">
+                        @isset( $images )
+                        @foreach ($images as $key => $image )
+                        <input type="hidden" name="image[{{$key}}]" value="{{ $image }}">
+                        @endforeach
+                        @endisset
+                    </div>
+
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-secondary rounded-0">内容を確認</button>
                     </div>
                 </form>
             </div>
         </div>
-    </div>
-
-    
-
-    {{-- 商品登録フォーム --}}
-    <div>
-        <form action="/fleamarket/edit/{{$item_infos["id"]}}" method="POST" enctype="multipart/form-data" id="item_create_form">
-            @csrf
-            @foreach ($errors->all() as $error)
-                <li>{{$error}}</li>
-            @endforeach
-            <label for="name">商品名:</label>
-            <input type="text" name="name" value="{{ old("name", $item_infos["name"]) }}">
-            <br>
-
-            @php
-                $images = old("image", $item_images);
-            @endphp
-            <label for="image">商品画像:</label>
-            <input type="file" id="input_img" multiple>
-
-            <div id="show_img_area">
-                @isset( $images )
-                    @foreach ($images as $image )
-                        @if ( explode('/',  $image)[0] === 'image' )
-                            <img src="{{asset($image)}}">
-                        @else
-                            <img src="{{$image}}">
-                        @endif
-                    @endforeach
-                @endisset
-            </div>
-            <br>
-
-            <label for="category">カテゴリ:</label>
-            <input type="text" name="category" value="{{ old("category", $item_infos["category"]) }}">
-            <br>
-
-            <label for="price">値段:</label>
-            <input type="text" name="price" value="{{ old("price", $item_infos["price"]) }}">
-            <br>
-
-            <label for="pref">発送元都道府県:</label>
-            <input type="text" name="pref" value="{{ old("pref") }}">
-            <br>
-
-            <label for="material">素材:</label>
-            <input type="text" name="material" value="{{ old("material", $item_infos["material"]) }}">
-            <br>
-
-            <label for="color">色:</label>
-            <input type="text" name="color" value="{{ old("color", $item_infos["color"]) }}">
-            <br>
-
-            <label for="status">商品状態:</label>
-            <input type="text" name="status" value="{{ old("status", $item_infos["item_status"]) }}">
-            <br>
-
-            <label for="smell">におい:</label>
-            <input type="text" name="smell" value="{{ old("smell", $item_infos["smell"]) }}">
-            <br>
-
-            <label for="size_heigh">身丈:</label>
-            <input type="text" name="size_height" value="{{ old("size_height", $item_infos["height"]) }}">
-            <br>
-            <label for="size_length">裄丈:</label>
-            <input type="text" name="size_length" value="{{ old("size_length", $item_infos["length"]) }}">
-            <br>
-            <label for="size_sleeve">袖丈:</label>
-            <input type="text" name="size_sleeve" value="{{ old("size_sleeve", $item_infos["sleeve"]) }}">
-            <br>
-            <label for="size_sleeves">袖幅:</label>
-            <input type="text" name="size_sleeves" value="{{ old("size_sleeves", $item_infos["sleeves"]) }}">
-            <br>
-            <label for="size_front">前幅:</label>
-            <input type="text" name="size_front" value="{{ old("size_front", $item_infos["front"]) }}">
-            <br>
-            <label for="size_back">後幅:</label>
-            <input type="text" name="size_back" value="{{ old("size_back", $item_infos["back"]) }}">
-            <br>
-
-            <label for="detail">自由記入欄</label>
-            <textarea name="detail" cols="30" rows="10">{{ old("detail", $item_infos["detail"]) }}</textarea>
-            <br>
-
-            <div id="hidden_input">
-                <input type="hidden" name="id" value="{{ $item_infos["id"] }}">
-                @isset( $images )
-                    @foreach ($images as $key => $image )
-                        <input type="hidden" name="image[{{$key}}]" value="{{ $image }}">
-                    @endforeach
-                @endisset
-            </div>
-
-            <input type="button" value="内容を確認" onclick="submit()">
-        </form>
     </div>
 
     @include('footer')

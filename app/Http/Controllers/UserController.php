@@ -345,6 +345,17 @@ class UserController extends Controller
         return view("user.ordered", $data);
     }
 
+    public function order_detail($id){
+        $user = unserialize(session()->get("user"));
+        if($user){
+            $reserve = DB::table('stylist_histories')->where("customer_id", $user->id)->where('stylist_histories.id','=',$id)->rightJoin('stylist_infos','stylist_histories.stylist_id','stylist_infos.id')->first();
+            if($reserve){
+                return view('user.order_detail',compact('reserve'));
+            }
+        }
+        return redirect(asset('/unfound'));
+    }
+
     public function assessStylist(Request $request)
     {
         // インスタンスを受け取る

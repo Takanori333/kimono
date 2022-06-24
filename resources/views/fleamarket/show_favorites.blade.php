@@ -85,7 +85,7 @@
 
                 
                 {{-- 表示件数 --}}
-                <p class="text-start mt-3">全○件中○件</p>
+                <p class="text-start mt-3">全{{ $item_infos->total() }}件中{{ $item_infos->count() }}件</p>
                 
                 <!-- お気に入りの商品がない場合 -->
                 <!-- <div class=" d-flex align-items-center justify-content-center" style="height: 500px;">
@@ -126,6 +126,35 @@
                     @endforeach
                 </div>
             </div>
+            
+
+            <!-- ページネーション -->
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    {{-- 前のページがあれば --}}
+                    @if ( !is_null( $item_infos->previousPageUrl() ) )
+                        <li class="page-item">
+                            <a class="page-link border-0" href="{{ $item_infos->previousPageUrl() }}" aria-label="Previous" >
+                                <span aria-hidden="true" class="link-secondary">&#8249;</span>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link link-secondary border-0" href="{{ $item_infos->previousPageUrl() }}">{{ $item_infos->currentPage() -1}}</a></li>
+                    @endif
+                    {{-- 現在のページ --}}
+                    <li class="page-item"><span class="page-link link-secondary border-0" >{{ $item_infos->currentPage() }}</span></li>
+
+                    {{-- 後ろのページ --}}
+                    @if ( !is_null( $item_infos->nextPageUrl() ) )
+                        <li class="page-item"><a class="page-link link-secondary border-0" href="{{ $item_infos->nextPageUrl() }}">{{$item_infos->currentPage() + 1}}</a></li>
+                        <li class="page-item">
+                            <a class="page-link border-0" href="{{ $item_infos->nextPageUrl() }}" aria-label="Next">
+                                <span aria-hidden="true" class="link-secondary">&#8250;</span>
+                            </a>
+                        </li>
+                    @endif
+                </ul>
+            </nav>
+
         </div>
     </div>
 

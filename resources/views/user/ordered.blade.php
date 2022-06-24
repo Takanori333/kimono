@@ -40,7 +40,7 @@
                     </div>
                     <div class="col">
                         <p class="m-3 text-end">￥{{ number_format($order_history->price) }}</p>
-                        <p class="m-3 text-end">{{ str_replace('-', '/', $order_history->created_at) }}</p>
+                        <p class="m-3 text-end">{{ str_replace('-', '/', $order_history->start_time) }}</p>
                         {{-- ユーザーがまだ評価していないとき --}}
                         @if (!$order_history->stylist_comment)
                         {{-- 現在時刻がサービスの終了時間よりも後の時 --}}
@@ -63,6 +63,7 @@
                         @endif
                         @endif
                     </div>
+                    <a class="m-3 text-end link-secondary" href="{{ asset('/user/order_detail/'.$order_history->id) }}" style="width:auto;height:auto" target="_blank"><p class="m-0 p-0">詳細</p></a> 
                 </div>
 
                 @endforeach

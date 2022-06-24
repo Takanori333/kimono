@@ -64,7 +64,7 @@
                     </p>
                     <div class="mb-3">
                         <label for="form-label">メールアドレス</label>
-                        <input type="text" name="email" class="form-control my-2 py-2">
+                        <input type="text" name="email" class="form-control my-2 py-2" value="{{ old('email') }}">
                     </div>
                     <div class="mb-3">
                         <label for="form-label">パスワード</label>

@@ -1,13 +1,7 @@
 <?php
     namespace App\Functions;
 
-    use App\Classes\Stylist;
     use App\Models\Item_chat;
-    use App\Models\Stylist as StylistDB;
-    use App\Models\Stylist_info;
-    use App\Models\Stylist_area;
-    use App\Models\Stylist_service;
-    use App\Models\Stylist_freetime;
     use App\Models\Stylist_chat;
     use App\Models\Stylist_reserve;
     use Illuminate\Http\Request;

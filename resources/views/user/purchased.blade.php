@@ -36,8 +36,8 @@
                             <a href="{{ asset('/fleamarket/item/'. $purchased_item->item_id) }}" class="link-dark text-decoration-none h4">{{ $purchased_item->item_info->name }}</a>
                         </div>
                         <div class="row">
-                            <p class="col m-3 text-start">￥{{ number_format($purchased_item->item_info->price) }}</p>
-                            <p class="col m-3 text-start">{{ str_replace('-', '/', $purchased_item->created_at) }}</p>
+                            <p class="col-4 m-3 text-start">￥{{ number_format($purchased_item->item_info->price) }}</p>
+                            <p class="col m-3 text-start">購入日時：{{ str_replace('-', '/', $purchased_item->created_at) }}</p>
                         </div>
                         <div class="text-end me-3 mb-3">
                             @if ($user->id == $purchased_item->buyer_id)

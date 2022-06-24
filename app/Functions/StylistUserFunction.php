@@ -2,7 +2,6 @@
     namespace App\Functions;
 
     use App\Classes\Stylist;
-    use App\Models\Stylist as StylistDB;
     use App\Models\Stylist_info;
     use App\Models\Stylist_area;
     use App\Models\Stylist_service;
@@ -10,15 +9,12 @@
     use Illuminate\Http\Request;
     use Illuminate\Support\Carbon;
     use Illuminate\Support\Facades\DB;
-    use App\Rules\stylist_signin;
-use Illuminate\Support\Facades\Validator;
 
     class StylistUserFunction{
         function __construct()
         {
             
         }
-        //TODO:バリョテション
         //サインアップで入力したデータをデータベースに挿入する
         function signup(Request &$request){
             // $stylistDB = new StylistDB();
@@ -46,7 +42,6 @@ use Illuminate\Support\Facades\Validator;
             $stylist_infoDB->save();
             // $stylistDB->save();       
         }
-        //TODO:バリョテション
         //サインインし、成功なら、データベースから取った情報をセッションに保存する
         function signin(Request &$request){
             $stylist_id = DB::table("stylists")->where("email","=",$request->form['email'])->where("password","=",$request->form['password'])->value("id");
@@ -55,7 +50,6 @@ use Illuminate\Support\Facades\Validator;
                 // var_dump();
             }
         }
-        //TODO:バリョテション
         //スタイリスト情報更新
         function info_update(Request &$request){
             $year = $request->year;
@@ -141,16 +135,16 @@ use Illuminate\Support\Facades\Validator;
         //予約の詳細を取得する
         function reserve_detail($id){
             $stylist = unserialize(session()->get("stylist"));
-            $reserve = DB::table('stylist_histories')->where("stylist_id","=",$stylist->getId())->where("id","=",$id)->first();
+            $reserve = DB::table('stylist_histories')->where("stylist_id","=",$stylist->getId())
+            ->where("stylist_histories.id","=",$id)->rightJoin('user_infos','user_infos.id','stylist_histories.customer_id')->first();            
             return $reserve;
         }
         //予約リストを取得する
         function reserve(){
             $stylist = unserialize(session()->get("stylist"));
-            $reserve_list = DB::table('stylist_histories')->where("stylist_id","=",$stylist->getId())->orderBy('start_time')->get();
+            $reserve_list = DB::table('stylist_histories')->where("stylist_id","=",$stylist->getId())->orderBy('start_time','desc   ')->orderBy('end_time','desc')->get();
             return $reserve_list;
         }        
-        //TODO:バリョテション
         //予約可能時間を追加する
         function freetime_DB(Request &$request){
             $stylist = unserialize(session()->get("stylist"));

@@ -322,7 +322,8 @@
                     },
                     error: function(error) {
                         $('#comment_errors').empty();
-                        $('#comment_errors').append('<p>' + error.responseJSON.message + '</p>');
+                        let message_obj = JSON.parse(error.responseText);
+                        $('#comment_errors').append('<p>' + message_obj.message + '</p>');
                     }
                 }
             )

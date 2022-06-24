@@ -18,6 +18,7 @@ use App\Models\User_info;
 use App\Models\Trade_status;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class FleamarketController extends Controller
 {
@@ -35,14 +36,18 @@ class FleamarketController extends Controller
             $msg = "条件に一致する商品はありません";
         }
 
+        // ページネーションのために前処理
         $page = is_null($request->get('page'))? 1 : $request->get('page');
-        // $item_infos = new LengthAwarePaginator(
-        //     $item_infos->forPage($page, 15), // 現在のページのsliceした情報(現在のページ, 1ページあたりの件数)
-        //     $item_infos->count(), // 総件数
-        //     15,
-        //     $page, // 現在のページ(ページャーの色がActiveになる)
-        //     ['path' => $request->url()] // ページャーのリンクをOptionのpathで指定
-        // );
+        $item_infos = collect( $item_infos );
+        $quantity_per_page = 3;
+        $parameter = explode(url()->current(), url()->full())[1];
+        $item_infos = new LengthAwarePaginator(
+            $item_infos->forPage($page, $quantity_per_page), // 現在のページのsliceした情報(現在のページ, 1ページあたりの件数)
+            count($item_infos), // 総件数
+            $quantity_per_page,
+            $page, // 現在のページ(ページャーの色がActiveになる)
+            ["path" => '/fleamarket' . $parameter ],
+        );
 
         return view('fleamarket.index', compact('item_infos', 'categories', 'msg', 'sort_type', 'onsale', 'selected_category'));
     }
@@ -61,6 +66,19 @@ class FleamarketController extends Controller
         if( count($item_infos) <= 0 ){
             $msg = "条件に一致する商品はありません";
         }
+
+        // ページネーションのために前処理
+        $page = is_null($request->get('page'))? 1 : $request->get('page');
+        $item_infos = collect( $item_infos );
+        $quantity_per_page = 3;
+        $parameter = explode(url()->current(), url()->full())[1];
+        $item_infos = new LengthAwarePaginator(
+            $item_infos->forPage($page, $quantity_per_page), // 現在のページのsliceした情報(現在のページ, 1ページあたりの件数)
+            count($item_infos), // 総件数
+            $quantity_per_page,
+            $page, // 現在のページ(ページャーの色がActiveになる)
+            ["path" => '/fleamarket/search' . $parameter ],
+        );
 
         return view('fleamarket.search_result', compact('item_infos', 'categories', 'msg', 'sort_type', 'onsale', 'selected_category', 'keyword'));
     }
@@ -106,6 +124,25 @@ class FleamarketController extends Controller
         if( count($item_infos) <= 0 && is_null( $msg ) ){
             $msg = "条件に一致する商品はありません";
         }
+
+
+        // ページネーションのために前処理
+        $decriment = 0;
+        $page = is_null($request->get('page'))? 1 : $request->get('page');
+        $item_infos_collection = collect( $item_infos );
+        $quantity_per_page = 3;
+        $parameter = explode(url()->current(), url()->full())[1];
+        do{
+            $page -= $decriment;
+            $item_infos = new LengthAwarePaginator(
+                $item_infos_collection->forPage($page, $quantity_per_page), // 現在のページのsliceした情報(現在のページ, 1ページあたりの件数)
+                count($item_infos_collection), // 総件数
+                $quantity_per_page,
+                $page, // 現在のページ(ページャーの色がActiveになる)
+                ["path" => '/fleamarket/favorite' . $parameter ],
+            );
+            $decriment--;
+        }while( $item_infos->count() == 0 );
 
         return view('fleamarket.show_favorites', compact('item_infos', 'categories', 'msg', 'sort_type', 'onsale', 'selected_category'));
     }

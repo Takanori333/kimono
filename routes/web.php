@@ -68,6 +68,7 @@ Route::get('/user/exhibited/delete/{id}',[UserController::class,'exhibited_delet
 Route::get('/user/purchased/{id}',[UserController::class,'purchasedIndex']);
 Route::get('/user/sold/{id}',[UserController::class,'soldIndex']);
 Route::get('/user/ordered/{id}',[UserController::class,'orderedIndex']);
+Route::get('/user/order_detail/{id}',[UserController::class,'order_detail']);
 Route::get('/user/assess_stylist',[UserController::class,'assessStylist']);
 Route::get('/user/follower/{id}',[UserController::class,'followerIndex']);
 Route::get('/user/follow/{id}',[UserController::class,'followIndex']);
@@ -119,6 +120,7 @@ Route::get('/manager/item',[ManagerController::class,'itemManageIndex']);
 Route::get('/manager/item/delete',[ManagerController::class,'deleteItem']);
 Route::get('/manager/item/recover',[ManagerController::class,'recoverItem']);
 Route::get('/manager/stylist',[ManagerController::class,'stylistManageIndex']);
+Route::get('/manager/stylist/history/{id}',[ManagerController::class,'stylist_history']);
 Route::get('/manager/stylist/delete',[ManagerController::class,'deleteStylist']);
 Route::get('/manager/stylist/recover',[ManagerController::class,'recoverStylist']);
 Route::get('/manager/faq',[ManagerController::class,'faqManageIndex']);

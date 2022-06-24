@@ -273,19 +273,46 @@
         let end_time = document.getElementById("end_time").value;
         let price = document.getElementById("price").value;
         let services = document.getElementById("service_area").textContent;
-        $.ajax({
-            url:url,
-            type:"post",
-            data:{"_token":csrf,customer_id:customer_id,stylist_id:stylist_id,start_time:start_time,end_time:end_time,price:price,services:services},
-            success:function(reserve_url){
-                sendUrl(reserve_url);
-                close_reverse();
-            },
-            error:function(msg){
-                console.log(msg);
-            }
-        })
+        console.log(start_time);
+        let today = new Date();
+        if(!start_time){
+            alert("開始時間を選択してください");
+        }else if(!end_time){
+            alert("終了時間をを選択してください");
+        }else if(new Date(start_time)<today){
+            alert("開始時間を今より遅い時間を選択してください");
+        }else if(new Date(end_time)<today){
+            alert("終了時間を今より遅い時間を選択してください");
+        }else if(new Date(start_time)>new Date(end_time)){
+            alert("終了時間を開始時間より遅い時間を選択してください");
+        }else if(!services){
+            alert("サービス内容を選択してください");
+        }else if(!price){
+            alert("料金を入力してください");
+        }else if(price_check(price)){
+            alert("料金を正整数を入力してください");
+        }else{
+            $.ajax({
+                url:url,
+                type:"post",
+                data:{"_token":csrf,customer_id:customer_id,stylist_id:stylist_id,start_time:start_time,end_time:end_time,price:price,services:services},
+                success:function(reserve_url){
+                    sendUrl(reserve_url);
+                    close_reverse();
+                },
+                error:function(msg){
+                    console.log(msg);
+                }
+            })
+        }
     }
+    function price_check(money){
+        if(money.toString().indexOf('.')!=-1||parseInt(money)<=0){
+            return true;
+        }
+        return false;
+    }
+
     get_customer_list();
     
 

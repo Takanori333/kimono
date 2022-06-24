@@ -35,8 +35,8 @@
           <div class="row">
             <div class="col-12 col-xl-3 col-xxl-3">
               <div class="input-group m-3 p-1 mx-auto">
-                <input type="text" class="form-control" placeholder="検索する">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                <input type="text" class="form-control" placeholder="検索する" name="stylist_name" value="{{ $stylist_name }}">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
                     <i class="bi bi-search"></i>
                 </button>
               </div>            
@@ -81,6 +81,13 @@
           </div>
         </form>
         <div class="row">
+        @if ($stylist_list->isEmpty())
+        <div class="p-5 rounded-3 " style="height: 500px">
+          <div class="container-fluid py-5 text-center mt-5">
+            <h1 class="display-5 fw-bold" style="color:#7a7a7a;">お探しのスタイリストはありません</h1>
+          </div>
+        </div>
+        @endif
         @foreach ($stylist_list as $stylist)
           <div class="col my-4 col-xl-4 col-xxl-4" style="text-align: -webkit-center;">
               <div class="card" style="width: 18rem;" >

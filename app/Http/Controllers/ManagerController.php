@@ -9,6 +9,7 @@ use App\Models\Item;
 use App\Models\Stylist;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ManagerController extends Controller
 {
@@ -316,6 +317,12 @@ class ManagerController extends Controller
         ];
 
         return redirect("/manager/faq/create/")->withInput($data);
+    }
+
+    public function stylist_history($id){
+        $reserve_list = DB::table('stylist_histories')->where("stylist_id","=",$id)->orderBy('start_time','desc')->orderBy('end_time','desc')->get();
+
+        return view('manager.stylist_history',compact('reserve_list'));
     }
 
 }

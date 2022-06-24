@@ -30,9 +30,12 @@ class UserEditRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:20',
-            'year' => 'required|integer|digits:4',
-            'month' => 'required|integer|digits_between:1,2',
-            'day' => 'required|integer|digits_between:1,2',
+            // 'year' => 'required|integer|digits:4',
+            // 'month' => 'required|integer|digits_between:1,2',
+            // 'day' => 'required|integer|digits_between:1,2',
+            'year' => 'required',
+            'month' => 'required',
+            'day' => 'required',
             'email' => [
                 'required',
                 'email',
@@ -41,10 +44,11 @@ class UserEditRequest extends FormRequest
                 'max:50',
             ],
             'phone' => 'required|digits_between:10,11|numeric',
+            'sex' => 'required',
             'post' => 'required|digits:7|numeric',
-            'address' => 'required|max:200',
+            'address' => 'required|max:100',
             'password' => 'required|max:20',
-            'height' => 'numeric|nullable|digits_between:1,3',
+            'height' => 'numeric|nullable|max:300|min:10',
             'icon' => 'nullable|image',
         ];
     }
@@ -78,18 +82,21 @@ class UserEditRequest extends FormRequest
             'phone.digits_between' => "電話番号が正しくありません",
             'phone.numeric' => "電話番号は数字で入力してください",
 
+            'sex.required' => '性別が選択されていません',
+
             'post.required' => "郵便番号が記入されていません",
             'post.numeric' => "郵便番号は数字で入力してください",
             'post.digits' => "郵便番号が正しくありません",
 
             'address.required' => "住所が記入されていません",
-            'address.max' => "住所は200文字以下で入力してください",
+            'address.max' => "住所は1   00文字以下で入力してください",
 
             'password.required' => "パスワードが記入されていません",
             'password.max' => "パスワードは20文字以下で入力してください",
 
             'height.numeric' => "身長は数字で入力してください",
-            'height.digits_between' => "身長が正しくありません",
+            'height.min' => "身長が正しくありません",
+            'height.max' => "身長が正しくありません",
 
             'icon.image' => '画像ファイルが正しくありません',
         ];

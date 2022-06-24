@@ -144,20 +144,20 @@
 
             <!-- リンク一覧 -->
             <div class="my-4 text-center">
-                <div class="bg-lightgray w-75 my-3 mx-auto py-3 lightgray-link">
-                    <a href="{{ asset('/user/exhibited/'. $user->id) }}" class="link-dark text-decoration-none d-block">出品中の商品</a>
+                <div class="bg-lightgray w-75 my-3 mx-auto lightgray-link">
+                    <a href="{{ asset('/user/exhibited/'. $user->id) }}" class="link-dark text-decoration-none d-block py-3">出品中の商品</a>
                 </div>
-                <div class="bg-lightgray w-75 my-3 mx-auto py-3">
-                    <a href="{{ asset('/user/purchased/'. $user->id) }}" class="link-dark text-decoration-none d-block">購入履歴</a>
+                <div class="bg-lightgray w-75 my-3 mx-auto">
+                    <a href="{{ asset('/user/purchased/'. $user->id) }}" class="link-dark text-decoration-none d-block py-3">購入履歴</a>
                 </div>
-                <div class="bg-lightgray w-75 my-3 mx-auto py-3">
-                    <a href="{{ asset('/user/sold/'. $user->id) }}" class="link-dark text-decoration-none d-block">販売履歴</a>
+                <div class="bg-lightgray w-75 my-3 mx-auto">
+                    <a href="{{ asset('/user/sold/'. $user->id) }}" class="link-dark text-decoration-none d-block py-3">販売履歴</a>
                 </div>
-                <div class="bg-lightgray w-75 my-3 mx-auto py-3">
-                    <a href="{{ asset('/user/ordered/'. $user->id) }}" class="link-dark text-decoration-none d-block">着付け依頼履歴</a>
+                <div class="bg-lightgray w-75 my-3 mx-auto">
+                    <a href="{{ asset('/user/ordered/'. $user->id) }}" class="link-dark text-decoration-none d-block py-3">着付け依頼履歴</a>
                 </div>
-                <div class="bg-lightgray w-75 my-3 mx-auto py-3">
-                    <a href="{{ asset('/user/edit/'. $user->id) }}" class="link-dark text-decoration-none d-block">登録情報変更</a>
+                <div class="bg-lightgray w-75 my-3 mx-auto">
+                    <a href="{{ asset('/user/edit/'. $user->id) }}" class="link-dark text-decoration-none d-block py-3">登録情報変更</a>
                 </div>
             </div>
         </div>
