@@ -17,6 +17,7 @@ use App\Models\Item_favorite;
 use App\Models\User_info;
 use App\Models\Trade_status;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class FleamarketController extends Controller
 {
@@ -29,20 +30,43 @@ class FleamarketController extends Controller
         $selected_category = is_null( $request->get('category') )? null: $request->get('category');
         SelectItem::sortItemInfos($item_infos, $sort_type);
         SelectItem::filterItemInfos($item_infos, $onsale, $selected_category);
-        return view('fleamarket.index', compact('item_infos', 'categories', 'sort_type', 'onsale', 'selected_category'));
+        $msg = null;
+        if( count($item_infos) <= 0 ){
+            $msg = "条件に一致する商品はありません";
+        }
+
+        $page = is_null($request->get('page'))? 1 : $request->get('page');
+        // $item_infos = new LengthAwarePaginator(
+        //     $item_infos->forPage($page, 15), // 現在のページのsliceした情報(現在のページ, 1ページあたりの件数)
+        //     $item_infos->count(), // 総件数
+        //     15,
+        //     $page, // 現在のページ(ページャーの色がActiveになる)
+        //     ['path' => $request->url()] // ページャーのリンクをOptionのpathで指定
+        // );
+
+        return view('fleamarket.index', compact('item_infos', 'categories', 'msg', 'sort_type', 'onsale', 'selected_category'));
     }
 
     // 4-2
     public function search(Request $request){
-        $keyword = $request->all();
+        $keyword = $request->get('keyword');
         $item_infos = SelectItem::getSearchedItemInfos($keyword);
         $categories = SelectItem::getCategories($item_infos);
+        $sort_type = is_null( $request->get('sort') )? 0: $request->get('sort');
+        $onsale = is_null( $request->get('onsale') )? false: $request->get('onsale');
+        $selected_category = is_null( $request->get('category') )? null: $request->get('category');
+        SelectItem::sortItemInfos($item_infos, $sort_type);
+        SelectItem::filterItemInfos($item_infos, $onsale, $selected_category);
+        $msg = null;
+        if( count($item_infos) <= 0 ){
+            $msg = "条件に一致する商品はありません";
+        }
 
-        return view('fleamarket.search_result', compact('item_infos', 'categories'));
+        return view('fleamarket.search_result', compact('item_infos', 'categories', 'msg', 'sort_type', 'onsale', 'selected_category', 'keyword'));
     }
 
     // 4-3
-    public function showFavorites(){
+    public function showFavorites(Request $request){
         $user_id = unserialize(session('user'))->id;
         $item_ids = Item_favorite::where('user_id', '=', unserialize(session('user'))->id )
         ->select('item_id')
@@ -50,18 +74,40 @@ class FleamarketController extends Controller
         ->toArray();
 
         $item_infos = array();
-        $msg = '';
+        $msg = null;
         if( ! is_null( $item_ids ) ){
             // お気に入りに追加している商品がある場合
             foreach( $item_ids as $item_id  ){
-                $item_infos[] = SelectItem::getItemInfosById($item_id)[0];
+                if( count( SelectItem::getItemInfosById($item_id) ) > 0 ){
+                    $item_infos[] = SelectItem::getItemInfosById($item_id)[0];
+                }
             }
-        }else{
+        }
+
+        if( count( $item_infos ) <= 0 ){
             $msg = "お気に入りに追加された商品はありません";
         }
-        $categories = SelectItem::getCategories($item_infos);
 
-        return view('fleamarket.show_favorites', compact('item_infos', 'categories', 'msg'));
+        $categories = SelectItem::getCategories($item_infos);
+        $sort_type = is_null( $request->get('sort') )? 0: $request->get('sort');
+        $onsale = is_null( $request->get('onsale') )? false: $request->get('onsale');
+        $selected_category = is_null( $request->get('category') )? null: $request->get('category');
+        $exist_category = false;
+        foreach( $categories as $category ){
+            if( $category == $selected_category ){
+                $exist_category = true;
+            }
+        }
+        if( !$exist_category ){
+            $selected_category = null;
+        }
+        SelectItem::sortItemInfos($item_infos, $sort_type);
+        SelectItem::filterItemInfos($item_infos, $onsale, $selected_category);
+        if( count($item_infos) <= 0 && is_null( $msg ) ){
+            $msg = "条件に一致する商品はありません";
+        }
+
+        return view('fleamarket.show_favorites', compact('item_infos', 'categories', 'msg', 'sort_type', 'onsale', 'selected_category'));
     }
 
     // 4-1-1(ソート)

@@ -90,9 +90,7 @@
                 @isset( $msg )
                 {{ $msg }}
                 @endisset
-                @foreach ($errors->all() as $error)
-                <li>{{$error}}</li>
-                @endforeach
+                
             
                 <!-- 商品画像スライドショー -->
                 <div id="carouselExampleIndicators" class="carousel slide col-sm-6 item-img-size-500" data-bs-ride="carousel">
@@ -134,6 +132,9 @@
 
                 <!-- 詳細 -->
                 <div class="col-sm-6 p-5">
+                    @foreach ($errors->all() as $error)
+                    <p class="text-danger">{{$error}}</p>
+                    @endforeach
                     <p class="fs-4">{{ $item_info["name"] }}</p>
                     <p class="fs-5 d-inline">￥{{ $item_info["price"] }}</p>
                     <!-- <p class="d-inline">（送料：￥400）</p> -->

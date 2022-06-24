@@ -28,7 +28,15 @@
     <form action="{{ asset('/stylist_user/info_DB') }}" enctype="multipart/form-data" method="POST">
         @csrf
         <input type="hidden" value="{{ $stylist->getId() }}" name="id">
-        <div class="container pt-5">
+        <div class="container">
+            <div class="text-danger ms-4 text-center">
+                <!-- バリデーションメッセージ -->
+                @if ($errors->any())
+                    @foreach ($errors->all() as $error)
+                        <p>{{ $error }}</p>
+                    @endforeach    
+                @endif
+            </div>
             <div class="row pt-5">
                 <div class="col-12 col-xxl-1 col-lg-1 col-md-1  col-xl-1">
                 </div>
@@ -103,8 +111,8 @@
                         <br>
                         <div class="row">
                            <div class="col-4">料金範囲:</div>
-                           <div class="col-4"><input type="number" class="form-control" name="min_price" value="{{ $stylist->getMin_price() }}" placeholder="最低料金"></div>
-                           <div class="col-4"><input type="number" class="form-control" name="max_price" value="{{ $stylist->getMax_price() }}" placeholder="最高料金"></div>
+                           <div class="col-4"><input type="number" class="form-control" name="price[min]" value="{{ $stylist->getMin_price() }}" placeholder="最低料金"></div>
+                           <div class="col-4"><input type="number" class="form-control" name="price[max]" value="{{ $stylist->getMax_price() }}" placeholder="最高料金"></div>
                         </div>
                     </div>
                 </div>
@@ -141,10 +149,22 @@
                             <div class="mb-3 row">
                                 <div class="alert-danger"></div>
                                 <label for="exampleInputEmail1" class="form-label">生年月日</label>
-                                <div class="row">
-                                    <div class="col-4"><input type="text" class="form-control" name="year" placeholder="年" value="{{Carbon::parse($stylist->getBirthday())->format('Y')}}"></div>
-                                    <div class="col-4"><input type="text" class="form-control" name="month" placeholder="月" value="{{Carbon::parse($stylist->getBirthday())->format('m')}}"></div>
-                                    <div class="col-4"><input type="text" class="form-control" name="day" placeholder="日" value="{{Carbon::parse($stylist->getBirthday())->format('d')}}"></div>
+                                <div class="row ">
+                                    <div class="col-3 ">
+                                        <select class="form-select" aria-label="Default select example" id="year" name="year" style="width: 85px"></select>
+                                        <input type="hidden" class="form-control" id="old_year" placeholder="年" value="{{Carbon::parse($stylist->getBirthday())->format('Y')}}">                                        
+                                    </div>
+                                    <div class="col-1"></div>
+                                    <div class="col-3">
+                                        <select class="form-select" aria-label="Default select example" id="month" name="month" style="width: 85px"></select>
+                                        <input type="hidden" class="form-control" id="old_month"  placeholder="月" value="{{Carbon::parse($stylist->getBirthday())->format('m')}}">
+                                    </div>
+                                    <div class="col-1"></div>
+                                    <div class="col-3">
+                                        <select class="form-select" aria-label="Default select example" id="day" name="day" style="width: 85px"></select>
+                                        <input type="hidden" class="form-control" id="old_day"  placeholder="日" value="{{Carbon::parse($stylist->getBirthday())->format('d')}}">
+                                    </div>
+                                    <div class="col-1"></div>
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -162,5 +182,7 @@
         </div>
     </form>
     @include('stylist_user.footer')
+    <script src="{{ asset('/js/birthday.js') }}"></script>
+
 </body>
 </html>

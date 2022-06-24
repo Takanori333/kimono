@@ -23,18 +23,25 @@
 
             <h2 class="text-center py-5 mt-5">商品登録</h2>
 
+            <!-- <div class="text-center">
+                <div class="d-inline text-start">
+                    @foreach ($errors->all() as $error)
+                    <p class="text-danger my-0">{{$error}}</p>
+                    @endforeach
+                </div>
+            </div> -->
+
             {{-- 商品登録フォーム --}}
             <div>
                 <form action="/fleamarket/exhibit/confirm" method="POST" enctype="multipart/form-data" id="item_create_form">
                     @csrf
-                    @foreach ($errors->all() as $error)
-                    <li>{{$error}}</li>
-                    @endforeach
 
                     <div class="row my-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="invalid-feedba ck col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-                            <p class="text-danger mb-1">商品名が記入されていません</p>
+                            @foreach ($errors->get('name') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">商品名</div>
                         <div class="col-sm-8">
@@ -47,13 +54,15 @@
                     $images = old("image");
                     @endphp
                     <div class="row my-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="invalid-feedba ck col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-                            <p class="text-danger mb-1"></p>
+                            @foreach ($errors->get('image') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">商品画像</div>
                         <div class="col-sm-8">
-                            <input type="file" name="" id="input_img" class="form-control rounded-0" multiple>
+                            <input type="file" id="input_img" class="form-control rounded-0" multiple>
                             <div id="show_img_area">
                                 @isset( $images )
                                 @foreach ($images as $image )
@@ -65,9 +74,11 @@
                     </div>
                     
                     <div class="row my-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="invalid-fe edback col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-                            <p class="text-danger mb-1"></p>
+                            @foreach ($errors->get('category') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">カテゴリ</div>
                         <div class="col-sm-8">
@@ -76,9 +87,11 @@
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="invalid-fee dback col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-                            <p class="text-danger mb-1"></p>
+                            @foreach ($errors->get('price') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">値段</div>
                         <div class="col-sm-8">
@@ -87,9 +100,11 @@
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="invalid-f eedback col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-                            <p class="text-danger mb-1"></p>
+                            @foreach ($errors->get('pref') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">発送元都道府県</div>
                         <div class="col-sm-8">
@@ -98,9 +113,11 @@
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="invalid-fe  edback col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-                            <p class="text-danger mb-1"></p>
+                            @foreach ($errors->get('material') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">素材</div>
                         <div class="col-sm-8">
@@ -109,9 +126,11 @@
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="invalid-fee dback col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-                            <p class="text-danger mb-1"></p>
+                            @foreach ($errors->get('color') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">色</div>
                         <div class="col-sm-8">
@@ -120,9 +139,11 @@
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="invalid-fee dback col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-                            <p class="text-danger mb-1"></p>
+                            @foreach ($errors->get('status') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">商品状態</div>
                         <div class="col-sm-8">
@@ -131,9 +152,11 @@
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="invalid-fe edback col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-                            <p class="text-danger mb-1"></p>
+                            @foreach ($errors->get('smell') as $message)
+                            <p class="text-danger mb-1">{{ $message }}</p>
+                            @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">におい</div>
                         <div class="col-sm-8">
@@ -142,9 +165,26 @@
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="invalid-f eedback col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-                            <p class="text-danger mb-1"></p>
+                            @foreach ($errors->get('size_height') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                            @foreach ($errors->get('size_length') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                            @foreach ($errors->get('size_sleeve') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                            @foreach ($errors->get('size_sleeves') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                            @foreach ($errors->get('size_front') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                            @foreach ($errors->get('size_back') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">サイズ</div>
                         <div class="col-sm-8">
@@ -178,9 +218,11 @@
                     </div>
 
                     <div class="row my-3">
-                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                        <div class="invalid-fe edback col-sm-8 offset-md-4">
                             <!-- バリデーションメッセージ -->
-                            <p class="text-danger mb-1"></p>
+                            @foreach ($errors->get('detail') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
                         </div>
                         <div class="col-sm-4 col-form-label">自由記入欄</div>
                         <div class="col-sm-8">
@@ -227,9 +269,13 @@
                     show_img.innerHTML += '<img src="' + dataUri + '">'
                     
                     // inputタグをhiddenで表示するdivタグを取得する
-                    let hidden_area = document.getElementById("hidden_input");
-                    hidden_area.innerHTML += '<input type="hidden" name="image[]" value="' + dataUri +'">'
-                    console.log( '<input type="hidden" name="image[]" value="' + dataUri +'">');
+                    let form = document.getElementById("item_create_form");
+                    let input_data = document.createElement('input');
+                    input_data.type = 'hidden';
+                    input_data.name = 'image[]';
+                    input_data.value = dataUri;
+                    form.appendChild(input_data);
+                    {{-- hidden_area.innerHTML += '<input type="hidden" name="image[]" value="' + dataUri +'">' --}}
                 }
                 // ファイルをData URIとして読み込む
                 fileReader.readAsDataURL( fileList[i] ) ;

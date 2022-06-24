@@ -58,7 +58,7 @@
                             @endif
                             @endif
                             <label>購入者：</label>
-                            <a href="{{ asset('/user/show/' . $sold_item->user_id) }}" class="link-dark text-decoration-none">{{ $sold_item->item_history->user_info->name }}</a>
+                            <a href="{{ asset('/user/show/' . $sold_item->item_history->buyer_id) }}" class="link-dark text-decoration-none">{{ $sold_item->item_history->user_info->name }}</a>
                         </div>
                     </div>
                 </div>

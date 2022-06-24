@@ -171,9 +171,11 @@
                         <label for="" class="col-sm-3 col-form-label">アイコン画像</label>
                         <p class="col-sm text-danger py-2 m-0"></p>
                         <div class="col-sm-8">
-                            <input type="file" class="form-control rounded-0" name="icon">
+                            <input type="file" accept='image/*' onchange="previewImage(this); class="form-control rounded-0" name="icon">
                         </div>
                     </div>
+
+                    <img id="preview" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
 
                     <div class="row my-2">
                         <input type="hidden" name="id" value="{{ $user->id }}">
@@ -190,6 +192,17 @@
     </div>
 
     @include('footer')
+
+    <script>
+        function previewImage(obj)
+        {
+            var fileReader = new FileReader();
+            fileReader.onload = (function() {
+                document.getElementById('preview').src = fileReader.result;
+            });
+            fileReader.readAsDataURL(obj.files[0]);
+        }
+    </script>
 
     <!-- <h1>登録情報変更</h1>
     @if ($errors->any())

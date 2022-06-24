@@ -42,7 +42,6 @@ class SelectItem{
 
     public static function getSearchedItemInfos($keyword){
         // 検索ワードの前処理
-        $keyword = $keyword['keyword'];
         //1.全角スペースを半角スペースに変換
         $keyword = str_replace('　', ' ', $keyword);
         //2.前後のスペース削除（trimの対象半角スペースのみなので半角スペースに変換後行う）
@@ -232,6 +231,14 @@ class SelectItem{
         $category_item_infos = array();
         // 上2つの配列に含まれるitem_infoを格納する配列
         $filtered_item_infos = array();
+
+        if( gettype( $is_only_sale ) == 'string' ){
+            if( $is_only_sale == 'true' ){
+                $is_only_sale = true;
+            }elseif( $is_only_sale == 'false' ){
+                $is_only_sale = false;
+            }
+        }
 
         // 販売中のitem_infoを格納
         if( $is_only_sale ){

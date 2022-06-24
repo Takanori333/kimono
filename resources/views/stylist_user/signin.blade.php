@@ -33,22 +33,26 @@
         </div>
     </nav>
     <div class="container">
-        <div class="contents p-5 mt-5 w-75 mx-auto border_shadow">
+        <div class="contents p-5 mt-5 w-75 mx-auto ">
             <h2 class="text-center pt-5">ログイン</h2>
             <div class="">
                 <form action="{{ asset('/stylist_user/signin_DB') }}" method="POST">
                     @csrf
-                    <p class="invalid-feedback">
+                    <div class="text-danger ms-4 text-center">
                         <!-- バリデーションメッセージ -->
-                        
-                    </p>
+                        @if ($errors->any())
+                            @foreach ($errors->all() as $error)
+                                <p>{{ $error }}</p>
+                            @endforeach    
+                        @endif
+                    </div>
                     <div class="mb-3">
                         <label for="form-label">メールアドレス</label>
-                        <input type="email" class="form-control my-2 py-2" name="email">
+                        <input type="email" class="form-control my-2 py-2" name="form[email]">
                     </div>
                     <div class="mb-3">
                         <label for="form-label">パスワード</label>
-                        <input type="password" class="form-control my-2 py-2" name="password">
+                        <input type="password" class="form-control my-2 py-2" name="form[password]">
                     </div>
                     <div class="row text-center flex" style="justify-content: center">
                         <button type="submit" class="btn btn-secondary btn-block my-2 py-3" style="width: 150px;">サインイン</button>

@@ -71,7 +71,7 @@
                     <div class="col">
                         <a href="{{ asset('/user/assessment/customer/'. $user->id) }}" class="link-dark">
                             <div class="Stars" style="--rating: {{ round($user->customer_assessment->avg('point'), 1) }};" aria-label="Rating of this product is 3.5 out of 5.">
-                                <p class="d-inline">{{ round($user->customer_assessment->avg('point'), 1) }}</p>
+                                <p class="d-inline">{{ number_format(round($user->customer_assessment->avg('point'), 1), 1) }}</p>
                             </div>
                         </a>
                     </div>
@@ -87,7 +87,7 @@
                     <div class="col">
                         <a href="{{ asset('/user/assessment/seller/'. $user->id) }}" class="link-dark">
                             <div class="col Stars" style="--rating: {{ round($user->seller_assessment->avg('point'), 1) }};" aria-label="Rating of this product is 4.3 out of 5.">
-                                <p class="d-inline">{{ round($user->seller_assessment->avg('point'), 1) }}</p>
+                                <p class="d-inline">{{ number_format(round($user->seller_assessment->avg('point'), 1), 1) }}</p>
                             </div>
                         </a>
                     </div>

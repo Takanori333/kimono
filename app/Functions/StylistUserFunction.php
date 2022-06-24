@@ -10,6 +10,8 @@
     use Illuminate\Http\Request;
     use Illuminate\Support\Carbon;
     use Illuminate\Support\Facades\DB;
+    use App\Rules\stylist_signin;
+use Illuminate\Support\Facades\Validator;
 
     class StylistUserFunction{
         function __construct()
@@ -47,7 +49,7 @@
         //TODO:バリョテション
         //サインインし、成功なら、データベースから取った情報をセッションに保存する
         function signin(Request &$request){
-            $stylist_id = DB::table("stylists")->where("email","=",$request->email)->where("password","=",$request->password)->value("id");
+            $stylist_id = DB::table("stylists")->where("email","=",$request->form['email'])->where("password","=",$request->form['password'])->value("id");
             if($stylist_id){
                 $this->data2session($stylist_id);
                 // var_dump();
@@ -64,8 +66,8 @@
                 'phone' => $request->phone,
                 'post' => $request->post,
                 'address' => $request->address,
-                'min_price' => $request->min_price,
-                'max_price' => $request->max_price,
+                'min_price' => $request->price['min'],
+                'max_price' => $request->price['max'],
                 'birthday' => $year."-".$month."-".$day
             ];
             if($request->file('icon')){

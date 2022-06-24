@@ -80,11 +80,11 @@
             <div class="">
                 {{-- 表示件数 --}}
                 <p class="text-start mt-3">全○件中○件</p>
+                <!-- 出品中の商品がない場合 -->
 
                 @isset( $msg )
 
-                <!-- 出品中の商品がない場合 -->
-                <div class=" d-flex align-items-center justify-content-center" style="height: 500px;">
+                <div class=" d-flex align-items-center justify-content-center" style="height: 400px;">
                     <p class="text-secondary">{{ $msg }}</p>
                 </div>
                 
@@ -114,7 +114,8 @@
                 </div>
 
             </div>
-
+            
+            {{-- {{ $item_infos->links() }} --}}
             <!-- ページネーション -->
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
@@ -136,6 +137,8 @@
 
         </div>
     </div>
+
+    @include('footer')
 
     <!-- <div>
         <div>
@@ -195,10 +198,6 @@
 
     <script>
         // 販売商品の絞り込みと、カテゴリによる絞り込みのAND検索
-        {{-- $('#only_on_sale, #category').change(function() {
-            searchItem();
-        }); --}}
-
         $('#only_on_sale, #category, #sort').change(function() {
             let selected_sortType = $('[name=sort] option:selected').val();
             let is_only_sale = $('#only_on_sale').prop('checked');
@@ -208,7 +207,6 @@
                 search += '&category=' + selected_category;
             }
             let href = location.protocol + '//' + location.host + location.pathname + search;
-            console.log(href);
             location.replace(href);
         });
 

@@ -22,7 +22,6 @@
 <body>
 
     @include('header')
-
     <div class="container">
         <div class="contents pt-5 w-75 mx-auto">
             <h2 class="text-center pt-5">ログイン</h2>

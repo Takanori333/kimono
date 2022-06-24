@@ -110,9 +110,21 @@
                         <div class="col-sm-8">
                             <!-- <input type="date" class="form-control rounded-0"> -->
                             <div class="row">
-                                <div class="col-4"><input type="text" name="year" value="{{ old('year') }}" placeholder="年" class="form-control rounded-0"></div>
+                                {{-- <div class="col-4"><input type="text" name="year" value="{{ old('year') }}" placeholder="年" class="form-control rounded-0"></div>
                                 <div class="col-4"><input type="text" name="month" value="{{ old('month') }}" placeholder="月" class="form-control rounded-0"></div>
-                                <div class="col-4"><input type="text" name="day" value="{{ old('day') }}" placeholder="日" class="form-control rounded-0"></div>
+                                <div class="col-4"><input type="text" name="day" value="{{ old('day') }}" placeholder="日" class="form-control rounded-0"></div> --}}
+                                <div class="col-4">
+                                    <select class="form-select rounded-0" aria-label="Default select example" id="year" name="year"></select>
+                                    <input type="hidden"  id="old_year" value="{{ old('year') }}">
+                                </div>
+                                <div class="col-4">
+                                    <select class="form-select rounded-0" aria-label="Default select example" id="month" name="month"></select>
+                                    <input type="hidden"  id="old_month" value="{{ old('month') }}">
+                                </div>
+                                <div class="col-4">
+                                    <select class="form-select rounded-0" aria-label="Default select example" id="day" name="day"></select>
+                                    <input type="hidden"  id="old_day" value="{{ old('day') }}">
+                                </div>
                             </div>
                             {{-- <select name="year" id="">
                                 @for ($year = 1900; $year <= date("Y"); $year++)
@@ -226,7 +238,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
+    <script src="{{ asset('/js/birthday.js') }}"></script>
     <!-- <h1>新規登録</h1>
     @if ($errors->any())
     @foreach ($errors->all() as $error)

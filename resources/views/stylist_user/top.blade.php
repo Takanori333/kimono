@@ -87,7 +87,7 @@
                     </div>
                     <br>
                     <div class="col text-center">
-                        <a class="link-primary" href="{{ '/stylist_user/signout ' }}">Sign-Out</a>
+                        <a class="link-secondary" href="{{ '/stylist_user/signout ' }}">ログアウト</a>
                     </div>
                     <br>
                 </div>

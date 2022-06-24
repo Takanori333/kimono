@@ -588,7 +588,12 @@ class UserController extends Controller
     public function showIndex(Request $request)
     {   
         $access_user = unserialize($request->session()->get("user"));
-        $page_user = User::where("id", $request->id)->first();
+
+        // アクティブユーザーのみを検索
+        // アクティブユーザーでないときは、プロフィール画面を表示させない
+        $page_user = User::where("id", $request->id)
+            ->where("exist", 1)    
+            ->first();
 
         // フォロー数とフォロワー数を計算
         $follower_count = User_follower::where("follow_id", $page_user->id)

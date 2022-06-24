@@ -25,23 +25,50 @@
             {{-- 絞り込み機能 --}}
             <div class="row frima-body">
                 <div class="col-6">
-                    <input type="checkbox" name="" id="only_on_sale" class="">
+                    <input type="checkbox" name="" id="only_on_sale" class=""
+                    @if( $onsale === 'true' )
+                        checked
+                    @endif
+                    >
                     <label for="only_on_sale">販売商品のみを表示</label>
                 </div>
                 <div class="col-3 text-end">
                     <select name="category" id="category">
                         <option value="" selected>未選択</option>
                         @foreach ( $categories as $category )
-                        <option value="{{$category}}">{{$category}}</option>
+                        <option value="{{$category}}"
+                        @if ( $selected_category == $category )
+                            selected
+                        @endif
+                        >{{$category}}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-3 text-start">
-                    <select name="" id="">
-                        <option value="新しい順">新しい順</option>
-                        <option value="遅い順">遅い順</option>
-                        <option value="評価順">評価順</option>
-                        <option value="評価逆順">評価逆順</option>
+                    <select name="sort" id="sort">
+                        <option value="0"
+                        @if ( $sort_type == 0 )
+                            selected
+                        @endif
+                        >出品日時:新しい順</option>
+                        
+                        <option value="1"
+                        @if ( $sort_type == 1 )
+                            selected
+                        @endif
+                        >出品日時:古い順</option>
+                        
+                        <option value="2"
+                        @if ( $sort_type == 2 )
+                            selected
+                        @endif
+                        >値段:高い順</option>
+                        
+                        <option value="3"
+                        @if ( $sort_type == 3 )
+                            selected
+                        @endif
+                        >値段:安い順</option>
                     </select>
                 </div>
             </div>
@@ -53,7 +80,7 @@
 
                 <!-- 出品中の商品がない場合 -->
                 @isset( $msg )
-                <div class=" d-flex align-items-center justify-content-center" style="height: 500px;">
+                <div class=" d-flex align-items-center justify-content-center" style="height: 400px;">
                     <p class="text-secondary">{{ $msg }}</p>
                 </div>
                 @endisset
@@ -112,8 +139,17 @@
 
     <script>
         // 販売商品の絞り込みと、カテゴリによる絞り込みのAND検索
-        $('#only_on_sale, #category').change(function() {
-            searchItem();
+        $('#only_on_sale, #category, #sort').change(function() {
+            let selected_sortType = $('[name=sort] option:selected').val();
+            let is_only_sale = $('#only_on_sale').prop('checked');
+            let selected_category = $('[name=category] option:selected').val();
+            let search = '?keyword=' + '{{$keyword}}';
+            search += '&sort=' + selected_sortType + '&onsale=' + is_only_sale;
+            if( selected_category !== '' ){
+                search += '&category=' + selected_category;
+            }
+            let href = location.protocol + '//' + location.host + location.pathname + search;
+            location.replace(href);
         });
 
         const searchItem = function(){

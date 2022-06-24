@@ -99,7 +99,7 @@
                                 <p class="d-inline ps-1"><a href="/user/show/{{$item_info['user_info']['id']}}" class="link-dark">{{$item_info["user_info"]["name"]}}</a></p>
                             </div>
                         </div>
-                        <div class="d-grid gap-2 my-3 mx-4">
+                        <div class="d-grid gap-2 my-3 mx-4" id="favorite_btn_wrapper">
                             @if ( $is_favorite )
                             <button id="deleteFavorite" class="btn btn-secondary rounded-0">お気に入りから削除</button>
                             @else
@@ -248,7 +248,7 @@
                 dataType: 'json',
                 success: function(data) {
                     $('#favorite_btn_wrapper').empty();
-                    $('#favorite_btn_wrapper').append('<button id="deleteFavorite">お気に入りから削除</button>');
+                    $('#favorite_btn_wrapper').append('<button id="deleteFavorite" class="btn btn-secondary rounded-0">お気に入りから削除</button>');
                     $('#favorite_btn_wrapper').append('<div id="favorite_messages"></div>');
                     $('#favorite_messages').append('<p>お気に入りに追加しました</p>');
                 },
@@ -275,7 +275,7 @@
                 dataType: 'json',
                 success: function(data) {
                     $('#favorite_btn_wrapper').empty();
-                    $('#favorite_btn_wrapper').append('<button id="insertFavorite">お気に入りに追加</button>');
+                    $('#favorite_btn_wrapper').append('<button id="insertFavorite" class="btn btn-secondary rounded-0">お気に入りに追加</button>');
                     $('#favorite_btn_wrapper').append('<div id="favorite_messages"></div>');
                     $('#favorite_messages').append('<p>お気に入りから削除しました</p>');
                 },

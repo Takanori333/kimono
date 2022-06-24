@@ -4,30 +4,250 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>商品編集</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- フォント読み込み -->
+    <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&family=Shippori+Mincho&display=swap" rel="stylesheet">
+    <!-- CDN読み込み -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <title>和服フリマ（仮）- 商品編集</title>
 </head>
 <body>
     {{-- ヘッダー --}}
-    {{-- @include(); --}}
+    @include('header');
 
-    {{-- フリマヘッダー --}}
-    <div>
-        <div>
-            {{-- タイトル --}}
-            <h1>商品編集</h1>
-            <p>検索</p>
-            <form action="/fleamarket/search" method="GET">
-                <input type="text" name="keyword">
-                <input type="submit" value="🔍">
-            </form>
+    <div class="container">
+        <div class="contents pt-5 w-75 mx-auto">
+
+            <h2 class="text-center py-5">商品編集</h2>
+
+            {{-- 商品登録フォーム --}}
+            <div class="">
+                <form action="/fleamarket/edit/{{$item_infos['id']}}" method="POST" enctype="multipart/form-data" id="item_create_form" class="">
+                    @csrf
+                    @foreach ($errors->all() as $error)
+                    <li>{{$error}}</li>
+                    @endforeach
+                    <div class="row my-3">
+                        <div class="invalid-feedbac k col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            @foreach ($errors->get('name') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                        </div>
+                        <div class="col-sm-4 col-form-label">商品名</div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control rounded-0" name="name" value="{{ old('name', $item_infos['name']) }}">
+                        </div>
+                    </div>    
+                    
+                    @php
+                    $images = old("image", $item_images);
+                    @endphp
+                    <div class="row my-3">
+                        <div class="invalid-feedb ack col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            @foreach ($errors->get('image') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                        </div>
+                        <div class="col-sm-4 col-form-label">商品画像</div>
+                        <div class="col-sm-8">
+                            <div id="show_img_area">
+                                <!-- 設定済画像表示 -->
+                                @isset( $images )
+                                @foreach ($images as $image )
+                                @if ( explode('/',  $image)[0] === 'image' )
+                                <img src="{{asset($image)}}" class="w-25 mb-1">
+                                @else
+                                <img src="{{$image}}" class="w-25 mb-1">
+                                @endif
+                                @endforeach
+                                @endisset
+                            </div>
+                            <input type="file" name="" id="input_img" class="form-control rounded-0" multiple>
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="invalid-feedb ack col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            @foreach ($errors->get('category') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                        </div>
+                        <div class="col-sm-4 col-form-label">カテゴリ</div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control rounded-0" name="category" value="{{ old('category', $item_infos['category']) }}">
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="invalid-fee dback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            @foreach ($errors->get('price') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                        </div>
+                        <div class="col-sm-4 col-form-label">値段</div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control rounded-0" name="price" value="{{ old('price', $item_infos['price']) }}">
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="invalid-feedb ack col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            @foreach ($errors->get('pref') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                        </div>
+                        <div class="col-sm-4 col-form-label">発送元都道府県</div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control rounded-0" name="pref" value="{{ old('pref') }}">
+                        </div>
+                    </div>
+
+                    <!-- <div class="row my-3">
+                        <div class="invalid-feedback col-sm-8 offset-md-4">
+                            バリデーションメッセージ
+                            @foreach ($errors->get('') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                        </div>
+                        <div class="col-sm-4 col-form-label">販売利益</div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control rounded-0" value="">
+                        </div>
+                    </div> -->
+
+                    <div class="row my-3">
+                        <div class="invalid-fe edback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            @foreach ($errors->get('material') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                        </div>
+                        <div class="col-sm-4 col-form-label">素材</div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control rounded-0" name="material" value="{{ old('material', $item_infos['material']) }}">
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="invalid-fee dback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            @foreach ($errors->get('color') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                        </div>
+                        <div class="col-sm-4 col-form-label">色</div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control rounded-0" name="color" value="{{ old('color', $item_infos['color']) }}">
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="invalid-feed back col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            @foreach ($errors->get('item_status') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                        </div>
+                        <div class="col-sm-4 col-form-label">商品状態</div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control rounded-0" name="item_status" value="{{ old('item_status', $item_infos['item_status']) }}">
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="invalid-f eedback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            @foreach ($errors->get('smell') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                        </div>
+                        <div class="col-sm-4 col-form-label">におい</div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control rounded-0" name="smell" value="{{ old('smell', $item_infos['smell']) }}">
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="invalid-fee dback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            @foreach ($errors->get('size_height') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                            @foreach ($errors->get('size_length') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                            @foreach ($errors->get('size_sleeve') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                            @foreach ($errors->get('size_sleeves') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                            @foreach ($errors->get('size_front') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                            @foreach ($errors->get('size_back') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                        </div>
+                        <div class="col-sm-4 col-form-label">サイズ</div>
+                        <div class="col-sm-8">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label for="" class="col-form-label">身丈</label>
+                                    <div class=""><input type="text" class="form-control rounded-0" name="size_height" value="{{ old('size_height', $item_infos['height']) }}"></div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="" class="col-form-label">裄</label>
+                                    <div class=""><input type="text" class="form-control rounded-0" name="size_length" value="{{ old('size_length', $item_infos['length']) }}"></div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="" class="col-form-label">袖丈</label>
+                                    <div class=""><input type="text" class="form-control rounded-0" name="size_sleeve" value="{{ old('size_sleeve', $item_infos['sleeve']) }}"></div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="" class="col-form-label">袖幅</label>
+                                    <div class=""><input type="text" class="form-control rounded-0" name="size_sleeves" value="{{ old('size_sleeves', $item_infos['sleeves']) }}"></div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="" class="col-form-label">前幅</label>
+                                    <div class=""><input type="text" class="form-control rounded-0" name="size_front" value="{{ old('size_front', $item_infos['front']) }}"></div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="" class="col-form-label">後ろ幅</label>
+                                    <div class=""><input type="text" class="form-control rounded-0" name="size_back" value="{{ old('size_back', $item_infos['back']) }}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="invalid-f eedback col-sm-8 offset-md-4">
+                            <!-- バリデーションメッセージ -->
+                            @foreach ($errors->get('detail') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                        </div>
+                        <div class="col-sm-4 col-form-label">自由記入欄</div>
+                        <div class="col-sm-8">
+                            <textarea name="detail" id="" class="form-control rounded-0" cols="30" rows="10">{{ old("detail", $item_infos["detail"]) }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-secondary rounded-0">内容を確認</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        {{-- お気に入り商品閲覧ページ --}}
-        @if ( session('user') )
-            <a href="{{asset("/fleamarket/favorite")}}">お気に入り商品</a>
-        @endif
-        {{-- 出品ボタン --}}
-        <a href="{{asset("/fleamarket/exhibit/new")}}">出品</a>
     </div>
+
+    
 
     {{-- 商品登録フォーム --}}
     <div>
@@ -122,6 +342,9 @@
             <input type="button" value="内容を確認" onclick="submit()">
         </form>
     </div>
+
+    @include('footer')
+
     <script>
         // <input type="file" id="input_img" multiple>にchangeイベントを設定
         document.getElementById( "input_img" ).addEventListener( "change", function() {
@@ -154,5 +377,12 @@
 
 
     </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -76,7 +76,6 @@ Route::get('/user/unfollow_DB',[UserController::class,'unfollow']);
 Route::get('/user/edit/{id}',[UserController::class,'editIndex']);
 Route::post('/user/edit_DB',[UserController::class,'editUser']);
 Route::get('/user/show/{id}',[UserController::class,'showIndex']);
-Route::get('/faq',[UserController::class,'faq']);
 Route::get('/user/assessment/customer/{id}',[UserController::class,'getCustomerAssessment']);
 Route::get('/user/assessment/seller/{id}',[UserController::class,'getSellerAssessment']);
 
@@ -139,4 +138,5 @@ Route::get('/thanks',function () {
     return view('thanks');
 });
 
+Route::get('/faq',[UserController::class,'faq']);
 

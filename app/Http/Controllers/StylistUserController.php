@@ -4,18 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Functions\ChatFunction;
 use App\Functions\StylistUserFunction;
+use App\Http\Requests\StylistSignInRequest;
+use App\Http\Requests\StylistSignUpRequest;
+use App\Http\Requests\StylistUpRequest;
 use Illuminate\Http\Request;
 
 class StylistUserController extends Controller
 {
     //サインアップ
-    function signup(Request &$request){
+    function signup(StylistSignUpRequest &$request){
         $s_function = new StylistUserFunction();
         $s_function->signup($request);
         return redirect(asset('/stylist_user/signin'));
     }
     //サインイン
-    function signin(Request &$request){
+    function signin(StylistSignInRequest &$request){
         $s_function = new StylistUserFunction();
         $s_function->signin($request);
         return redirect(asset('/stylist_user'));
@@ -34,7 +37,7 @@ class StylistUserController extends Controller
 
     }
     //スタイリストの情報を更新する
-    function info_update(Request &$request){
+    function info_update(StylistUpRequest &$request){
         $s_function = new StylistUserFunction();
         $s_function->info_update($request);
         return redirect(asset('/stylist_user/info'));
