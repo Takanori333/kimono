@@ -1,4 +1,4 @@
-let socket = io("192.168.10.209:3120");
+let socket = io("192.168.10.116:3120");
 let sender_id = document.getElementById('self_id').value;
 let getter_id = document.getElementById('other_side_id').value;
 let item_id = document.getElementById('item_id').value;

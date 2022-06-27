@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>チャット</title>
+    <title>晴 re 着 - チャット</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">
     <link href="{{ asset('css/bootcss/css/bootstrap.min.css') }}" rel="stylesheet"  crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/chat.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/my-sheet.css') }}">
@@ -50,8 +51,8 @@
                         <button class="btn btn-outline-secondary" style="max-width: 120px;height: 80%;max-height: 40px;position: relative;padding: 0;margin: 0;align-self: center;font-size: 15px;margin-right:20px" onclick="open_reverse()">予約を作る</button>
                         <button class="btn btn-outline-secondary" style="width: 20%;max-width: 80px;height: 80%;max-height: 40px;position: relative;padding: 0;margin: 0;align-self: center;font-size: 15px;margin-right:20px" onclick="sendMsg()">送信</button>
                     </div>
-                    <div class="row form-floating" style="height: 25%;margin:0">
-                        <textarea class="form-control h-100" style="resize: none;padding: 3px" id="message" placeholder="ここに入力"></textarea>
+                    <div class="row" style="height: 25%;margin:0">
+                        <textarea class="form-control h-100" style="resize: none;padding: 3px" id="message" placeholder="ここに入力してください"></textarea>
                     </div>
                 </div>
             </div>
@@ -121,6 +122,7 @@
     {{-- <input type="hidden" id="customer_id" value="9999999"> --}}
     <input type="hidden" id="csrf" value="{{ csrf_token() }}">
     <input type="hidden" id="url" value="{{ asset('/chat/insert_stylist') }}">
+    <input type="hidden" id="origin" value="{{ asset('/') }}">
     <script>
         let customer_list_url = "{{ asset('/stylist_user/get_customer') }}";
         let customer_csrf = "{{  csrf_token()  }}";

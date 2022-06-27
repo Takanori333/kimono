@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>チャット</title>
+    <title>晴 re 着 - 受け取り終了</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">
     <link href="{{ asset('css/bootcss/css/bootstrap.min.css') }}" rel="stylesheet"  crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/chat.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/my-sheet.css') }}">

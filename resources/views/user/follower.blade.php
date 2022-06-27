@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>和服フリマ（仮）- フォロワー</title>
+    <title>晴 re 着 - フォロワー</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&family=Shippori+Mincho&display=swap" rel="stylesheet">
     <!-- CDN読み込み -->
@@ -72,24 +73,6 @@
             @endif
 
             <!-- ページネーション -->
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                        <a class="page-link border-0" href="#" aria-label="Previous">
-                            <span aria-hidden="true" class="link-secondary">&#8249;</span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link link-secondary border-0" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link link-secondary border-0" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link link-secondary border-0" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link border-0" href="#" aria-label="Next">
-                            <span aria-hidden="true" class="link-secondary">&#8250;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
             <span class="d-block" style="height: 100px;"></span>
 
         </div>

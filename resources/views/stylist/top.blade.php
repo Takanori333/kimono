@@ -8,7 +8,8 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>スタイリスト一覧</title>
+    <title>晴 re 着 - スタイリスト一覧</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/css/my-sheet.css') }}">
@@ -92,7 +93,7 @@
           <div class="col my-4 col-xl-4 col-xxl-4" style="text-align: -webkit-center;">
               <div class="card" style="width: 18rem;" >
                 <a class="link-dark" href="{{ asset('/stylist/show/'.$stylist->id) }}" style="text-decoration: none" target="_blank">
-                  <img src="{{ asset($stylist->icon) }}" class="card-img-top" alt="" height="300px" width="250px">
+                  <img src="{{ asset($stylist->icon) }}" class="card-img-top ob-fit-cont" alt="" height="300px" width="250px">
                   <div class="card-body">
                     <p class="card-text mb-1">{{ $stylist->name }}</p>
                     @if ($stylist->point)
@@ -100,7 +101,7 @@
                     @else
                     <p class="card-text mb-1 text-end">-</p>                        
                     @endif
-                    <p class="card-text mb-1 text-end">￥{{ $stylist->min_price?$stylist->min_price."~".$stylist->max_price : "-"}}</p>
+                    <p class="card-text mb-1 text-end">￥{{ $stylist->min_price?number_format($stylist->min_price)."~".number_format($stylist->max_price): "-"}}</p>
                     <p class="card-text mb-1 text-start border-bottom text-truncate">{{ $stylist->service }}</p>
                     <p class="card-text mb-1 text-start text-truncate">{{ $stylist->area }}</p>
                   </div>

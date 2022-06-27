@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>和服フリマ（仮）- フリマ</title>
+    <title>晴 re 着 - フリマ</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&family=Shippori+Mincho&display=swap" rel="stylesheet">
     <!-- CDN読み込み -->
@@ -102,10 +103,10 @@
                          data-is-on-sale="{{$item_info['onsale']==2? 'sold':'sale'}}" 
                          data-category="{{$item_info['category']}}" class="col-sm-3 my-4"
                     >
-                        <a href="{{asset('fleamarket/item/' . $item_info['id'] )}}" class="col d-block text-decoration-none">
-                            <img src="{{asset($item_info['image'][0]['path'])}}" alt="" class="w-100 ob-fit item_img_size">
+                        <a href="{{asset('fleamarket/item/' . $item_info['id'] )}}" class="col d-block text-decoration-none" target="_blank">
+                            <img src="{{asset($item_info['image'][0]['path'])}}" alt="" class="w-100 ob-fit-cont item_img_size">
                             <p class="text-dark text-start mt-3 mb-2">{{ $item_info["name"] }}</p>
-                            <p class="text-dark text-start">￥{{ $item_info["price"] }}</p>
+                            <p class="text-dark text-start">￥{{ number_format($item_info["price"]) }}</p>
                         </a>
                     </div>
 

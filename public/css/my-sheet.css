@@ -76,6 +76,14 @@ textarea:focus {
     object-fit: cover;
 }
 
+.ob-fit-cont{
+    object-fit: contain;
+}
+
+.item-img-size-243{
+    height: 243px;
+}
+
 .item_img_size {
     height: 300px;
 }

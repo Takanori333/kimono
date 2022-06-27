@@ -8,7 +8,7 @@
     <div class="p-3 fixed-top d-flex border-bottom flex-wrap w-100 js-header">
         <!-- サイト名 -->
         <h5 class="me-auto my-0 mr-mb-auto font-weight-normal p-2">
-            <a href="{{ asset('/') }}" class="text-decoration-none js-header">和服フリマ（仮）</a>
+            <a href="{{ asset('/') }}" class="text-decoration-none js-header">晴 re 着</a>
         </h5>
         <ul class="nav">
             <!-- ゲスト・ユーザー共通部 -->

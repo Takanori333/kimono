@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>情報編集</title>
+    <title>晴 re 着 - 情報編集</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">
     <script src="{{ asset('/js/jquery.js') }}"></script>
     <script src="{{ asset('/js/stylist_update.js') }}"></script>    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
@@ -45,7 +46,9 @@
                         <div class="row" style="text-align: -webkit-center">
                             <div class="col">
                                 <img src="{{ asset($stylist->getIcon()) }}" class="img-thumbnail" width="250px" height="300px" id="img">
-                                <input type="file" class="form-control-sm" width="250px" name="icon" onchange="imgChange(this)">
+                                <br>
+                                <br>
+                                <input type="file" class="form-control form-control-sm" width="250px" name="icon" onchange="imgChange(this)">
                             </div>
                         </div>
                         <br>

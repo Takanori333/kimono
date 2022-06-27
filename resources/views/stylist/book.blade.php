@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>晴 re 着 - 予約確認</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <link href="{{ asset('css/bootcss/css/bootstrap.min.css') }}" rel="stylesheet"  crossorigin="anonymous">
     <script src="{{ asset('js/bootjs/js/bootstrap.bundle.min.js') }}"  crossorigin="anonymous"></script>
-    <title>Document</title>
 </head>
 <body>
     {{-- {{ var_dump($reserve) }} --}}
@@ -30,15 +31,20 @@
                             @csrf
                             <div class="mb-3 row">
                                 <div class="alert-danger"></div>
-                                    <label for="exampleInputEmail1" class="form-label">名前：{{ $user->name }}</label>
+                                    <label for="" class="form-label">名前：{{ $user->name }}</label>
                                 </div>
                             <div class="mb-3 row">
                                 <div class="alert-danger"></div>
-                                <label for="exampleInputEmail1" class="form-label">予約時間</label>
+                                <label for="" class="form-label">予約時間</label>
                                 <div class="row text-center">
                                     <p>
                                         {{ $reserve->start_time }}~{{ $reserve->end_time }}
                                     </p>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <div class="alert-danger"></div>
+                                    <label for="" class="form-label">料金：{{ number_format($reserve->price) }}</label>
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -74,7 +80,7 @@
                             </div>               
                             <div class="row text-center flex" style="justify-content: center">
                                 <input type="hidden" name="reserve_id" value="{{ $reserve->reserve_id }}">
-                                <button type="submit" class="btn btn-outline-primary" style="width: 200px;">Primary</button>
+                                <button type="submit" class="btn btn-outline-primary" style="width: 200px;">決定</button>
                             </div>    
                         </form>
                     </div>

@@ -13,7 +13,8 @@
     <!-- CDN読み込み -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <title>和服フリマ（仮）- 購入</title>
+    <title>晴 re 着 - 購入</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <style>
         /*モーダル本体の指定 + モーダル外側の背景の指定*/
         /* .buyer_info_change_modal_container,
@@ -109,11 +110,11 @@
                         @foreach ( $item_info["image"] as $i=> $image)
                         @if ($i == 0)
                         <div class="carousel-item active">
-                            <img src="{{asset($image['path'])}}" class="d-block w-100 ob-fit item-img-size-500" alt="">
+                            <img src="{{asset($image['path'])}}" class="d-block w-100 ob-fit-cont item-img-size-500" alt="">
                         </div>
                         @else
                         <div class="carousel-item">
-                            <img src="{{asset($image['path'])}}" class="d-block w-100 ob-fit item-img-size-500" alt="">
+                            <img src="{{asset($image['path'])}}" class="d-block w-100 ob-fit-cont item-img-size-500" alt="">
                         </div>
                         @endif
                         @endforeach
@@ -132,11 +133,8 @@
 
                 <!-- 詳細 -->
                 <div class="col-sm-6 p-5">
-                    @foreach ($errors->all() as $error)
-                    <p class="text-danger">{{$error}}</p>
-                    @endforeach
                     <p class="fs-4">{{ $item_info["name"] }}</p>
-                    <p class="fs-5 d-inline">￥{{ $item_info["price"] }}</p>
+                    <p class="fs-5 d-inline">￥{{ number_format($item_info["price"]) }}</p>
                     <!-- <p class="d-inline">（送料：￥400）</p> -->
                     <!-- <p>税込</p> -->
                     <div class="my-3 row">
@@ -145,6 +143,15 @@
                             <p class="mb-0" id="buyer_name">{{ old('buyer_name', $item_info["user_info"]["name"]) }}</p>
                             <p class="mb-0" id="buyer_post">〒{{ old('buyer_post', $item_info["user_info"]["post"]) }}</p>
                             <p class="mb-0" id="buyer_address">{{ old('buyer_address', $item_info["user_info"]["address"]) }}</p>
+                            @foreach ($errors->get('buyer_name') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                            @foreach ($errors->get('buyer_post') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
+                            @foreach ($errors->get('buyer_address') as $msg)
+                            <p class="text-danger mb-1">{{ $msg }}</p>
+                            @endforeach
                         </div>
                     </div>
                     <div class="text-end">
@@ -190,6 +197,9 @@
                         <div class="col-sm mt-1">
                             <p class="mb-0" id="payment_way">{{ old('payment_way') }}</p>
                         </div>
+                        @foreach ($errors->get('payment_way') as $msg)
+                        <p class="text-danger mb-1">{{ $msg }}</p>
+                        @endforeach
                     </div>
                     <div class="text-end">
                         <button class="btn btn-secondary rounded-0 open_payment_way_change_modal" type="button" data-bs-toggle="modal" data-bs-target="#howPayModal">変更</button>

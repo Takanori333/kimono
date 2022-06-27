@@ -17,6 +17,7 @@ use App\Models\Item;
 use App\Models\Item_history;
 use App\Models\Seller_assessment;
 use App\Models\Stylist_comment;
+use App\Models\Stylist_followers;
 use App\Models\Stylist_history;
 use App\Models\Trade_status;
 use Illuminate\Support\Facades\DB;
@@ -63,6 +64,9 @@ class UserController extends Controller
             if ($input_password == $user->password) {
                 // セッションにuserのインスタンスを格納
                 $request->session()->put("user", serialize($user));
+                // 他のセッションを削除
+                $request->session()->forget('stylist');
+                $request->session()->forget('manager');
 
                 // フリマトップページにリダイレクト
                 return redirect(asset("/fleamarket"));
@@ -151,23 +155,27 @@ class UserController extends Controller
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
 
-        // フォロー数とフォロワー数を計算
-        $follower_count = User_follower::where("follow_id", $user->id)
-            ->join("users", "user_followers.follower_id", "=", "users.id")
-            ->where("users.exist", 1)
-            ->count();
-        $follow_count = User_follower::where("follower_id", $user->id)
-            ->join("users", "user_followers.follow_id", "=", "users.id")
-            ->where("users.exist", 1)
-            ->count();
-
-        $data = [
-            "user" => $user,
-            "follow_count" => $follow_count,
-            "follower_count" => $follower_count,
-        ];
-
-        return view("user.info", $data);
+        if ($user) {
+            // フォロー数とフォロワー数を計算
+            $follower_count = User_follower::where("follow_id", $user->id)
+                ->join("users", "user_followers.follower_id", "=", "users.id")
+                ->where("users.exist", 1)
+                ->count();
+            $follow_count = User_follower::where("follower_id", $user->id)
+                ->join("users", "user_followers.follow_id", "=", "users.id")
+                ->where("users.exist", 1)
+                ->count();
+    
+            $data = [
+                "user" => $user,
+                "follow_count" => $follow_count,
+                "follower_count" => $follower_count,
+            ];
+    
+            return view("user.info", $data);
+        } else {
+            return redirect(asset("/notfound"));
+        }
     }
 
     //スタイリストとのチャットページに移動
@@ -231,23 +239,26 @@ class UserController extends Controller
     {
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
-
         // item_idの代入
         $item_id = $request->id;
+        // itemをDBから検索
+        $item = Item::where("id", $item_id)->first();
 
-        // 該当のitem_idのonsaleを0に変更
-        Item::where("id", $item_id)
-            ->first()
-            ->fill(["onsale" => 0])
-            ->save();
+        if ($user->id == $item->user_id) {
+            // 該当のitem_idのonsaleを0に変更
+            $item->fill(["onsale" => 0])->save();
+    
+            // メッセージの代入
+            $data = [
+                "msg" => "削除しました",
+            ];
+    
+            // 出品商品一覧画面へリダイレクト
+            return redirect(asset("user/exhibited/". $user->id))->withInput($data);
+        } else {
+            return redirect(asset("/notfound"));
+        }
 
-        // メッセージの代入
-        $data = [
-            "msg" => "削除しました",
-        ];
-
-        // 出品商品一覧画面へリダイレクト
-        return redirect(asset("user/exhibited/". $user->id))->withInput($data);
     }
 
     //フリーマチャット画面にいく
@@ -281,18 +292,39 @@ class UserController extends Controller
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
 
-        // 購入済みの商品をDBから検索
-        $purchased_items = Item_history::where("buyer_id", $user->id)
-            ->with(["item_info", "trade_status"])
-            ->get();
-
-        $data = [
-            "user" => $user,
-            "purchased_items" => $purchased_items,
-        ];
-
-        // 購買履歴一覧画面の表示
-        return view("user.purchased", $data);
+        if ($user) {
+            // 購入済みの商品をDBから検索
+            $purchased_items = Item_history::where("buyer_id", $user->id)
+                ->with(["item_info", "trade_status","item"])
+                ->get();
+    
+            $data = [
+                "user" => $user,
+                "purchased_items" => $purchased_items,
+            ];
+    
+            // 購買履歴一覧画面の表示
+            return view("user.purchased", $data);
+        } else {
+            return redirect(asset("/notfound"));
+        }
+    }
+    //フリーマ顧客として販売者への評価
+    public function assessSeller(Request $request){
+        $user = unserialize($request->session()->get("user"));
+        $assessment = new Seller_assessment();
+        $customer_id = $user->id;
+        $item_id = $request->item_id;
+        $comment = $request->comment;
+        $point = $request->point;
+        $seller_id = $request->seller_id;
+        $assessment->from_id = $customer_id;
+        $assessment->to_id = $seller_id;
+        $assessment->text = $comment;
+        $assessment->point = $point;
+        $assessment->save();
+        DB::table("trade_statuses")->where("item_id","=",$item_id)->update(["status"=>"3"]);    
+        return redirect(asset('/user/purchased/'.$customer_id));
     }
 
     // 販売履歴一覧画面の表示
@@ -323,30 +355,51 @@ class UserController extends Controller
         return view("user.sold", $data);
     }
 
+    public function assessCustomer(Request $request){
+        $user = unserialize($request->session()->get("user"));
+        $assessment = new Customer_assessment();
+        $seller_id = $user->id;
+        $item_id = $request->item_id;
+        $comment = $request->comment;
+        $point = $request->point;
+        $customer_id = $request->customer_id;
+        $assessment->to_id = $customer_id;
+        $assessment->from_id = $seller_id;
+        $assessment->text = $comment;
+        $assessment->point = $point;
+        $assessment->save();
+        DB::table("trade_statuses")->where("item_id","=",$item_id)->update(["status"=>"4"]); 
+        return redirect(asset('/user/sold/'.$seller_id));
+    }
+
     // 注文履歴一覧画面の表示
     public function orderedIndex(Request $request)
     {
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
 
-        // ユーザーのスタイリストへの注文履歴を検索する
-        // stylist_infoと一緒に取り出す
-        $order_histories = Stylist_history::where("customer_id", $user->id)
-            ->with("stylist_info")
-            ->get();
-
-        $data = [
-            "msg" => "",
-            "order_histories" => $order_histories,
-        ];
-
-        // リダイレクト時のmsgの代入
-        if ($request->old("msg")) {
-            $data["msg"] = $request->old("msg");
+        if ($user) {
+            // ユーザーのスタイリストへの注文履歴を検索する
+            // stylist_infoと一緒に取り出す
+            $order_histories = Stylist_history::where("customer_id", $user->id)
+                ->with("stylist_info")
+                ->get();
+    
+            $data = [
+                "msg" => "",
+                "order_histories" => $order_histories,
+            ];
+    
+            // リダイレクト時のmsgの代入
+            if ($request->old("msg")) {
+                $data["msg"] = $request->old("msg");
+            }
+    
+            // 注文履歴一覧画面の表示
+            return view("user.ordered", $data);
+        } else {
+            return redirect(asset("/notfound"));
         }
-
-        // 注文履歴一覧画面の表示
-        return view("user.ordered", $data);
     }
 
     public function order_detail($id){
@@ -357,7 +410,7 @@ class UserController extends Controller
                 return view('user.order_detail',compact('reserve'));
             }
         }
-        return redirect(asset('/unfound'));
+        return redirect(asset('/notfound'));
     }
 
     public function assessStylist(Request $request)
@@ -379,7 +432,8 @@ class UserController extends Controller
         // DBに保存
         $stylist_comment->fill($values)->save();
         $avg_point = DB::table("stylist_comments")->where('stylist_id','=',$order_history->stylist_id)->avg('point');
-        DB::table("stylist_infos")->where('stylist_id','=',$order_history->stylist_id)->update(['point'=>$avg_point]);
+        DB::table("stylist_infos")->where('id','=',$order_history->stylist_id)->update(['point'=>$avg_point]);
+        
         // 注文一覧画面へリダイレクト
         return redirect(asset("/user/ordered/" . $order_history->customer_id))
             ->withInput(["msg" => "評価しました"]);
@@ -400,7 +454,7 @@ class UserController extends Controller
             ->where("users.exist", "1")
             ->select("*", "user_infos.id as user_id")
             ->get();
- 
+
         // ログイン状態化を判別
         // ログインしていないときは$userがnullになる
         if ($user) {
@@ -485,6 +539,61 @@ class UserController extends Controller
         return $data;
     }
 
+    // スタイリストをフォローするボタンが押されたときの処理
+    public function stylistFollow(Request $request)
+    {
+        // セッションからuserインスタンスを受け取る
+        $user = unserialize($request->session()->get("user"));
+
+        // フォローするスタイリストのidを取得
+        $stylist_id = $request->stylist_id;
+
+        // フォロー情報があるか検索
+        // ないときは新しいインスタンスを作る
+        $user_follower = Stylist_followers::firstOrNew([
+            "stylist_id" => $stylist_id,
+            "customer_id" => $user->id,
+        ]);
+
+        // // DBに保存する値
+        $values = [
+            "stylist_id" => $stylist_id,
+            "customer_id" => $user->id,
+        ];
+
+        // DBに保存
+        $user_follower->fill($values)->save();
+
+        // JSにフォローしたスタイリストのidを返す
+        $data = [
+            "stylist_id" => $stylist_id,
+        ];
+
+        return $data;
+    }
+
+    // スタイリストを解除するボタンが押された時の処理
+    public function stylistUnfollow(Request $request)
+    {
+        // セッションからuserインスタンスを受け取る
+        $user = unserialize($request->session()->get("user"));
+
+        // 削除するスタイリストのidを取得
+        $stylist_id = $request->stylist_id;
+
+        // DBからフォロー情報を削除
+        Stylist_followers::where("stylist_id", $stylist_id)
+            ->where("customer_id", $user->id)
+            ->delete();
+
+        // JSに削除したスタイリストのidを返す
+        $data = [
+            "stylist_id" => $stylist_id,
+        ];
+
+        return $data;
+    }
+
     // フォロー一覧画面の表示
     public function followIndex(Request $request)
     {
@@ -499,6 +608,13 @@ class UserController extends Controller
             ->join("users", "follow_id", "=", "users.id")
             ->where("users.exist", "1")
             ->select("*", "user_infos.id as user_id")
+            ->get();
+
+        $stylist_follows_of_page_user = Stylist_followers::where("customer_id", $request->id)
+            ->join("stylist_infos", "stylist_id", "=", "stylist_infos.id")
+            ->join("stylists", "stylist_id", "=", "stylists.id")
+            ->where("stylists.exist", "1")
+            ->select("*", "stylist_infos.id as stylist_id")
             ->get();
 
         // ログイン状態化を判別
@@ -516,14 +632,28 @@ class UserController extends Controller
                     return $row->follow_id;
                 })
                 ->toArray();
+
+            $stylist_follows_of_access_user = Stylist_followers::where("customer_id", $user->id)
+                ->join("stylists", "stylist_id", "=", "stylists.id")
+                // ->select("stylist_id")
+                ->select("*")
+                ->where("stylists.exist", "1")
+                ->get()
+                ->map(function ($row) {
+                    return $row->stylist_id;
+                })
+                ->toArray();
         } else {
             $follows_of_access_user = array();
+            $stylist_follows_of_access_user = array();
         }
         
         $data = [
             "user" => $user,
             "follows_of_page_user" => $follows_of_page_user,
             "follows_of_access_user" => $follows_of_access_user,
+            "stylist_follows_of_page_user" => $stylist_follows_of_page_user,
+            "stylist_follows_of_access_user" => $stylist_follows_of_access_user,
         ];
         
         // フォロー一覧画面の表示
@@ -535,20 +665,24 @@ class UserController extends Controller
     {
         // セッションからuserインスタンスを受け取る
         $user = unserialize($request->session()->get("user"));
-
-        $data = [
-            "user" => $user,
-            // msgの初期値
-            "msg" => ""
-        ];
-
-        // リダイレクト時のmsgの代入
-        if ($request->old("msg")) {
-            $data["msg"] = $request->old("msg");
+        
+        if ($user) {
+            $data = [
+                "user" => $user,
+                // msgの初期値
+                "msg" => ""
+            ];
+    
+            // リダイレクト時のmsgの代入
+            if ($request->old("msg")) {
+                $data["msg"] = $request->old("msg");
+            }
+    
+            // ユーザー情報変更画面の表示
+            return view("user.edit", $data);
+        } else {
+            return redirect(asset("/notfound"));
         }
-
-        // ユーザー情報変更画面の表示
-        return view("user.edit", $data);
     }
 
     // ユーザー情報変更処理

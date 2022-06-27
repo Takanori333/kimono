@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>和服フリマ（仮）</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">
+    <title>晴 re 着 </title>
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&family=Shippori+Mincho&display=swap" rel="stylesheet">
     <!-- CDN読み込み -->
@@ -23,7 +24,7 @@
         <div class="row">
             <div class="col-xs-12 cover-img" style="background-image:url('{{ asset('image/top_img.jpg') }}');">
                 <div class="cover-text text-center">
-                    <p class="text-light fs-1" style="font-family: 'Kaisei Opti', serif;">和服フリマ（仮）</p>
+                    <p class="text-light fs-1" style="font-family: 'Kaisei Opti', serif;">晴 re 着</p>
                     <small class="text-light">Wafuku Flea Market and Dressing</small>
                 </div>
             </div>

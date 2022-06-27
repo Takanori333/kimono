@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>和服フリマ（仮）- 着付け依頼履歴</title>
+    <title>晴 re 着 - 着付け依頼履歴</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&family=Shippori+Mincho&display=swap" rel="stylesheet">
     <!-- CDN読み込み -->
@@ -32,13 +33,13 @@
                 @foreach ($order_histories as $order_history)
 
                 <div class="w-75 row m-0 mx-auto bg-lightoff my-4">
-                    <div class="col">
+                    <div class="col-sm-4">
                         <div class="m-3 text-start">
                             <a href="{{ asset('/stylist/show/' . $order_history->stylist_id) }}" class="link-dark text-decoration-none h4">{{ $order_history->stylist_info->name }}</a>
                         </div>
                         <p class="m-3 text-start">{{ $order_history->services }}</p>
                     </div>
-                    <div class="col">
+                    <div class="col-sm-6">
                         <p class="m-3 text-end">￥{{ number_format($order_history->price) }}</p>
                         <p class="m-3 text-end">{{ str_replace('-', '/', $order_history->start_time) }}</p>
                         {{-- ユーザーがまだ評価していないとき --}}
@@ -54,16 +55,20 @@
                                         @endfor
                                 </select>
                             </div>
-                            <div class="row">
+                            <div class="row mx-auto">
                                 <input type="text" name="comment" class="form-control col me-2">
-                                <input type="submit" value="評価する" class="btn btn-secondary col-3">
+                                <div class="col-sm-3">
+                                    <input type="submit" value="評価する" class="btn btn-secondary">
+                                </div>
                             </div>
                             <input type="hidden" value="{{ $order_history->toJson() }}" name="order_history">
                         </form>
                         @endif
                         @endif
                     </div>
-                    <a class="m-3 text-end link-secondary" href="{{ asset('/user/order_detail/'.$order_history->id) }}" style="width:auto;height:auto" target="_blank"><p class="m-0 p-0">詳細</p></a> 
+                    <div class="col-sm-2">
+                        <a class="m-3 link-secondary" href="{{ asset('/user/order_detail/'.$order_history->id) }}" style="width:auto;height:auto" target="_blank"><p class="m-0 p-0">詳細</p></a> 
+                    </div>
                 </div>
 
                 @endforeach

@@ -141,7 +141,7 @@
         //予約リストを取得する
         function reserve(){
             $stylist = unserialize(session()->get("stylist"));
-            $reserve_list = DB::table('stylist_histories')->where("stylist_id","=",$stylist->getId())->orderBy('start_time','desc   ')->orderBy('end_time','desc')->get();
+            $reserve_list = DB::table('stylist_histories')->where("stylist_id","=",$stylist->getId())->orderBy('start_time','desc')->orderBy('end_time','desc')->get();
             return $reserve_list;
         }        
         //予約可能時間を追加する

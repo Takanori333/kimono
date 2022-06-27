@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>和服フリマ（仮）- 販売履歴</title>
+    <title>晴 re 着 - 販売履歴</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&family=Shippori+Mincho&display=swap" rel="stylesheet">
     <!-- CDN読み込み -->
@@ -30,7 +31,7 @@
                 @foreach ($sold_items as $sold_item)
 
                 <div class="w-75 row m-0 mx-auto my-4" style="box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;">
-                    <img src="{{ asset($sold_item->item_photo->first()->path) }}" alt="" class="col-sm w-25 p-0">
+                    <img src="{{ asset($sold_item->item_photo->first()->path) }}" alt="" class="col-sm-4 p-0 item-img-size-243 ob-fit-cont">
                     <div class="col-sm-8">
                         <div class="mx-3 mt-5 mb-3 text-start">
                             <a href="{{ asset('/fleamarket/item/'. $sold_item->id) }}" class="link-dark text-decoration-none h4">{{ $sold_item->item_info->name }}</a>
@@ -51,6 +52,26 @@
                             @break
                             @case(1)
                             <p>発送済み</p>
+                            @break
+                            @case(3)
+                            <form action="{{ asset('/user/assess_customer') }}" class="mb-3 me-3" method="POST">
+                                @csrf
+                                <div class="text-start mb-1">
+                                    <label class="">評価</label>
+                                    <select name="point" id="" class="">
+                                        @for ($i=1;$i<=5;++$i) <option value="{{ $i }}">{{ $i }}</option>
+                                            @endfor
+                                    </select>
+                                </div>
+                                <div class="row mx-auto">
+                                    <input type="text" name="comment" class="form-control col me-2">
+                                    <div class="col-sm-3">
+                                        <input type="submit" value="評価する" class="btn btn-secondary">
+                                    </div>
+                                </div>
+                                <input type="hidden" value="{{ $sold_item->id }}" name="item_id">
+                                <input type="hidden" value="{{ $sold_item->item_history->buyer_id }}" name="customer_id">
+                            </form>
                             @break
                             @default
                             {{-- 何も表示しない --}}

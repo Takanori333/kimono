@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>予約一覧</title>
+    <title>晴 re 着 - 予約一覧</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <link href="{{ asset('css/bootcss/css/bootstrap.min.css') }}" rel="stylesheet"  crossorigin="anonymous">
     <script src="{{ asset('js/bootjs/js/bootstrap.bundle.min.js') }}"  crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap" rel="stylesheet">
@@ -38,7 +39,7 @@
                     <td>{{Carbon::parse($reserve->start_time)->format('Y年m月d日 H時i分')}}</td>
                     <td>{{Carbon::parse($reserve->end_time)->format('Y年m月d日 H時i分')}}</td>
                     <td>{{ $reserve->address }}</td>
-                    <td>{{ $reserve->price }}</td>
+                    <td>{{ number_format($reserve->price) }}</td>
                     <td><a href="{{ asset('/stylist_user/reserve_detail/'.$reserve->id) }}" target="_blank">詳細</a></td>
                 </tr>
                 @endforeach

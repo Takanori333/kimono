@@ -7,7 +7,8 @@
         <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>スタイリスト一覧</title>
+    <title>晴 re 着 - {{ $stylist->name }}</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/css/my-sheet.css') }}">
@@ -15,7 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"></head>
     {{-- 星マーク --}}
     <link rel="stylesheet" href="{{ asset('/css/star.css') }}">
-    <title>Document</title>
+    
 </head>
 <body>
     @include('header')
@@ -24,7 +25,7 @@
         
     @endphp
     <div class="container mt-5 pt-5">
-        <div class="contents p-5 w-75 mx-auto text-center">
+        <div class="contents pt-5 w-75 mx-auto text-center">
             <div class="row text-end justify-content-end">
                 @if (!session('stylist')&&!session('manager'))
                     <a class="link-secondary" href="{{ asset('/user/stylist_chat/'.$stylist->id) }}" style="width: auto" target="_blank">チャット</a>                
@@ -33,7 +34,7 @@
             <div class="row my-4">
                 <div class="col-12 col-xl-4 col-xxl-4 d-grid gap-2">
                     <div class="row">
-                        <img src="{{ asset($stylist->icon) }}" alt="" height="300px" width="250px">
+                        <img src="{{ asset($stylist->icon) }}" alt="" height="300px" width="250px" class="ob-fit-cont">
                     </div>
                     <div class="row text-center">
                         <div>フォロワー人数: {{ $follower_count }}</div>
@@ -77,7 +78,7 @@
                                 料金
                             </div>
                             <div class="col text-start">
-                                ￥{{ $stylist->min_price }}~{{ $stylist->min_price }}
+                                ￥{{ number_format($stylist->min_price) }}~{{ number_format($stylist->max_price) }}
                             </div>
                         </div>
                         <div class="row border-bottom">
@@ -130,7 +131,7 @@
                     <div class="row">
                         <div class="row h6 text-start">             
                             <div class="col  m-0 p-0">
-                                <a class=" link-secondary  m-0 p-0" href="{{ asset("/user/show/".$comment->customer_id) }}" style="width:auto">{{ $comment->name }}</a> 
+                                <a class=" link-secondary  m-0 p-0" href="{{ asset("/user/show/".$comment->customer_id) }}" style="width:auto" target="_blank">{{ $comment->name }}</a> 
                             </div>
                             <div class="col flex-grow-1 Stars mb-1 fs-4 text-end" style='--rating: {{$comment->point}};' aria-label='Rating of this product is {{$comment->point}} out of 5.'></div>
                         </div>

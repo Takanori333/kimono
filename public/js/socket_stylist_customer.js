@@ -1,4 +1,4 @@
-let socket = io("192.168.10.209:3120");
+let socket = io("192.168.10.116:3120");
 let stylist_id = document.getElementById('stylist_id').value;
 let customer_id = document.getElementById('customer_id').value;
 let url = document.getElementById('url').value;

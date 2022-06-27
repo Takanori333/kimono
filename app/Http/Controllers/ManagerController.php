@@ -50,12 +50,12 @@ class ManagerController extends Controller
         if ($input_email == $manager_email and $input_password == $manager_password) {
             // セッションにmanagerのインスタンスを格納
             $request->session()->put("manager", "manager");
+            // 他のセッションを削除
+            $request->session()->forget('user');
+            $request->session()->forget('stylist');
 
             // 管理者トップページにリダイレクト
             return redirect("/manager ");
-
-            // 今は、管理者トップページができていないので、ユーザー管理画面にリダイレクト
-            // return redirect("manager/user");
         } else {
             // emailとpasswordの組み合わせが正しくないとき
             // サインイン画面にリダイレクト
@@ -74,255 +74,349 @@ class ManagerController extends Controller
     public function userManageIndex(Request $request)
     {
         // セッションからmanagerインスタンスを受け取る
-        // $manager = $request->session()->get("manager");
+        $manager = $request->session()->get("manager");
 
-        $users = User::with("User_info")
-            // ->where("exist", "!=", "0")
-            ->get();
-
-        $data = [
-            "users" => $users,
-        ];
-
+        if ($manager) {
+            $users = User::with("User_info")
+                // ->where("exist", "!=", "0")
+                ->get();
+    
+            $data = [
+                "users" => $users,
+            ];
+        } else {
+            return redirect(asset("/notfound"));
+        }
         return view("manager.user_manage", $data);
     }
 
     public function deleteUser(Request $request)
     {
-        $user_id = $request->user_id;
+        $manager = $request->session()->get("manager");
 
-        $user = User::where("id", $user_id)->first();
-        $user->fill(["exist" => 2])->save();
-
-        $data = [
-            "user_id" => $user_id,
-        ];
-
-        return $data;
+        if ($manager) {
+            $user_id = $request->user_id;
+    
+            $user = User::where("id", $user_id)->first();
+            $user->fill(["exist" => 2])->save();
+    
+            $data = [
+                "user_id" => $user_id,
+            ];
+    
+            return $data;
+        } else {
+            return redirect(asset("/notfound"));
+        }
     }
 
     public function recoverUser(Request $request)
     {
-        $user_id = $request->user_id;
+        $manager = $request->session()->get("manager");
+        
+        if ($manager) {
+            $user_id = $request->user_id;
+    
+            $user = User::where("id", $user_id)->first();
+            $user->fill(["exist" => 1])->save();
+    
+            $data = [
+                "user_id" => $user_id,
+            ];
 
-        $user = User::where("id", $user_id)->first();
-        $user->fill(["exist" => 1])->save();
-
-        $data = [
-            "user_id" => $user_id,
-        ];
-
-        return $data;
+            return $data;
+        } else {
+            return redirect(asset("/notfound"));
+        }
     }
 
     public function itemManageIndex(Request $request)
     {
         // セッションからmanagerインスタンスを受け取る
-        // $manager = $request->session()->get("manager");
+        $manager = $request->session()->get("manager");
 
-        $items = Item::where("onsale", "!=", "2")
-            ->with(["item_info", "item_photo", "user_info"])
-            ->get();
-
-        $data = [
-            "items" => $items,
-        ];
-
-        return view("manager.item_manage", $data);
+        if ($manager) {
+            $items = Item::where("onsale", "!=", "2")
+                ->with(["item_info", "item_photo", "user_info"])
+                ->get();
+    
+            $data = [
+                "items" => $items,
+            ];
+    
+            return view("manager.item_manage", $data);
+        } else {
+            return redirect(asset("/notfound"));
+        }
     }
 
     public function deleteItem(Request $request)
     {
-        $item_id = $request->item_id;
-
-        $item = item::where("id", $item_id)->first();
-        $item->fill(["onsale" => 0])->save();
-
-        $data = [
-            "item_id" => $item_id,
-        ];
-
-        return $data;
+        $manager = $request->session()->get("manager");
+        
+        if ($manager) {
+            $item_id = $request->item_id;
+    
+            $item = item::where("id", $item_id)->first();
+            $item->fill(["onsale" => 0])->save();
+    
+            $data = [
+                "item_id" => $item_id,
+            ];
+    
+            return $data;
+        } else {
+            return redirect(asset("/notfound"));
+        }
     }
 
     public function recoverItem(Request $request)
     {
-        $item_id = $request->item_id;
-
-        $item = item::where("id", $item_id)->first();
-        $item->fill(["onsale" => 1])->save();
-
-        $data = [
-            "item_id" => $item_id,
-        ];
-
-        return $data;
+        $manager = $request->session()->get("manager");
+        
+        if ($manager) {
+            $item_id = $request->item_id;
+    
+            $item = item::where("id", $item_id)->first();
+            $item->fill(["onsale" => 1])->save();
+    
+            $data = [
+                "item_id" => $item_id,
+            ];
+    
+            return $data;
+        } else {
+            return redirect(asset("/notfound"));
+        }
     }
 
     public function stylistManageIndex(Request $request)
     {
         // セッションからmanagerインスタンスを受け取る
-        // $manager = $request->session()->get("manager");
-
-        $stylists = Stylist::where("exist", "!=", "0")
-            ->with(["stylist_info", "stylist_area", "stylist_service","stylist_comment"])
-            ->get();
-
-        $data = [
-            "stylists" => $stylists,
-        ];
-
-        return view("manager.stylist_manage", $data);
+        $manager = $request->session()->get("manager");
+        
+        if ($manager) {
+            $stylists = Stylist::where("exist", "!=", "0")
+                ->with(["stylist_info", "stylist_area", "stylist_service","stylist_comment"])
+                ->get();
+    
+            $data = [
+                "stylists" => $stylists,
+            ];
+    
+            return view("manager.stylist_manage", $data);
+        } else {
+            return redirect(asset("/notfound"));
+        }
     }
 
     public function deleteStylist(Request $request)
     {
-        $stylist_id = $request->stylist_id;
-
-        $stylist = Stylist::where("id", $stylist_id)->first();
-        $stylist->fill(["exist" => 2])->save();
-
-        $data = [
-            "stylist_id" => $stylist_id,
-        ];
-
-        return $data;
+        $manager = $request->session()->get("manager");
+        
+        if ($manager) {
+            $stylist_id = $request->stylist_id;
+    
+            $stylist = Stylist::where("id", $stylist_id)->first();
+            $stylist->fill(["exist" => 2])->save();
+    
+            $data = [
+                "stylist_id" => $stylist_id,
+            ];
+    
+            return $data;
+        } else {
+            return redirect(asset("/notfound"));
+        }
     }
 
     public function recoverStylist(Request $request)
     {
-        $stylist_id = $request->stylist_id;
-
-        $stylist = Stylist::where("id", $stylist_id)->first();
-        $stylist->fill(["exist" => 1])->save();
-
-        $data = [
-            "stylist_id" => $stylist_id,
-        ];
-
-        return $data;
+        $manager = $request->session()->get("manager");
+        
+        if ($manager) {
+            $stylist_id = $request->stylist_id;
+    
+            $stylist = Stylist::where("id", $stylist_id)->first();
+            $stylist->fill(["exist" => 1])->save();
+    
+            $data = [
+                "stylist_id" => $stylist_id,
+            ];
+    
+            return $data;
+        } else {
+            return redirect(asset("/notfound"));
+        }
     }
 
     public function faqManageIndex(Request $request)
     {
         // セッションからmanagerインスタンスを受け取る
-        // $manager = $request->session()->get("manager");
-
-        $faqs = Faq::all();
-
-        $data = [
-            "faqs" => $faqs,
-        ];
-
-        return view("manager.faq_manage", $data);
+        $manager = $request->session()->get("manager");
+        
+        if ($manager) {
+            $faqs = Faq::all();
+    
+            $data = [
+                "faqs" => $faqs,
+            ];
+    
+            return view("manager.faq_manage", $data);
+        } else {
+            return redirect(asset("/notfound"));
+        }
     }
 
     public function deleteFaq(Request $request)
     {
-        $faq_id = $request->faq_id;
-
-        $faq = Faq::where("id", $faq_id)->first();
-        $faq->fill(["exist" => 0])->save();
-
-        $data = [
-            "faq_id" => $faq_id,
-        ];
-
-        return $data;
+        $manager = $request->session()->get("manager");
+        
+        if ($manager) {
+            $faq_id = $request->faq_id;
+    
+            $faq = Faq::where("id", $faq_id)->first();
+            $faq->fill(["exist" => 0])->save();
+    
+            $data = [
+                "faq_id" => $faq_id,
+            ];
+    
+            return $data;
+        } else {
+            return redirect(asset("/notfound"));
+        }
     }
 
     public function recoverFaq(Request $request)
     {
-        $faq_id = $request->faq_id;
-
-        $faq = Faq::where("id", $faq_id)->first();
-        $faq->fill(["exist" => 1])->save();
-
-        $data = [
-            "faq_id" => $faq_id,
-        ];
-
-        return $data;
+        $manager = $request->session()->get("manager");
+        
+        if ($manager) {
+            $faq_id = $request->faq_id;
+    
+            $faq = Faq::where("id", $faq_id)->first();
+            $faq->fill(["exist" => 1])->save();
+    
+            $data = [
+                "faq_id" => $faq_id,
+            ];
+    
+            return $data;
+        } else {
+            return redirect(asset("/notfound"));
+        }
     }
 
     public function editFaqIndex(Request $request)
     {
-        $faq_id = $request->id;
-        $msg = "";
-
-        // リダイレクト時のmsgの代入
-        if ($request->old("msg")) {
-            $msg = $request->old("msg");
-            $faq_id = $request->old("faq_id");
+        $manager = $request->session()->get("manager");
+        
+        if ($manager) {
+            $faq_id = $request->id;
+            $msg = "";
+    
+            // リダイレクト時のmsgの代入
+            if ($request->old("msg")) {
+                $msg = $request->old("msg");
+                $faq_id = $request->old("faq_id");
+            }
+    
+            $faq = Faq::where("id", $faq_id)->first();
+    
+            $data = [
+                "msg" => $msg,
+                "faq" => $faq,
+            ];
+    
+            return view("manager.faq_edit", $data);
+        } else {
+            return redirect(asset("/notfound"));
         }
-
-        $faq = Faq::where("id", $faq_id)->first();
-
-        $data = [
-            "msg" => $msg,
-            "faq" => $faq,
-        ];
-
-        return view("manager.faq_edit", $data);
     }
 
     public function editFaq(FaqRequest $request)
     {
-        $faq_id = $request->faq_id;
-
-        $faq = Faq::where("id", $faq_id)->first();
-
-        $values = [
-            "question" => $request->question,
-            "answer" => $request->answer,
-        ];
+        $manager = $request->session()->get("manager");
         
-        $faq->fill($values)->save();
-        
-        $data = [
-            "msg" => "変更しました",
-            "faq_id" => $faq_id,
-        ];
+        if ($manager) {
+            $faq_id = $request->faq_id;
+    
+            $faq = Faq::where("id", $faq_id)->first();
+    
+            $values = [
+                "question" => $request->question,
+                "answer" => $request->answer,
+            ];
+            
+            $faq->fill($values)->save();
+            
+            $data = [
+                "msg" => "変更しました",
+                "faq_id" => $faq_id,
+            ];
 
-        return redirect("/manager/faq/edit/" . $faq_id)->withInput($data);
+            return redirect("/manager/faq/edit/" . $faq_id)->withInput($data);
+        } else {
+            return redirect(asset("/notfound"));
+        }
     }
 
     public function createFaqIndex(Request $request)
     {
-        $data = [
-            "msg" => "",
-        ];
-
-        // リダイレクト時のmsgの代入
-        if ($request->old("msg")) {
-            $data["msg"] = $request->old("msg");
+        $manager = $request->session()->get("manager");
+        
+        if ($manager) {
+            $data = [
+                "msg" => "",
+            ];
+    
+            // リダイレクト時のmsgの代入
+            if ($request->old("msg")) {
+                $data["msg"] = $request->old("msg");
+            }
+    
+            return view("manager.faq_create", $data);
+        } else {
+            return redirect(asset("/notfound"));
         }
-
-        return view("manager.faq_create", $data);
     }
 
     public function createFaq(FaqRequest $request)
     {
-        $faq = new Faq;
-
-        $values = [
-            "question" => $request->question,
-            "answer" => $request->answer,
-        ];
-
-        $faq->fill($values)->save();
+        $manager = $request->session()->get("manager");
         
-        $data = [
-            "msg" => "追加しました",
-        ];
-
-        return redirect("/manager/faq/create/")->withInput($data);
+        if ($manager) {
+            $faq = new Faq;
+    
+            $values = [
+                "question" => $request->question,
+                "answer" => $request->answer,
+            ];
+    
+            $faq->fill($values)->save();
+            
+            $data = [
+                "msg" => "追加しました",
+            ];
+    
+            return redirect("/manager/faq/create/")->withInput($data);
+        } else {
+            return redirect(asset("/notfound"));
+        }
     }
 
-    public function stylist_history($id){
-        $reserve_list = DB::table('stylist_histories')->where("stylist_id","=",$id)->orderBy('start_time','desc')->orderBy('end_time','desc')->get();
+    public function stylist_history(Request $request){
+        $manager = $request->session()->get("manager");
+        
+        if ($manager) {
+            $id = $request->id;
+            $reserve_list = DB::table('stylist_histories')->where("stylist_id","=",$id)->orderBy('start_time','desc')->orderBy('end_time','desc')->get();
 
-        return view('manager.stylist_history',compact('reserve_list'));
+            return view('manager.stylist_history',compact('reserve_list'));
+        } else {
+            return redirect(asset("/notfound"));
+        }
     }
 
 }

@@ -1,24 +1,3 @@
-{{-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <h1>管理ページ</h1>
-    <button onclick="location.href='{{ asset('/manager/user') }}'">ユーザー管理</button>
-    <br>
-    <button onclick="location.href='{{ asset('/manager/item') }}'">商品管理</button>
-    <br>
-    <button onclick="location.href='{{ asset('/manager/stylist') }}'">スタイリスト管理</button>
-    <br>
-    <button onclick="location.href='{{ asset('/manager/faq') }}'">FAQ管理</button>
-</body>
-</html>
- --}}
-
 <!doctype html>
 <html lang="ja">
 
@@ -30,7 +9,8 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>管理トップ</title>
+    <title>晴 re 着 - 管理トップ</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap" rel="stylesheet">
     <!-- CDN読み込み -->

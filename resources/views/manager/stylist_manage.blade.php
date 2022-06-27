@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>スタイリスト一覧</title>
+    <title>晴 re 着 - スタイリスト一覧</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -14,43 +15,10 @@
 
 </head>
 <body>
-    {{-- <h1>スタイリスト管理</h1>
-    @foreach ($stylists as $stylist)
-        <div>
-            <img src="{{ asset($stylist->stylist_info->icon) }}" alt="">
-            <br>
-            <a href="{{ asset('/stylist/show/' . $stylist->id) }}">{{ $stylist->stylist_info->name }}</a>
-            @if ($stylist->stylist_info->sex)
-                <p>男</p>
-            @else
-                <p>女</p>
-            @endif
-            <p>{{ str_replace('-', '/', $stylist->stylist_info->birthday) }}</p>
-            <p>{{ $stylist->email }}</p>
-            <p>{{ $stylist->stylist_info->phone }}</p>
-            <p>{{ $stylist->stylist_info->post }}</p>
-            <p>{{ $stylist->stylist_info->address }}</p>
-            <p>評価:{{ $stylist->stylist_comment->avg("point") }}</p>
-            <p>対応地域:
-                @foreach ($stylist->stylist_area as $stylist_area)
-                    <span>{{ $stylist_area->area }}</span>
-                @endforeach
-            </p>
-            @if ($stylist->exist == 1)
-                <button id="delete{{ $stylist->id }}" value="{{ $stylist->id }}" class="manage" name="delete">削除</button>
-                <button id="recover{{ $stylist->id }}" value="{{ $stylist->id }}" class="manage" name="recover" disabled>復旧</button>
-            @else
-                <button id="delete{{ $stylist->id }}" value="{{ $stylist->id }}" class="manage" name="delete" disabled>削除</button>
-                <button id="recover{{ $stylist->id }}" value="{{ $stylist->id }}" class="manage" name="recover">復旧</button>
-            @endif
-        </div>
-    @endforeach --}}
-
     @include('header')
     <div class="container">
         <div class="contents pt-5 mt-5 w-100 mx-auto text-center">
             <h1>スタイリスト管理</h1>
-            <!-- 商品一覧 -->
             <div class="">
                 <div class="text-center my-4 py-5">
                     @foreach ($stylists as $stylist)

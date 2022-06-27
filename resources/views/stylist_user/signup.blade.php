@@ -8,7 +8,8 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>スタイリスト  新規登録</title>
+    <title>晴 re 着 - スタイリスト  新規登録</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/css/my-sheet.css') }}">
@@ -17,12 +18,12 @@
 </head>
 <body>
     <nav id="header" class="p-3">
-        <div class="p-3 fixed-top d-flex border-bottom flex-wrap w-100">
-            <h5 class="me-auto my-0 mr-mb-auto font-weight-normal p-2"><a href="{{ asset('/') }}" class="link-dark text-decoration-none h4">和服フリマ（仮）</a></h5>
+        <div class="p-3 fixed-top d-flex border-bottom flex-wrap w-100" style="background: white">
+            <h5 class="me-auto my-0 mr-mb-auto font-weight-normal p-2"><a href="{{ asset('/') }}" class="link-dark text-decoration-none h4">晴 re 着</a></h5>
         </div>
     </nav>
     <div class="container">
-        <div class="contents p-5 w-75 mx-auto mt-3">
+        <div class="contents pt-5 w-75 mx-auto mt-3">
 
             <h2 class="text-center pb-4">新規登録</h2>
 

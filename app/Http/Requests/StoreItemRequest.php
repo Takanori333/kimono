@@ -33,12 +33,12 @@ class StoreItemRequest extends FormRequest
             'color' => 'required|max:50',
             'status' => 'required|max:50',
             'smell' => 'required|max:50',
-            'size_height' => 'required|numeric|regex:/((^[0-9]{1})(.[0-9]{0,2}$))/',
-            'size_length' => 'required|numeric|regex:/((^[0-9]{1})(.[0-9]{0,2}$))/',
-            'size_sleeve' => 'required|numeric|regex:/((^[0-9]{1,2})(.[0-9]{0,2}$))/',
-            'size_sleeves' => 'required|numeric|regex:/((^[0-9]{1,2})(.[0-9]{0,2}$))/',
-            'size_front' => 'required|numeric|regex:/((^[0-9]{1,2})(.[0-9]{0,2}$))/',
-            'size_back' => 'required|numeric|regex:/((^[0-9]{1,2})(.[0-9]{0,2}$))/',
+            'size_height' => 'required|numeric|regex:/((^([1-9][0-9]{0,2})$))/',
+            'size_length' => 'required|numeric|regex:/((^([1-9][0-9]{0,2})$))/',
+            'size_sleeve' => 'required|numeric|regex:/((^([1-9][0-9]{0,2})$))/',
+            'size_sleeves' => 'required|numeric|regex:/((^([1-9][0-9]{0,2})$))/',
+            'size_front' => 'required|numeric|regex:/((^([1-9][0-9]{0,2})$))/',
+            'size_back' => 'required|numeric|regex:/((^([1-9][0-9]{0,2})$))/',
             'detail' => 'nullable|string|max:200',
         ];
     }
@@ -79,27 +79,27 @@ class StoreItemRequest extends FormRequest
             
             'size_height.required' => ':attributeが記入されていません',
             'size_height.numeric' => ':attributeは数字で入力してください',
-            'size_height.regex' => '0.00m から 9.99m の範囲で入力してください',
+            'size_height.regex' => '1cm から 999cm の範囲で入力してください',
             
             'size_length.required' => ':attributeが記入されていません',
             'size_length.numeric' => ':attributeは数字で入力してください',
-            'size_length.regex' => '0.00m から 9.99m の範囲で入力してください',
+            'size_length.regex' => '1cm から 999cm の範囲で入力してください',
             
             'size_sleeve.required' => ':attributeが記入されていません',
             'size_sleeve.numeric' => ':attributeは数字で入力してください',
-            'size_sleeve.regex' => '0.00m から 9.99m の範囲で入力してください',
+            'size_sleeve.regex' => '1cm から 999cm の範囲で入力してください',
             
             'size_sleeves.required' => ':attributeが記入されていません',
             'size_sleeves.numeric' => ':attributeは数字で入力してください',
-            'size_sleeves.regex' => '0.00m から 9.99m の範囲で入力してください',
+            'size_sleeves.regex' => '1cm から 999cm の範囲で入力してください',
             
             'size_front.required' => ':attributeが記入されていません',
             'size_front.numeric' => ':attributeは数字で入力してください',
-            'size_front.regex' => '0.00m から 9.99m の範囲で入力してください',
+            'size_front.regex' => '1cm から 999cm の範囲で入力してください',
             
             'size_back.required' => ':attributeが記入されていません',
             'size_back.numeric' => ':attributeは数字で入力してください',
-            'size_back.regex' => '0.00m から 9.99m の範囲で入力してください',
+            'size_back.regex' => '1cm から 999cm の範囲で入力してください',
             
             'detail.max:200' => '200 文字以下で入力してください',
         ];

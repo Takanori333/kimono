@@ -1,4 +1,4 @@
-    let socket = io("192.168.10.209:3120");
+    let socket = io("192.168.10.116:3120");
     let stylist_id = document.getElementById('stylist_id').value;
     let customer_id;
     let url = document.getElementById('url').value;
@@ -7,11 +7,13 @@
     let message_box = document.getElementById('message_box');
     let customer_list_box = document.getElementById('customer_list_box');
     let customer_info_box = document.getElementById('customer_info');
+    let origin = document.getElementById('origin').value;
     let customer_list;
     let customer_info;
     let first = true;
     let reserve_name = document.getElementById("reserve_name");
     socket.emit('stylist_join',stylist_id);
+    console.log(origin);
     //textareaにshift+enterキーでメッセージ送信
     message_body.addEventListener('keyup',function(e){
         if(e.shiftKey){
@@ -89,9 +91,9 @@
                     a.classList.add("border-bottom")
                     a.href = "javascript:void(0);";
                     a.addEventListener("click",function(){
-                        change_customer_message('http://192.168.10.209:8000/chat/stylist_user_get_message',customer_csrf,customer.id,i);                        
+                        change_customer_message(origin + 'chat/stylist_user_get_message',customer_csrf,customer.id,i);                        
                     })
-                    img.src = 'http://192.168.10.209:8000/' + customer.icon;
+                    img.src = origin + customer.icon;
                     img.width = '30px';
                     img.height = '30px';
                     img.style.borderRadius = "50%";
@@ -116,7 +118,7 @@
                     // console.log(customer);
                 }
                 if(first){
-                    change_customer_message('http://192.168.10.209:8000/chat/stylist_user_get_message',customer_csrf,c_list[0].id,0);
+                    change_customer_message(origin + 'chat/stylist_user_get_message',customer_csrf,c_list[0].id,0);
                     first = false;
                 }
             },
@@ -134,7 +136,7 @@
         out_div.classList.add("other_side");
         inner_div.classList.add("inner_div");
         pre.textContent = message;
-        img.src = 'http://192.168.10.209:8000/' + customer_info.icon;
+        img.src = origin + customer_info.icon;
         img.width = '30px';
         img.height = '30px';
         img.style.borderRadius = "50%";
@@ -201,9 +203,9 @@
         a.style.margin = "0px";
         p.style.marginLeft = "5px";
         p.style.marginBottom = "0px";
-        a.href = 'http://192.168.10.209:8000/user/show/' + customer_info.id;
+        a.href = origin + 'user/show/' + customer_info.id;
         a.target = '_blank';
-        img.src = 'http://192.168.10.209:8000/' + customer_info.icon;
+        img.src = origin + customer_info.icon;
         img.width = '30px';
         img.height = '30px';
         img.style.borderRadius = "50%";

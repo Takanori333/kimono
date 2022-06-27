@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $stylist_info->name }}</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <link href="{{ asset('css/bootcss/css/bootstrap.min.css') }}" rel="stylesheet"  crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/chat.css') }}">
     <script src="{{ asset('js/bootjs/js/bootstrap.bundle.min.js') }}"  crossorigin="anonymous"></script>
@@ -46,8 +47,8 @@
                     <div class="row border-secondary border-bottom" style="height: 7%;max-height: 100px;margin:0">
                         <button class="btn btn-outline-secondary" style="width: 20%;max-width: 80px;height: 80%;max-height: 40px;left: 80%;position: relative;padding: 0;margin: 0;align-self: center;font-size: 15px;" onclick="sendMsg()">送信</button>
                     </div>
-                    <div class="row form-floating" style="height: 25%;margin:0">
-                        <textarea class="form-control h-100" style="resize: none;padding: 3px" id="message"></textarea>
+                    <div class="row" style="height: 25%;margin:0">
+                        <textarea class="form-control h-100" style="resize: none;padding: 3px" id="message" placeholder="ここに入力してください"></textarea>
                     </div>
                 </div>
             </div>

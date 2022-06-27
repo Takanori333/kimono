@@ -11,7 +11,8 @@
         rel="stylesheet">
     <!-- CDN読み込み -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <title>和服フリマ（仮）- 商品購入確認</title>
+    <title>晴 re 着 - 商品購入確認</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
 </head>
 <body>
     {{-- ヘッダー --}}
@@ -25,7 +26,7 @@
                 {{-- 商品画像 --}}
                 <div class="col-sm-6">
                     @foreach ( $item_info["image"] as $image )
-                    <img src="{{asset($image['path'])}}" class="d-block w-100 ob-fit item-img-size-500 mb-2" alt="">
+                    <img src="{{asset($image['path'])}}" class="d-block w-100 ob-fit-cont item-img-size-500 mb-2" alt="">
                     @endforeach
                 </div>
 

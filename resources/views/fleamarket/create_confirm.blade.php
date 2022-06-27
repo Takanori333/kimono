@@ -11,7 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&family=Shippori+Mincho&display=swap" rel="stylesheet">
     <!-- CDN読み込み -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <title>和服フリマ（仮）- 出品登録確認</title>
+    <title>晴 re 着 - 出品登録確認</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
 </head>
 
 <body>
@@ -53,7 +54,7 @@
                 <div class="row my-3">
                     <div class="col-sm-4 ">値段</div>
                     <div class="col-sm-8">
-                        <p class="">￥{{$item_infos["price"]}}
+                        <p class="">￥{{number_format($item_infos["price"])}}
                         <p>
                     </div>
                 </div>

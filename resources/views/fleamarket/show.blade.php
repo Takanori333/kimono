@@ -8,7 +8,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>和服フリマ（仮）- 商品詳細</title>
+    <title>晴 re 着 - 商品詳細</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&family=Shippori+Mincho&display=swap" rel="stylesheet">
     <!-- CDN読み込み -->
@@ -49,11 +50,11 @@
                         @foreach ( $item_info["image"] as $i=> $image)
                         @if ($i == 0)
                         <div class="carousel-item active">
-                            <img src="{{asset($image['path'])}}" class="d-block w-100 ob-fit item-img-size-500" alt="">
+                            <img src="{{asset($image['path'])}}" class="d-block w-100 ob-fit-cont item-img-size-500" alt="">
                         </div>
                         @else
                         <div class="carousel-item">
-                            <img src="{{asset($image['path'])}}" class="d-block w-100 ob-fit item-img-size-500" alt="">
+                            <img src="{{asset($image['path'])}}" class="d-block w-100 ob-fit-cont item-img-size-500" alt="">
                         </div>
                         @endif
                         @endforeach
@@ -73,19 +74,18 @@
                 <!-- 詳細 -->
                 <div class="col-sm-6 p-5">
                     <p class="fs-4">{{ $item_info["name"] }}</p>
-                    <p class="fs-5 d-inline">￥{{ $item_info["price"] }}</p>
+                    <p class="fs-5 d-inline">￥{{ number_format($item_info["price"]) }}</p>
                     <!-- <p class="d-inline">（送料：￥400）</p> -->
                     <!-- <p>税込</p> -->
                     <div class="my-3">
                         <p>商品について</p>
                         <div class="row ms-2 border-start">
-                            <p class="col-2 mb-0">カテゴリ</p>
+                            <p class="col-3 mb-0">カテゴリ</p>
                             <p class="col-9 mb-0">{{ $item_info["category"] }}</p>
                             <div class="w-100"></div>
-                            <p class="col-2 mb-0">商品状態</p>
+                            <p class="col-3 mb-0">商品状態</p>
                             <p class="col-9 mb-0">{{ $item_info["item_status"] }}</p>
                             <div class="w-100"></div>
-                            {{$item_info["smell"]}}
                         </div>
                             @if ($user)
                                 @if ( $user->id!=$item_info['user_id'] && $item_info['onsale'] == 1 )
@@ -119,7 +119,7 @@
                             </div>
                             <div class="">
                                 <p class="d-inline">出品者：</p>
-                                <p class="d-inline ps-1"><a href="/user/show/{{$item_info['user_info']['id']}}" class="link-dark">{{$item_info["user_info"]["name"]}}</a></p>
+                                <p class="d-inline ps-1"><a href="/user/show/{{$item_info['user_info']['id']}}" class="link-dark" target="_blank">{{$item_info["user_info"]["name"]}}</a></p>
                             </div>
                         </div>
                         <div class="d-grid gap-2 my-3 mx-4" id="favorite_btn_wrapper">
@@ -128,7 +128,7 @@
                                     @if ( $is_favorite )
                                     <button id="deleteFavorite" class="btn btn-secondary rounded-0">お気に入りから削除</button>
                                     @else
-                                    <button id="insertFavorite" class="btn btn-secondary rounded-0">お気に入りに追加</button>
+                                    <button id="insertFavorite" class="btn btn-danger rounded-0">お気に入りに追加</button>
                                     @endif                                
                                     <div id="favorite_messages"></div>
                                 @endif
@@ -155,7 +155,7 @@
                                     @if ( $item_comment['is_seller'] )
                                     <label class="me-1">出品者:</label>
                                     @endif
-                                    <a href="/user/show/{{$item_comment['user_id']}}" class="link-dark text-decoration-none my-1 hover-line">{{$item_comment['user_name']}}</a>
+                                    <a href="/user/show/{{$item_comment['user_id']}}" class="link-dark text-decoration-none my-1 hover-line" target="_blank">{{$item_comment['user_name']}}</a>
                                     <div class="bg-lightoff m-2 rounded p-2">
                                         <!-- コメント本文 -->
                                         <p class="text-break mb-0">{{$item_comment['text']}}</p>
@@ -232,7 +232,7 @@
                 dataType: 'json',
                 success: function(data) {
                     $('#favorite_btn_wrapper').empty();
-                    $('#favorite_btn_wrapper').append('<button id="insertFavorite" class="btn btn-secondary rounded-0">お気に入りに追加</button>');
+                    $('#favorite_btn_wrapper').append('<button id="insertFavorite" class="btn btn-secondary rounded-0 bg-danger">お気に入りに追加</button>');
                     $('#favorite_btn_wrapper').append('<div id="favorite_messages"></div>');
                     $('#favorite_messages').append('<p>お気に入りから削除しました</p>');
                 },
@@ -271,7 +271,7 @@
                             if (data[i].is_seller) {
                                 appendElement += '<label class="me-1">出品者:</label>';
                             }
-                            appendElement += '<a href="/user/show/' + data[i].user_id + '" class="link-dark text-decoration-none my-1">' + data[i].user_name + '</a>';
+                            appendElement += '<a href="/user/show/' + data[i].user_id + '" class="link-dark text-decoration-none my-1" target="_blank">' + data[i].user_name + '</a>';
                             appendElement += '<div class="bg-lightoff m-2 rounded p-2"><p class="text-break mb-0">' + data[i].text + '</p></div>';
                             appendElement += '</div></div>'
 

@@ -7,42 +7,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>ユーザー一覧</title>
+    <title>晴 re 着 - ユーザー一覧</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
 </head>
 <body>
-    {{-- <h1>ユーザー管理</h1>
-    @foreach ($users as $user)
-        <div>
-            <img src="{{ asset($user->user_info->icon) }}" alt="">
-            <br>
-            <a href="{{ asset('/user/show/' . $user->id) }}">{{ $user->user_info->name }}</a>
-            @if ($user->user_info->sex)
-                <p>男</p>
-            @else
-                <p>女</p>
-            @endif
-            <p>{{ str_replace('-', '/', $user->user_info->birthday) }}</p>
-            <p>{{ $user->email }}</p>
-            <p>{{ $user->user_info->phone }}</p>
-            <p>{{ $user->user_info->post }}</p>
-            <p>{{ $user->user_info->address }}</p>
-            @if ($user->exist)
-                <button id="delete{{ $user->id }}" value="{{ $user->id }}" class="manage" name="delete">削除</button>
-                <button id="recover{{ $user->id }}" value="{{ $user->id }}" class="manage" name="recover" disabled>復旧</button>
-            @else
-                <button id="delete{{ $user->id }}" value="{{ $user->id }}" class="manage" name="delete" disabled>削除</button>
-                <button id="recover{{ $user->id }}" value="{{ $user->id }}" class="manage" name="recover">復旧</button>
-            @endif
-        </div>
-    @endforeach --}}
     @include('header')
     <div class="container">
         <div class="contents pt-5 mt-5 w-100 mx-auto text-center">
             <h1>ユーザー管理</h1>
-            <!-- 商品一覧 -->
             <div class="">
                 @foreach ($users as $user)                
                 <div class="text-center my-4">

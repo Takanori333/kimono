@@ -74,12 +74,15 @@ Route::get('/user/follower/{id}',[UserController::class,'followerIndex']);
 Route::get('/user/follow/{id}',[UserController::class,'followIndex']);
 Route::get('/user/follow_DB',[UserController::class,'follow']);
 Route::get('/user/unfollow_DB',[UserController::class,'unfollow']);
+Route::get('/user/stylist_follow_DB',[UserController::class,'stylistFollow']);
+Route::get('/user/stylist_unfollow_DB',[UserController::class,'stylistUnfollow']);
 Route::get('/user/edit/{id}',[UserController::class,'editIndex']);
 Route::post('/user/edit_DB',[UserController::class,'editUser']);
 Route::get('/user/show/{id}',[UserController::class,'showIndex']);
 Route::get('/user/assessment/customer/{id}',[UserController::class,'getCustomerAssessment']);
 Route::get('/user/assessment/seller/{id}',[UserController::class,'getSellerAssessment']);
-
+Route::post('/user/assess_seller',[UserController::class,'assessSeller']);
+Route::post('/user/assess_customer',[UserController::class,'assessCustomer']);
 Route::get('/user/chat/',[UserController::class,'chat']);
 Route::get('/user/stylist_chat/{id}',[UserController::class,'chat_stylist']);
 Route::get('/user/trade_chat/{item_id}',[UserController::class,'chat_trade']);

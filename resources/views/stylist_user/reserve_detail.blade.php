@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>予約詳細</title>
+    <title>晴 re 着 - 予約詳細</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">
     <link href="{{ asset('css/bootcss/css/bootstrap.min.css') }}" rel="stylesheet"  crossorigin="anonymous">
     <script src="{{ asset('js/bootjs/js/bootstrap.bundle.min.js') }}"  crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap" rel="stylesheet">
@@ -15,7 +16,7 @@
     @php
         use Illuminate\Support\Carbon;
     @endphp
-    <div class="container p-5 mt-5 border secondary" style="padding: 50px;max-width: 600px">
+    <div class="container pt-5 mt-5 border secondary" style="padding: 50px;max-width: 600px">
         <table class="table text-center">
             <tbody>
                 <tr>
@@ -40,7 +41,7 @@
                 </tr>
                 <tr>
                     <td>料金</td>
-                    <td>{{ $reserve->price }}円</td>
+                    <td>{{ number_format($reserve->price) }}円</td>
                 </tr>
 
             </tbody>

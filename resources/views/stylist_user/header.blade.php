@@ -6,7 +6,7 @@
 <script src="{{ asset('js/header.js') }}"></script>
 <nav id="header" class="p-3" style="margin-bottom: 100px">
         <div class="p-3 fixed-top d-flex border-bottom flex-wrap w-100 bg-white">
-            <h5 class="me-auto my-0 mr-mb-auto font-weight-normal p-2"><a href="{{ asset('/') }}" class="link-dark text-decoration-none h4">和服フリマ（仮）</a></h5>
+            <h5 class="me-auto my-0 mr-mb-auto font-weight-normal p-2"><a href="{{ asset('/') }}" class="link-dark text-decoration-none h4">晴 re 着</a></h5>
             <ul class="nav">
                 <li class="nav-item">
                     <a href="{{  asset('/stylist_user') }}" class="nav-link p-2 text-dark js-header header-link">

@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Stylist_followers extends Model
 {
     use HasFactory;
+
+    protected $guarded = ["id"];
+
 }
