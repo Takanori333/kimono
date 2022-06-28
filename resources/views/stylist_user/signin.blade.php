@@ -38,14 +38,14 @@
                     </div>
                     <div class="mb-3">
                         <label for="form-label">メールアドレス</label>
-                        <input type="email" class="form-control my-2 py-2" name="form[email]">
+                        <input type="email" class="form-control my-2 py-2 rounded-0" name="form[email]">
                     </div>
                     <div class="mb-3">
                         <label for="form-label">パスワード</label>
-                        <input type="password" class="form-control my-2 py-2" name="form[password]">
+                        <input type="password" class="form-control my-2 py-2 rounded-0" name="form[password]">
                     </div>
                     <div class="row text-center flex" style="justify-content: center">
-                        <button type="submit" class="btn btn-secondary btn-block my-2 py-3" style="width: 150px;">サインイン</button>
+                        <button type="submit" class="btn btn-secondary btn-block my-2 py-3 rounded-0" style="width: 150px;">サインイン</button>
                     </div>
                 </form>
                 <div class="text-center p-2">

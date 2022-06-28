@@ -31,7 +31,7 @@
                 <form action="{{ asset('/stylist_user/signup_DB') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
+                        <div class="col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('name') as $message)
                                 <p>{{ $message }}</p>
@@ -41,12 +41,12 @@
                         <label for="" class="col-sm-3 col-form-label">名前</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="name" value="{{ old('name') }}">
+                            <input type="text" class="form-control rounded-0" name="name" value="{{ old('name') }}">
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
+                        <div class="col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('email') as $message)
                                 <p>{{ $message }}</p>
@@ -56,12 +56,12 @@
                         <label for="" class="col-sm-3 col-form-label">メールアドレス</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
                         <div class="col-sm-8">
-                            <input type="email" class="form-control" name="email" value="{{ old('email') }}">
+                            <input type="email" class="form-control rounded-0" name="email" value="{{ old('email') }}">
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
+                        <div class="col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('phone') as $message)
                                 <p>{{ $message }}</p>
@@ -71,12 +71,12 @@
                         <label for="" class="col-sm-3 col-form-label">電話番号</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="phone" value="{{ old('phone') }}">
+                            <input type="text" class="form-control rounded-0" name="phone" value="{{ old('phone') }}">
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
+                        <div class="col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('post') as $message)
                                 <p>{{ $message }}</p>
@@ -86,12 +86,12 @@
                         <label for="" class="col-sm-3 col-form-label">郵便番号</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="post" value="{{ old('post') }}">
+                            <input type="text" class="form-control rounded-0" name="post" value="{{ old('post') }}">
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
+                        <div class="col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('address') as $message)
                                 <p>{{ $message }}</p>
@@ -101,14 +101,12 @@
                         <label for="" class="col-sm-3 col-form-label">住所</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
                         <div class="col-sm-8">
-                            <!-- <textarea name="" id="" cols="30" rows="7" class="form-control"></textarea> -->
-                            {{-- <input type="text" class="form-control my-2"> --}}
-                            <textarea class="form-control" id="floatingTextarea2" style="height: 100px;resize: none" name="address">{{ old('address') }}</textarea>
+                            <textarea class="form-control rounded-0" id="floatingTextarea2" style="height: 100px;resize: none" name="address">{{ old('address') }}</textarea>
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
+                        <div class="col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('year') as $message)
                                 <p>{{ $message }}</p>
@@ -126,17 +124,17 @@
                             <div class="row">
                                 <div class="col-4">
                                     {{-- <input type="number" class="form-control" placeholder="年" name="year"> --}}
-                                    <select class="form-select" aria-label="Default select example" id="year" name="year"></select>
+                                    <select class="form-select rounded-0" aria-label="Default select example" id="year" name="year"></select>
                                     <input type="hidden"  id="old_year" value="{{ old('year') }}">
                                 </div>
                                 <div class="col-4">
                                     {{-- <input type="number" class="form-control" placeholder="月" name="month"> --}}
-                                    <select class="form-select" aria-label="Default select example" id="month" name="month"></select>
+                                    <select class="form-select rounded-0" aria-label="Default select example" id="month" name="month"></select>
                                     <input type="hidden"  id="old_month" value="{{ old('month') }}">
                                 </div>
                                 <div class="col-4">
                                     {{-- <input type="number" class="form-control" placeholder="日" name="day"> --}}
-                                    <select class="form-select" aria-label="Default select example" id="day" name="day"></select>
+                                    <select class="form-select rounded-0" aria-label="Default select example" id="day" name="day"></select>
                                     <input type="hidden"  id="old_day" value="{{ old('day') }}">
                                 </div>
                             </div>
@@ -144,7 +142,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
+                        <div class="col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('sex') as $message)
                                 <p>{{ $message }}</p>
@@ -161,7 +159,7 @@
                     </div>
                     
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
+                        <div class="col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('password') as $message)
                                 <p>{{ $message }}</p>
@@ -170,21 +168,19 @@
                         <label for="" class="col-sm-3 col-form-label">パスワード</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
                         <div class="col-sm-8">
-                            <input type="password" class="form-control" name="password">
+                            <input type="password" class="form-control rounded-0" name="password">
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
-                        </div>
                         <label for="" class="col-sm-3 col-form-label">パスワード（確認）</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
                         <div class="col-sm-8">
-                            <input type="password" class="form-control" name="password_confirmation">
+                            <input type="password" class="form-control rounded-0" name="password_confirmation">
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
+                        <div class="col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('icon') as $message)
                                 <p>{{ $message }}</p>
@@ -194,11 +190,11 @@
                         <label for="" class="col-sm-3 col-form-label">アイコン画像</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
                         <div class="col-sm-8">
-                            <input type="file" class="form-control" name="icon" accept="image/*">
+                            <input type="file" class="form-control rounded-0" name="icon" accept="image/*">
                         </div>
                     </div>
                     <div class="row text-center flex" style="justify-content: center">
-                        <button type="submit" class="btn btn-secondary btn-block my-2 py-3" style="width: 150px;">登録</button>
+                        <button type="submit" class="btn btn-secondary btn-block my-2 py-3 rounded-0" style="width: 150px;">登録</button>
                     </div>
                     <div class="text-center p-2">
                         <p class="d-inline">アカウントをお持ちの方</p>

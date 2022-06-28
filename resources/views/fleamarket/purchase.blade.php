@@ -138,7 +138,7 @@
                     <!-- <p class="d-inline">（送料：￥400）</p> -->
                     <!-- <p>税込</p> -->
                     <div class="my-3 row">
-                        <p class="me-2 col-sm-2 m-1">お届け先</p>
+                        <p class="me-2 col-sm-3 m-1">お届け先</p>
                         <div class="col-sm">
                             <p class="mb-0" id="buyer_name">{{ old('buyer_name', $item_info["user_info"]["name"]) }}</p>
                             <p class="mb-0" id="buyer_post">〒{{ old('buyer_post', $item_info["user_info"]["post"]) }}</p>
@@ -193,7 +193,7 @@
                     </div>
 
                     <div class="my-3 row">
-                        <p class="me-2 col-sm-2 m-1 pe-0">お支払方法</p>
+                        <p class="me-2 col-sm-3 m-1 pe-0">お支払方法</p>
                         <div class="col-sm mt-1">
                             <p class="mb-0" id="payment_way">{{ old('payment_way') }}</p>
                         </div>

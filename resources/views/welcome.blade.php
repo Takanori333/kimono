@@ -39,7 +39,7 @@
         <p class="">
             手元の着物を捨てるのはもったいないけれど、譲る相手がいない。<br><br>
             着物を着てみたいけれど、着方が分からない。<br><br>
-            晴re着はそんな悩みを持つ皆さんが着物を気軽に着るお手伝いをします。<br><br>
+            晴re着はそんな悩みを持つ皆さんが着物を気軽に着るためのお手伝いをします。<br><br>
         </p>
     </div>
 
@@ -53,7 +53,7 @@
                         <a href="{{ asset('/fleamarket') }}" class="fs-5 link-dark text-decoration-none border-bottom d-block">フリマ</a>
                         <p class="mt-4">手元の着物を出品、出品された着物を購入することができます。</p>
                         <p>箪笥の肥やしになっている着物はありませんか？</p>
-                        <p>欲しい</p>
+                        <p>欲しい人の手元に欲しい着物が届きます。</p>
                         <p></p>
                         <a href="{{ asset('/fleamarket') }}" class="btnarrow4 link-dark">商品を見る</a>
                     </div>

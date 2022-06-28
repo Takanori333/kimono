@@ -24,13 +24,13 @@
             <div class="col-12 col-xxl-6 col-xl-6 my-2">
                 <div>
                     <div class="list-group overflow-auto " style="height: 400px">
-                        <li class="list-group-item list-group-item-secondary text-center">フリーマチャット</li>
+                        <li class="list-group-item list-group-item-secondary text-center">フリマチャット</li>
                         @foreach ($trade_chat as $chat)
                         <a href="{{ asset("/user/trade_chat/".$chat->item_id) }}" class="list-group-item list-group-item-action d-flex justify-content-between" aria-current="true" target="_blank">
                             <div><img src="{{ asset("$chat->icon") }}" alt="" width="25px" height="25px">{{ $chat->name }}</div>
                             <div>商品：{{ $chat->item_name }}</div>
                             @if ($chat->readed)
-                                <span class="badge bg-danger rounded-pill" style="height: 21px">{{ $chat->readed }}</span>                                
+                                <span class="badge bg-danger rounded-pill" style="height: 21px">{{ $chat->readed }}</span>
                             @else
                                 <span></span>
                             @endif

@@ -65,7 +65,7 @@
             $stylist = DB::table('stylist_infos')->where('id','=',$id)->first();
             $services = DB::table('stylist_services')->where('stylist_id','=',$id)->pluck("service");
             $freetime_list = DB::table('stylist_freetimes')->where("stylist_id","=",$id)->where("end_time",">=",date("Y-m-d H:i:s"))->orderBy('start_time')->get();
-            $comments = DB::table('stylist_comments')->where("stylist_id","=",$id)->rightJoin('user_infos','user_infos.id','=','stylist_comments.customer_id')->get();
+            $comments = DB::table('stylist_comments')->where("stylist_id","=",$id)->rightJoin('user_infos','user_infos.id','=','stylist_comments.customer_id')->orderByDesc('stylist_comments.created_at')->get();
             $service = [];
             foreach($services as $s){
                 $service[] = $s;
@@ -94,9 +94,11 @@
                 // $user_id = 9999999;
                 $reserve = DB::table('stylist_reserves')->where('reserve_id','=',$reserve_id)->first();
                 // var_dump($reserve);
-                if($reserve->customer_id==$user_id){
-                    return $reserve;
-                }    
+                if($reserve){
+                    if($reserve->customer_id==$user_id){
+                        return $reserve;
+                    }        
+                }
             }
             return false;
             // var_dump($reserve);
