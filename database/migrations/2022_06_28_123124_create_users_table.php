@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->string('email', 50);
             $table->string('password', 200);
-            $table->boolean('exist')->default(true);
+            $table->string('exist', 1)->default('1');
             $table->timestamps();
         });
     }

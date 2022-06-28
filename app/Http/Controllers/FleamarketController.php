@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreItemCommentRequest;
 use App\Http\Requests\StoreItemRequest;
@@ -467,6 +468,7 @@ class FleamarketController extends Controller
         }
         $item_infos = $request->validated();
 
+        $image_paths = array();
         // トランザクション処理
         try {
             DB::beginTransaction();
@@ -498,6 +500,7 @@ class FleamarketController extends Controller
             ]);
 
             // 現在の画像をすべて削除
+            $image_paths = Item_photo::where('item_id', '=', $id)->select('path')->get()->toArray();
             Item_photo::where('item_id', '=', $id)
             ->delete();
 
@@ -521,6 +524,10 @@ class FleamarketController extends Controller
             $errors[] = "更新に失敗しました";
             $item_images = $item_infos['image'];
             return view('fleamarket.edit', compact('errors', 'item_infos', 'item_images'));
+        }
+
+        foreach( $image_paths as $image_path ){
+            Storage::disk('local')->delete($image_path);
         }
 
         return redirect()->route('fleamarket')->with(['msg' => '更新しました。']);
