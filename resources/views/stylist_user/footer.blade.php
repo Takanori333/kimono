@@ -9,10 +9,10 @@
                     <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
                         <!-- Content -->
                         <h6 class="fw-bold mb-4">晴 re 着</h6>
-                        <p>
+                        {{-- <p>
                             Here you can use rows and columns to organize your footer content. Lorem ipsum
                             dolor sit amet, consectetur adipisicing elit.
-                        </p>
+                        </p> --}}
                     </div>
                     <!-- Grid column -->
 
@@ -24,7 +24,7 @@
                         </h6> -->
                         <!-- スタイリストログイン時新規登録は非表示 -->
                         <p>
-                            <a href="" class="text-reset text-decoration-none">よくあるご質問</a>
+                            <a href="{{ asset('/faq') }}" class="text-reset text-decoration-none">よくあるご質問</a>
                         </p>
                     </div>
                     <!-- Grid column -->
@@ -49,7 +49,7 @@
 
         <!-- Copyright -->
         <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-            © 2021 Copyright:ttttt...
+            © 2021 Copyright:Team B
         </div>
         <!-- Copyright -->
     </footer>

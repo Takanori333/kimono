@@ -40,7 +40,7 @@
                     <td>{{Carbon::parse($reserve->end_time)->format('Y年m月d日 H時i分')}}</td>
                     <td>{{ $reserve->address }}</td>
                     <td>{{ number_format($reserve->price) }}</td>
-                    <td><a href="{{ asset('/stylist_user/reserve_detail/'.$reserve->id) }}" target="_blank">詳細</a></td>
+                    <td><a class="link-secondary" href="{{ asset('/stylist_user/reserve_detail/'.$reserve->id) }}" target="_blank">詳細</a></td>
                 </tr>
                 @endforeach
             </tbody>

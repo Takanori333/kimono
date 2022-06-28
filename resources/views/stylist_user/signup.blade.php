@@ -31,7 +31,7 @@
                 <form action="{{ asset('/stylist_user/signup_DB') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4">
+                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('name') as $message)
                                 <p>{{ $message }}</p>
@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4">
+                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('email') as $message)
                                 <p>{{ $message }}</p>
@@ -61,7 +61,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4">
+                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('phone') as $message)
                                 <p>{{ $message }}</p>
@@ -76,7 +76,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4">
+                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('post') as $message)
                                 <p>{{ $message }}</p>
@@ -91,7 +91,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4">
+                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('address') as $message)
                                 <p>{{ $message }}</p>
@@ -108,7 +108,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4">
+                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('year') as $message)
                                 <p>{{ $message }}</p>
@@ -144,7 +144,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4">
+                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('sex') as $message)
                                 <p>{{ $message }}</p>
@@ -161,7 +161,7 @@
                     </div>
                     
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4">
+                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('password') as $message)
                                 <p>{{ $message }}</p>
@@ -175,7 +175,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4">
+                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
                         </div>
                         <label for="" class="col-sm-3 col-form-label">パスワード（確認）</label>
                         <p class="col-sm text-danger py-2 m-0">必須</p>
@@ -184,7 +184,7 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="invalid-feedbac k col-sm-8 offset-md-4">
+                        <div class="invalid-feedbac k col-sm-8 offset-md-4 text-danger">
                             <!-- バリデーションメッセージ -->
                             @foreach ($errors->get('icon') as $message)
                                 <p>{{ $message }}</p>

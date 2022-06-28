@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreItemCommentRequest extends FormRequest
+class ChangeItemFavoriteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,25 +25,17 @@ class StoreItemCommentRequest extends FormRequest
     {
         return [
             'user_id' => 'required|regex:/^[1-9][0-9]*$/',
-            'comment' => 'required|string|max:200',
+            'item_id' => 'required|regex:/^[1-9][0-9]*$/',
         ];
     }
 
     public function messages(){
         return [
             'user_id.required' => 'ログインしてください',
-            'user_id.regex' => '値が不正です',
+            'user_id.integer' => '値が不正です',
 
-            'comment.required' => 'テキストを入力してから送信してください',
-            'comment.string' => ':attributeが正しくありません',
-            'comment.max' => '200文字以内で入力してください',
-        ];
-    }
-
-    public function attributes()
-    {
-        return [
-            'comment' => 'コメント',
+            'item_id.required' => '値が不正です',
+            'item_id.integer' => '値が不正です',
         ];
     }
 }

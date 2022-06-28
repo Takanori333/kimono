@@ -200,6 +200,7 @@
             $.ajax("/fleamarket/favorite/insert", {
                 type: 'post',
                 data: {
+                    'user_id' : @if($user){{$user->id}}@else''@endif,
                     'item_id': {{$item_info["id"]}}
                 },
                 dataType: 'json',
@@ -227,6 +228,7 @@
             $.ajax("/fleamarket/favorite/delete", {
                 type: 'post',
                 data: {
+                    'user_id' : @if($user){{$user->id}}@else''@endif,
                     'item_id': {{$item_info["id"]}}
                 },
                 dataType: 'json',
@@ -254,7 +256,7 @@
             $.ajax("/fleamarket/item/{{$item_info["id"]}}/upload/comment", {
                     type: 'post',
                     data: {
-                        'user_id' : @if( is_null( $user = unserialize( session('user') )) ){{ $user->id }}@else''@endif,
+                        'user_id' : @if($user){{$user->id}}@else''@endif,
                         'comment': $('#comment').val(),
                     },
                     dataType: 'json',

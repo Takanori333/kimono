@@ -81,13 +81,13 @@
                             @case($sold_item->user_id)
                             {{-- 購入者とのチャットへのリンク --}}
                             <div class="me-2 d-inline">
-                                <a href="{{ asset('user/trade_chat/' . $sold_item->id) }}" class="link-dark">購入者とのチャットへ</a>
+                                <a href="{{ asset('user/trade_chat/' . $sold_item->id) }}" class="link-dark" target="_blank">購入者とのチャットへ</a>
                             </div>        
                             @break
                             @case($sold_item->item_history->buyer_id)
                             {{-- 販売者とのチャットへのリンク --}}
                             <div class="me-2 d-inline">
-                                <a href="{{ asset('user/trade_chat/' . $sold_item->id) }}" class="link-dark">販売者とのチャットへ</a>
+                                <a href="{{ asset('user/trade_chat/' . $sold_item->id) }}" class="link-dark" target="_blank">販売者とのチャットへ</a>
                             </div>
                             @break
                             @endswitch

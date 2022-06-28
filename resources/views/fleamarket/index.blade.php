@@ -194,7 +194,7 @@
             <div id="item_card_{{$item_info["id"]}}" data-is-on-sale="{{$item_info['onsale']==2? 'sold':'sale'}}" data-category="{{$item_info['category']}}">
                 <a href="{{asset('fleamarket/item/' . $item_info['id'] )}}">
                     <div>
-                        <img src="{{asset($item_info["image"][0]["path"])}}">
+                        {{-- <img src="{{asset($item_info["image"][0]["path"])}}"> --}}
                         <p> 商品名: {{ $item_info["name"] }}</p>
                         <p> 値段: {{ $item_info["price"] }}</p>
                     </div>

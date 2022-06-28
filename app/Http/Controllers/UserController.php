@@ -295,6 +295,7 @@ class UserController extends Controller
         if ($user) {
             // 購入済みの商品をDBから検索
             $purchased_items = Item_history::where("buyer_id", $user->id)
+                ->orderBy('created_at','desc')
                 ->with(["item_info", "trade_status","item"])
                 ->get();
     
@@ -343,6 +344,7 @@ class UserController extends Controller
         // item_info, item_photo, item_historyと一緒に取り出す
         $sold_items = Item::where("user_id", $page_user->id)
             ->where("onsale", 2)
+            ->orderBy('updated_at','desc')
             ->with(["item_info", "item_photo", "item_history", ])
             ->get();
 

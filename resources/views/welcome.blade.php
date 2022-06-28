@@ -37,10 +37,9 @@
         <p class="fs-5 pt-5">はじめに</p>
         <br>
         <p class="">
-            良い感じのおしゃれで雅な説明をしています。<br><br>
-            和服フリマ（仮）はこんなことします。<br><br>
-            気軽に着物をシェアしようぜ的な、、、。<br><br>
-            みんな使ってね。;)
+            手元の着物を捨てるのはもったいないけれど、譲る相手がいない。<br><br>
+            着物を着てみたいけれど、着方が分からない。<br><br>
+            晴re着はそんな悩みを持つ皆さんが着物を気軽に着るお手伝いをします。<br><br>
         </p>
     </div>
 
@@ -52,9 +51,10 @@
                 <div class="col mt-5 ms-5 d-flex justify-content-center align-items-end">
                     <div class="m-4">
                         <a href="{{ asset('/fleamarket') }}" class="fs-5 link-dark text-decoration-none border-bottom d-block">フリマ</a>
-                        <p class="mt-4">商品を購入。</p>
-                        <p>もう着ない和服を出品できる。</p>
-                        <p>など説明をする。</p>
+                        <p class="mt-4">手元の着物を出品、出品された着物を購入することができます。</p>
+                        <p>箪笥の肥やしになっている着物はありませんか？</p>
+                        <p>欲しい</p>
+                        <p></p>
                         <a href="{{ asset('/fleamarket') }}" class="btnarrow4 link-dark">商品を見る</a>
                     </div>
                 </div>
@@ -70,10 +70,10 @@
                 <div class="col mt-5 d-flex justify-content-center align-items-end">
                     <div class="m-4">
                         <a href="{{ asset('/stylist') }}" class="fs-5 link-dark text-decoration-none border-bottom d-block">着付け</a>
-                        <p class="mt-4">スタイリストを選んで依頼。</p>
-                        <p>着付けを依頼する。</p>
-                        <p>着付け依頼を請ける。</p>
-                        <p>とか説明をする。</p>
+                        <p class="mt-4">着付けの依頼をはじめ、着物を着た時の</p>
+                        <p>メイク、ヘアメイクの依頼をすることができます。</p>
+                        <p>要望に合った着付け師を探してみましょう。</p>
+                        <p></p>
                         <a href="{{ asset('/stylist') }}" class="btnarrow4 link-dark">着付け師を見る</a>
                     </div>
                 </div>

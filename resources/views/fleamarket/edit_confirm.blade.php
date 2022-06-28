@@ -150,8 +150,12 @@
                 <form action="/fleamarket/update/{{$item_infos['id']}}" method="POST">
                     @csrf
                     <input type="hidden" name="name" value="{{ $item_infos['name'] }}">
-                    @foreach ( $item_infos["image"] as $img )
-                    <input type="hidden" name="image[]" value="{{ $img }}">
+                    @foreach ( $item_infos["image"] as $key => $img )
+                        @if ( explode('/', $img)[0] === 'image' )
+                        <input type="hidden" name="image[]" id="hidden_image_{{$key}}" class="hidden_image" value="{{asset($img)}}">
+                        @else
+                        <input type="hidden" name="image[]" id="hidden_image_{{$key}}" class="hidden_image" value="{{$img}}">
+                        @endif
                     @endforeach
                     <input type="hidden" name="category" value="{{ $item_infos['category'] }}">
                     <input type="hidden" name="price" value="{{ $item_infos['price'] }}">
@@ -239,6 +243,36 @@
     </div> -->
 
     @include('footer')
+
+    <script>
+        $(document).ready( function(){
+            let temp_images = document.getElementsByClassName('hidden_image');
+            let images = Object.keys(temp_images).map(function (key) {return [temp_images[key]];});
+            images.forEach(function(e, i){
+                e.forEach(function(ee, ii){
+                    toBase64Url(ee.value, function(base64Url){
+                        document.getElementById(ee.id).value = base64Url;
+                    });
+                });
+            });
+        });
+
+        function toBase64Url(url, callback){
+            let xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                let reader = new FileReader();
+                reader.onloadend = function() {
+                callback(reader.result);
+                }
+                reader.readAsDataURL(xhr.response);
+            };
+            xhr.open('GET', url);
+            xhr.responseType = 'blob';
+            xhr.send();
+        }
+
+
+    </script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

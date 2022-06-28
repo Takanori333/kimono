@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>晴 re 着  - FAQ</title>
+    <title>晴 re 着  - よくあるご質問</title>
     <link rel="icon" type="image/x-icon" href="{{asset('/image/tagicon.png')}}">    
     <!-- フォント読み込み -->
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
     @include('header')
     <div class="container">
         <div class="contents pt-5 mt-5 w-100 mx-auto text-center">
-            <h1>FAQ</h1>
+            <h2>よくあるご質問</h2>
             <div class="">
                 <div class="text-center my-4 py-5">
                     <div class="w-75 row m-0 mx-auto  my-4 d-grid gap-2">

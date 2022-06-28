@@ -48,7 +48,7 @@
             <div class="col-12 col-xxl-2   col-xl-2">
             </div>
             <div class="col-12 col-xxl-4   col-xl-4">
-                <div  class="container">
+                <div  class="container" style="width:400px">
                     <div class="row" style="justify-content: center">
                         <div class="card" style="min-width: 18rem;">
                             <ul class="list-group list-group-flush">
@@ -85,7 +85,7 @@
                                 <li class="list-group-item">
                                     <div class="row">
                                         <input type="datetime-local" class="col-5 form-control-sm" name="start_time" id="start_time">
-                                        <h6 class="col-1 text-center">~</h6>
+                                        <h6 class="col-1 text-center">-</h6>
                                         <input type="datetime-local" class="col-5 form-control-sm" name="end_time" id="end_time">
                                         <a class="col-1" href="javascript:void(0);" onclick="add_new_time('{{ asset('/stylist_user/freetime_DB') }}','{{ csrf_token() }}')">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-plus" viewBox="0 0 16 16">

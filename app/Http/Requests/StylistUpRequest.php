@@ -45,7 +45,7 @@ class StylistUpRequest extends FormRequest
             'name.max' => '名前は20文字以下で入力してください',
                         
             'phone.required' => '電話番号が記入されていません',
-            'phone.digits_between' => '電話番号が正しくありません',
+            'phone.digits_between' => '電話番号が正しくありません（１０文字か１１文字、間隔、ハイフンなし）',
             'phone.numeric' => '電話番号は数字で入力してください',
 
             'year.required' => '誕生年が記入されていません',
@@ -62,7 +62,7 @@ class StylistUpRequest extends FormRequest
 
             'post.required' => '郵便番号が記入されていません',
             'post.numeric' => '郵便番号は数字で入力してください',
-            'post.digits' => '郵便番号が正しくありません',
+            'post.digits' => '郵便番号が正しくありません（７文字、間隔、ハイフンなし）',
 
             'address.required' => '住所が記入されていません',
             'address.max' => '住所は100文字以下で入力してください',

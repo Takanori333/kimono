@@ -152,7 +152,7 @@ select:focus {
 }
 
 .cover-img {
-    height: 800px;
+    height: 750px;
     display: table;
     width: 100%;
     background-size: cover;

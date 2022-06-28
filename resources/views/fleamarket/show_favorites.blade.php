@@ -162,6 +162,9 @@
     <span class="d-block" style="height: 300px;"></span>
 
     @include('footer')
+    @php
+        $user = unserialize( session('user') );
+    @endphp
 
     <script>
         function deleteFavorite(item_id){
@@ -173,6 +176,7 @@
             $.ajax("/fleamarket/favorite/delete",{
                 type: 'post',
                 data: {
+                    'user_id' : @if($user){{$user->id}}@else''@endif,
                     'item_id' : item_id,
                 },
                 dataType: 'json',

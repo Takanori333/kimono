@@ -9,20 +9,15 @@
                 <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
                     <!-- Content -->
                     <h6 class="fw-bold mb-4"><a href="{{ asset('/') }}" class="text-reset text-decoration-none footer-link">晴 re 着</a></h6>
-                    <p>
+                    {{-- <p>
                         Here you can use rows and columns to organize your footer content. Lorem ipsum
                         dolor sit amet, consectetur adipisicing elit.
-                    </p>
+                    </p> --}}
                 </div>
                 <!-- Grid column -->
 
                 <!-- Grid column -->
                 <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
-                    <!-- Links -->
-                    <!-- <h6 class="text-uppercase fw-bold mb-4">
-                            Useful links
-                        </h6> -->
-                    <!-- スタイリストログイン時新規登録は非表示 -->
                     <p>
                         @if (!session('stylist'))
                             <a href="{{ asset('/stylist_user/signup') }}" class="text-reset text-decoration-none footer-link">スタイリスト新規登録</a>                            
@@ -36,14 +31,14 @@
 
                 <!-- Grid column -->
                 <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-                    <!-- Links -->
                     <h6 class="text-uppercase fw-bold mb-4">
                         Contact
                     </h6>
-                    <p>
+                    <p class="mb-2">
                         <i class="bi bi-envelope"></i>
                         info@example.com
                     </p>
+                    <p>お気軽にお問い合わせください。</p>
                 </div>
                 <!-- Grid column -->
             </div>
@@ -54,7 +49,7 @@
 
     <!-- Copyright -->
     <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-        © 2021 Copyright:ttttt...
+        © 2022 Copyright:Team B
     </div>
     <!-- Copyright -->
 </footer>

@@ -65,14 +65,21 @@
                         <div class="col-sm-2 col-form-label">商品画像</div>
                         <p class="col-sm text-danger py-2 m-0 text-end">必須</p>
                         <div class="col-sm-8">
-                            <div id="show_img_area">
-                                <input type="file" id="input_img" class="form-control rounded-0" multiple accept="image/*">
-                                @isset( $images )
-                                @foreach ($images as $key => $image )
-                                <img src="{{ $image }}" class="w-25 mb-1" id="show_image_{{$key}}">
-                                <button type="button" class="btn btn-danger" id="btn_image_{{$key}}" onclick="del_img({{$key}})">×</button>
-                                @endforeach
-                                @endisset
+                            <div >
+                                <div class="w-100">
+                                    <label for="input_img" class="border-1 border py-2 mt-1 w-100 rounded-0">画像を選択</label>
+                                </div>
+                                <input type="file" name="" id="input_img" class="form-control rounded-0" multiple accept="image/*" onchange="addImage()" style="display: none">
+                                <div id="show_img_area" class="position-relative w-25">
+                                    @isset( $images )
+                                    @foreach ($images as $key => $image )
+                                    <img src="{{ $image }}" class="w-100 mb-1" id="show_image_{{$key}}">
+                                    <div class="position-absolute top-0 end-0 ">
+                                        <button type="button" class="btn btn-danger" id="btn_image_{{$key}}" onclick="del_img({{$key}})">×</button>
+                                    </div>
+                                    @endforeach
+                                    @endisset
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -98,7 +105,7 @@
                             <p class="text-danger mb-1">{{ $msg }}</p>
                             @endforeach
                         </div>
-                        <div class="col-sm-2 col-form-label">値段(円)</div>
+                        <div class="col-sm-2 col-form-label">値段</div>
                         <p class="col-sm text-danger py-2 m-0 text-end">必須</p>
                         <div class="col-sm-8">
                             <input type="number" name="price" value="{{ old('price') }}" class="form-control rounded-0" step="1" min="1" max="9999999">
@@ -116,7 +123,7 @@
                         <p class="col-sm text-danger py-2 m-0 text-end">必須</p>
                         <div class="col-sm-8">
                             {{-- <input type="text" name="pref" value="{{ old('pref') }}" class="form-control rounded-0"> --}}
-                            <select name="pref" class="form-control rounded-0">
+                            <select name="pref" class="form-control rounded-0 form-select">
                                 <option value="" selected disabled>選択してください</option>
                                 @foreach ( config('pref') as $pref )
                                     <Option value="{{$pref}}"
@@ -274,26 +281,22 @@
     <script>
         let image_count = 0;
 
-        $(document).ready(function(){
-            // hiddenの中の要素数を数える
-            image_count = document.getElementById('hidden_input').childElementCount;
-        });
-
         // 画像の追加
         // <input type="file" id="input_img" multiple>にchangeイベントを設定
-        document.getElementById( "input_img" ).addEventListener( "change", function() {
+        const addImage = function(){
             // フォームで選択された全ファイルを取得
-            let fileList = this.files;
+            let fileList = document.getElementById('input_img').files;
+            console.log(fileList);
 
             // 個数分の画像を表示する
             for( let i=0,l=fileList.length; l>i; i++ ) {
                 // FileReaderオブジェクトを作成
-                let fileReader = new FileReader();
+                let fileReader = new FileReader() ;
 
                 // 読み込み後の処理を決めておく
                 fileReader.onload = function() {
                     // Data URIを取得
-                    let dataUri = this.result;
+                    let dataUri = this.result ;
 
                     // 次の画像idを取得
                     let img_id = image_count;
@@ -301,28 +304,35 @@
                     // サンプルを表示する領域を取得
                     let show_img = document.getElementById("show_img_area");
                     // HTMLに書き出し (src属性にData URIを指定)
-                    show_img.innerHTML += '<img src="' + dataUri + '" class="w-25 mb-' + (i+1) +'" id="show_image_' + img_id + '" >';
-                    show_img.innerHTML += '<button type="button" class="btn btn-danger" id="btn_image_' + img_id + '" onclick="del_img(' + img_id + ')">×</button>';
-                    
+                    show_img.innerHTML += '<img src="' + dataUri + '" class="w-100 mb-' + (i+1) +'" id="show_image_' + img_id + '" >';
+                    show_img.innerHTML += '<div class="position-absolute top-0 end-0 w-25 h-25"><button type="button" class="btn btn-danger" id="btn_image_' + img_id + '" onclick="del_img(' + img_id + ')">×</button></div>';
+
+
                     // inputタグをhiddenで表示するdivタグを取得する
                     let hidden_area = document.getElementById("hidden_input");
                     hidden_area.innerHTML += '<input type="hidden" name="image[]" id="hidden_image_' + img_id + '" value="' + dataUri +'">';
                     image_count++;
+
                 }
                 // ファイルをData URIとして読み込む
                 fileReader.readAsDataURL( fileList[i] ) ;
             }
-        } ) ;
+        };
 
         // 画像の削除
-        function del_img(img_id){
+        const del_img = function(img_id){
             let show_image = document.getElementById( 'show_image_' + img_id );
             let btn_image = document.getElementById( 'btn_image_' + img_id );
             let hidden_image = document.getElementById( 'hidden_image_' + img_id );
-            show_image.remove()
+            show_image.remove();
             btn_image.remove();
             hidden_image.remove();
         }
+
+        $(document).ready(function(){
+            // hiddenの中の要素数を数える
+            image_count = document.getElementById('hidden_input').childElementCount - 1;
+        });
 
 
     </script>

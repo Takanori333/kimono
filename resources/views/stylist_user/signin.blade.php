@@ -19,7 +19,7 @@
 <body>
     <nav id="header" class="p-3">
         <div class="p-3 fixed-top d-flex border-bottom flex-wrap w-100" style="background: white">
-            <h5 class="me-auto my-0 mr-mb-auto font-weight-normal p-2"><a href="{{ asset('/') }}" class="link-dark text-decoration-none h4">和服フリマ（仮）</a></h5>
+            <h5 class="me-auto my-0 mr-mb-auto font-weight-normal p-2"><a href="{{ asset('/') }}" class="link-dark text-decoration-none h4">晴 re 着</a></h5>
         </div>
     </nav>
     <div class="container">

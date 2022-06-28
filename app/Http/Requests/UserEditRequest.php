@@ -79,14 +79,14 @@ class UserEditRequest extends FormRequest
             'email.max' => "メールアドレスは50文字以下で入力してください",
 
             'phone.required' => "電話番号が記入されていません",
-            'phone.digits_between' => "電話番号が正しくありません",
+            'phone.digits_between' => "電話番号が正しくありません（１０文字か１１文字、間隔、ハイフンなし）",
             'phone.numeric' => "電話番号は数字で入力してください",
 
             'sex.required' => '性別が選択されていません',
 
             'post.required' => "郵便番号が記入されていません",
             'post.numeric' => "郵便番号は数字で入力してください",
-            'post.digits' => "郵便番号が正しくありません",
+            'post.digits' => "郵便番号が正しくありません（７文字、間隔、ハイフンなし）",
 
             'address.required' => "住所が記入されていません",
             'address.max' => "住所は1   00文字以下で入力してください",

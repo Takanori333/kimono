@@ -6,8 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreItemCommentRequest;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\PurchaseItemRequest;
-use  App\Classes\SelectItem;
-use  App\Classes\ImageSave;
+use App\Http\Requests\ChangeItemFavoriteRequest;
+use App\Classes\SelectItem;
+use App\Classes\ImageSave;
 use App\Models\Item;
 use App\Models\Item_info;
 use App\Models\Item_photo;
@@ -185,56 +186,73 @@ class FleamarketController extends Controller
     public function uploadComment(StoreItemCommentRequest $request, $id){
         $reqData = $request->validated();
 
-        // データベースにコメントを追加
-        $comment = $reqData['comment'];
         $user_id = unserialize(session('user'))->id;
-        Item_comment::create([
-            'item_id' => $id,
-            'user_id' => $user_id,
-            'text' => $comment,
-        ]);
-
-        $item_comments = SelectItem::getItemCommentsById($id);
+        if( $reqData['user_id'] == $user_id ){
+            // データベースにコメントを追加
+            $comment = $reqData['comment'];
+            Item_comment::create([
+                'item_id' => $id,
+                'user_id' => $user_id,
+                'text' => $comment,
+            ]);
+            $item_comments = SelectItem::getItemCommentsById($id);
+        }else{
+            $item_comments = [
+                'error' => '不正な値です',
+            ];
+        }
 
         return response()->json($item_comments);
     }
 
     // 4-4-2(お気に入り追加)
-    public function insertFavorite(Request $request){
-        $item_id = $request->get('item_id');
+    public function insertFavorite(ChangeItemFavoriteRequest $request){
+        $reqData = $request->validated();
+
+        $item_id = $reqData['item_id'];
         $user_id = unserialize(session('user'))->id;
 
-        $item_favorite_records = Item_favorite::where('item_id', '=', $item_id)->where('user_id', '=', $user_id)->get();
-        if( $item_favorite_records->isEmpty() ){
-            // アイテムをお気に入りに登録していない場合
-            Item_favorite::create([
-                'item_id' => $item_id,
-                'user_id' => $user_id
-            ]);
-            $msg = 'お気に入りに登録しました';
+        if( $reqData['user_id'] == $user_id ){
+            $item_favorite_records = Item_favorite::where('item_id', '=', $item_id)->where('user_id', '=', $user_id)->get();
+            if( $item_favorite_records->isEmpty() ){
+                // アイテムをお気に入りに登録していない場合
+                Item_favorite::create([
+                    'item_id' => $item_id,
+                    'user_id' => $user_id
+                ]);
+                $msg = 'お気に入りに登録しました';
+            }else{
+                // 既にお気に入りに登録している場合
+                $msg = '既にお気に入りに登録されています';
+            }
         }else{
-            // 既にお気に入りに登録している場合
-            $msg = '既にお気に入りに登録されています';
+            $msg = '値が不正です';
         }
 
         return response()->json($msg);
     }
 
     // 4-4-3(お気に入り削除)
-    public function deleteFavorite(Request $request){
+    public function deleteFavorite(ChangeItemFavoriteRequest $request){
+        $reqData = $request->validated();
+
         $item_id = $request->get('item_id');
         $user_id = unserialize(session('user'))->id;
 
-        $item_favorite_records = Item_favorite::where('item_id', '=', $item_id)->where('user_id', '=', $user_id)->get();
-        if( $item_favorite_records->isEmpty() ){
-            // アイテムをお気に入りに登録していない場合
-            $msg = 'お気に入りに登録されていません';
+        if( $reqData['user_id'] == $user_id ){
+            $item_favorite_records = Item_favorite::where('item_id', '=', $item_id)->where('user_id', '=', $user_id)->get();
+            if( $item_favorite_records->isEmpty() ){
+                // アイテムをお気に入りに登録していない場合
+                $msg = 'お気に入りに登録されていません';
+            }else{
+                // 既にお気に入りに登録している場合
+                Item_favorite::where('item_id', '=', $item_id)
+                ->where('user_id', '=', $user_id)
+                ->delete();
+                $msg = 'お気に入りから削除しました';
+            }
         }else{
-            // 既にお気に入りに登録している場合
-            Item_favorite::where('item_id', '=', $item_id)
-            ->where('user_id', '=', $user_id)
-            ->delete();
-            $msg = 'お気に入りから削除しました';
+            $msg = '値が不正です';
         }
 
         return response()->json($msg);
@@ -479,12 +497,15 @@ class FleamarketController extends Controller
                 'back'          => $item_infos['size_back'],
             ]);
 
+            // 現在の画像をすべて削除
+            Item_photo::where('item_id', '=', $id)
+            ->delete();
+
             // imageを一つずつ取り出してサーバーとデータベースに追加
             foreach( $item_infos['image'] as $key => $image ){
-                if( explode('/',  $image)[0] != 'image' )
+                if( explode('/', $image)[0] != 'image' )
                 {
                     $img_path = ImageSave::uploadBase64($image);
-                    // $img_path = $request->file('image')->store('public/image');
                     Item_photo::create([
                         'item_id'   => $id,
                         'path'      => $img_path,
